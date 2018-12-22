@@ -1,0 +1,165 @@
+/*
+Copyright (c) 2016 Robert Atkinson
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted (subject to the limitations in the disclaimer below) provided that
+the following conditions are met:
+
+Redistributions of source code must retain the above copyright notice, this list
+of conditions and the following disclaimer.
+
+Redistributions in binary form must reproduce the above copyright notice, this
+list of conditions and the following disclaimer in the documentation and/or
+other materials provided with the distribution.
+
+Neither the name of Robert Atkinson nor the names of his contributors may be used to
+endorse or promote products derived from this software without specific prior
+written permission.
+
+NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
+LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESSFOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.LightSensor;
+
+/**
+ * This file illustrates the concept of driving up to a line and then stopping.
+ * It uses the common Pushbot hardware class to define the drive on the robot.
+ * The code is structured as a LinearOpMode
+ *
+ * The code shows using two different light sensors:
+ *   The Primary sensor shown in this code is a legacy NXT Light sensor (called "sensor_light")
+ *   Alternative "commented out" code uses a MR Optical Distance Sensor (called "sensor_ods")
+ *   instead of the LEGO sensor.  Chose to use one sensor or the other.
+ *
+ *   Setting the correct WHITE_THRESHOLD value is key to stopping correctly.
+ *   This should be set half way between the light and dark values.
+ *   These values can be read on the screen once the OpMode has been INIT, but before it is STARTED.
+ *   Move the senso on asnd off the white line and not the min and max readings.
+ *   Edit this code to make WHITE_THRESHOLD half way between the min and max.
+ *
+ * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
+ */
+
+@Autonomous(name="Pushbot: Drive Forward Encoder", group="Pushbot")
+@Disabled
+public class DriveForwardEncoder extends LinearOpMode {
+
+    /* Declare OpMode members. */
+    CompetitionHWsetup robot = new CompetitionHWsetup();  // Use a Pushbot's hardware
+    // could also use HardwarePushbotMatrix class.
+    LightSensor lightSensor;      // Primary LEGO Light sensor,
+    // OpticalDistanceSensor   lightSensor;   // Alternative MR ODS sensor
+
+    static final double     WHITE_THRESHOLD = 0.2;  // spans between 0.1 - 0.5 from dark to light
+    static final double     APPROACH_SPEED  = 0.1;
+    static final double     LINEC = 0.3;
+
+
+    ColorSensor colorSensor;
+
+    @Override
+    public void runOpMode() {
+
+        /* Initialize the drive system variables.
+         * The init() method of the hardware class does all the work here
+         */
+        robot.init(hardwareMap);
+//andymark encoders 1120 ticks per revolution
+//tetrix encoders 1440 ticks per revolution
+// rotation is 78.5 cm
+//1.03 rotations
+        waitForStart();
+
+        /*the encoders use PID controllers so power is absolute, the sign on direction is what actually changes the direction
+          Measurements for distance is in Centimeters, program automatically converts cm to ticks
+         */
+        DriveEncoder(.25,-100,.25,-100);
+
+
+// input times 9.512
+
+        // What to do upon start is pushed
+
+        telemetry.update();
+        idle();
+
+    }
+
+    public void DrivePower (double leftpower, double rightpower){
+
+        robot.frontrightMotor.setPower(rightpower);
+        robot.backrightMotor.setPower(rightpower);
+        robot.frontleftMotor.setPower(leftpower);
+        robot.backleftMotor.setPower(leftpower);
+
+    }
+
+
+
+    //Stops all motors in the drivetrain
+    public void DriveStop (){
+        DrivePower(0,0);
+    }
+
+
+    //Allows the ability to run the Mechanum as a tank drive using the encoders to run to a spcific distance at a cetain speed.
+    public void DriveEncoder (double leftpower, int leftdistance, double rightpower, int rightdistance){
+
+
+        //sets the encoder values to zero
+        robot.frontrightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.backrightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.frontleftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.backleftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        //sets the position(distance) to drive to
+        robot.frontrightMotor.setTargetPosition(rightdistance * 24);
+        robot.backrightMotor.setTargetPosition(rightdistance * 24);
+        robot.frontleftMotor.setTargetPosition(leftdistance * 24);
+        robot.backleftMotor.setTargetPosition(leftdistance * 24);
+
+        //engages the encoders to start tracking revolutions of the motor axel
+        robot.frontrightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.backrightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.frontleftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.backleftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        //powers up the left and right side of the drivetrain independently
+        DrivePower(leftpower, rightpower);
+
+        //will pause the program until the motors have run to the previously specified position
+        while (robot.frontrightMotor.isBusy() && robot.backrightMotor.isBusy() &&
+                robot.frontleftMotor.isBusy() && robot.backleftMotor.isBusy())
+        {
+
+        }
+
+        //stops the motors and sets them back to normal operation mode
+        DriveStop();
+        robot.frontrightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.backrightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.frontleftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.backleftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+}
+
