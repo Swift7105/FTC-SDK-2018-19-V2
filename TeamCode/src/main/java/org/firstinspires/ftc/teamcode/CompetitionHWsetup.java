@@ -34,7 +34,6 @@ public class CompetitionHWsetup
     public Servo    jewelarm = null;
     public Servo    jewelTwist = null;
     public Servo    relicclaw    = null;
-    public Servo    SensorArm = null;
 
 
     public Sensor color_sensor = null;
@@ -125,14 +124,13 @@ public class CompetitionHWsetup
         jewelarm = hwMap.get(Servo.class, "barney");
         jewelTwist = hwMap.get(Servo.class, "jeweltwist");
         relicclaw   = hwMap.get(Servo.class, "relicclaw");
-        SensorArm   =hwMap.get(Servo.class, "sensorarm");
 
 
         bigclaw.setPosition(0.5);
         frontclaw.setPosition(0.0);
         backclaw.setPosition(0.5);
         relicclaw.setPosition(1);
-        SensorArm.setPosition(0.9);
+
 
         
 
