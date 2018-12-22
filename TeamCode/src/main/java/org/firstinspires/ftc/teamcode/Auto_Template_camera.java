@@ -91,6 +91,10 @@ public class Auto_Template_camera extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+        robot.lift.setPower(-.7);
+        sleep(3100);
+        robot.lift.setPower(0);
+
         if (opModeIsActive()) {
             /** Activate Tensor Flow Object Detection. */
             if (tfod != null) {
@@ -98,7 +102,6 @@ public class Auto_Template_camera extends LinearOpMode {
             }
 
             while (loop == TRUE) {
-                CameraDevice.getInstance().setFlashTorchMode(true);
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
@@ -148,9 +151,6 @@ public class Auto_Template_camera extends LinearOpMode {
             tfod.shutdown();
         }
 
-        robot.lift.setPower(-.7);
-        sleep(3100);
-        robot.lift.setPower(0);
 
         DriveForward(.7,9,  .7,9);
         DriveStrafe(.7,48,.7,-48);

@@ -34,8 +34,7 @@ public class Gyro_test extends LinearOpMode
 
     // called when init button is  pressed.
     @Override
-    public void runOpMode() throws InterruptedException
-    {
+    public void runOpMode() {
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
