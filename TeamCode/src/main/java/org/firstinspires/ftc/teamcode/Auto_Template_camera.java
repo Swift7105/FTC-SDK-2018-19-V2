@@ -94,6 +94,10 @@ public class Auto_Template_camera extends LinearOpMode {
         robot.lift.setPower(-.7);
         sleep(3100);
         robot.lift.setPower(0);
+        DriveForward(.7,9,  .7,9);
+        DriveStrafe(.7,10,.7,-10);
+        DriveForward(.7,-9,  .7,-9);
+
 
         if (opModeIsActive()) {
             /** Activate Tensor Flow Object Detection. */
@@ -152,17 +156,83 @@ public class Auto_Template_camera extends LinearOpMode {
         }
 
 
-        DriveForward(.7,9,  .7,9);
-        DriveStrafe(.7,48,.7,-48);
-
         if (cubepos == 0){
-            DriveForward(.7,9,  .7,9);
+
+            DriveForward(.7, 20, .7, -20);
+            DriveStrafe(.7,58,.7,-58);
+            DriveStrafe(.7,-18,.7,18);
+            DriveForward(.7, -20, .7, 20);
+            DriveForward(.7, 60, .7, 60);
+
         }
         if (cubepos == 1){
+            DriveStrafe(.7,58,.7,-58);
+            DriveStrafe(.7,-18,.7,18);
+            DriveForward(.7,100,  .7,100);
+
+        }
+        if (cubepos == 2) {
+            DriveForward(.7, -20, .7, 20);
+            DriveStrafe(.7,58,.7,-58);
+            DriveStrafe(.7,-18,.7,18);
+            DriveForward(.7, 20, .7, -20);
+            DriveForward(.7, 140, .7, 140);
+
+        }
+/*
+        DriveStrafe(.7,40,.7,-40);
+
+        if (cubepos == 0){
+            DriveForward(.7,40,  .7,40);
+            DriveStrafe(.7,18,.7,-18);
+            DriveStrafe(.7,-18,.7,18);
+            DriveForward(.7,60,  .7,60);
+
+        }
+        if (cubepos == 1){
+            DriveStrafe(.7,18,.7,-18);
+            DriveStrafe(.7,-18,.7,18);
+            DriveForward(.7,100,  .7,100);
+
         }
         if (cubepos == 2){
-            DriveForward(.7,-9,  .7,-9);
+            DriveForward(.7,-40,  .7,-40);
+            DriveStrafe(.7,18,.7,-18);
+            DriveStrafe(.7,-18,.7,18);
+            DriveForward(.7,140,  .7,140);
+
+
         }
+*/
+        DriveForward(.7,24,  .7,-24);
+        DriveStrafeTime(70,-70,  1);
+        DriveForward(.7,92,  .7,90);
+
+
+        robot.intake.setPower(-1);
+        sleep( 700);
+        robot.intake.setPower(0);
+
+        robot.intake.setPower(0);
+        robot.arm.setPower(.7);
+        robot.arm2.setPower(.7);
+        sleep( 700);
+        robot.arm.setPower(0);
+        robot.arm2.setPower(0);
+        sleep( 100);
+
+        robot.arm.setPower(-.7);
+        robot.arm2.setPower(-.7);
+        sleep( 500);
+        robot.arm.setPower(0);
+        robot.arm2.setPower(0);
+        sleep( 100);
+
+        DriveForward(.7,-92,  .7,-90);
+        robot.mineralarm.setPower(1);
+        DriveStrafe(.7,-20,.7,20);
+        DriveForward(.7,20,  .7,-20);
+
 
         telemetry.update();
         sleep(5000);
@@ -262,6 +332,20 @@ public class Auto_Template_camera extends LinearOpMode {
         robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+    public void DriveStrafeTime (double leftpower,double rightpower, long timetime){
+
+
+        //engages the encoders to start tracking revolutions of the motor axel
+        robot.rightFrontDrive.setPower(rightpower);
+        robot.rightBackDrive.setPower(leftpower);
+        robot.leftFrontDrive.setPower(leftpower);
+        robot.leftBackDrive.setPower(rightpower);
+
+        sleep(1000 * timetime);
+
+        //stops the motors and sets them back to normal operation mode
+        DriveStop();
     }
 
     private void initVuforia() {
