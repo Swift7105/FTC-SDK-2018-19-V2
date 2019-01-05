@@ -205,23 +205,38 @@ public class PrototypeDrive extends OpMode{
 
         robot.intake.setPower(-gamepad2.left_stick_y);
 
-        robot.lift.setPower(gamepad2.left_trigger - gamepad2.right_trigger);
+        if (gamepad2.left_trigger > .5){
+            robot.lift.setPower(1);
+        }
+        else {
+            robot.lift.setPower(0);
+        }
+        if (gamepad2.right_trigger > .5){
+            robot.door.setPosition(.1);
+
+        }
 
         if (gamepad2.a){
-            robot.door.setPosition(.1);
-        }
-        if (gamepad2.x){
-            robot.door.setPosition(.4);
-        }
-
-        if (gamepad2.left_bumper){
-            robot.mineralarm.setPower(-1);
-        }
-        else if (gamepad2.right_bumper){
             robot.mineralarm.setPower(1);
+        }
+        else if (gamepad2.x){
+            robot.mineralarm.setPower(-1);
         }
         else {
             robot.mineralarm.setPower(0);
+        }
+
+        if (gamepad2.left_bumper){
+            robot.lift.setPower(-1);
+        }
+
+        if (gamepad2.right_bumper){
+            robot.door.setPosition(.1);
+
+        }
+        else {
+            robot.door.setPosition(.4);
+
         }
 
         if (gamepad1.left_bumper){

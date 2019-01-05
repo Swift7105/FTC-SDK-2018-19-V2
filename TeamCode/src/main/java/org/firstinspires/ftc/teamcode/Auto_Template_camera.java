@@ -70,7 +70,7 @@ public class Auto_Template_camera extends LinearOpMode {
 
     private boolean loop = TRUE;
 
-    private int cubepos = 0;
+    private int cubepos = -1;
 
     @Override public void runOpMode() {
 
@@ -96,11 +96,83 @@ public class Auto_Template_camera extends LinearOpMode {
         robot.lift.setPower(0);
         DriveForward(.7,9,  .7,9);
         DriveStrafe(.7,10,.7,-10);
-        DriveForward(.7,-9,  .7,-9);
+        DriveForward(.7,-17,  .7,-17);
+        DriveForward(.5,7,  .5,-7);
 
+
+ /*       if (opModeIsActive()) {
+             Activate Tensor Flow Object Detection.
+            if (tfod != null) {
+                tfod.activate();
+            }
+
+            while (loop == TRUE) {
+                if (tfod != null) {
+                    // getUpdatedRecognitions() will return null if no new information is available since
+                    // the last time that call was made.
+                    List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                    if (updatedRecognitions != null) {
+                        telemetry.addData("# Object Detected", updatedRecognitions.size());
+                        if (updatedRecognitions.size() == 1) {
+                            int goldMineralX    = -1;
+                            int silverMineral1X = -1;
+                            int silverMineral2X = -1;
+                            for (Recognition recognition : updatedRecognitions) {
+                                if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                                    goldMineralX = (int) recognition.getLeft();
+                                } else if (silverMineral1X == -1) {
+                                    silverMineral1X = (int) recognition.getLeft();
+                                } else {
+                                    silverMineral2X = (int) recognition.getLeft();
+                                }
+                            }
+                            if (goldMineralX != -1) {
+                                telemetry.addData("Gold Mineral Position", "left");
+                                cubepos = 0;
+                            }
+                            DriveForward(.5, -11, .5, 11);
+
+                        }
+
+                        if (updatedRecognitions.size() == 2) {
+                            sleep(500);
+                            int goldMineralX = -1;
+                            int silverMineral1X = -1;
+                            int silverMineral2X = -1;
+                            for (Recognition recognition : updatedRecognitions) {
+                                if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                                    goldMineralX = (int) recognition.getLeft();
+                                } else if (silverMineral1X == -1) {
+                                    silverMineral1X = (int) recognition.getLeft();
+                                } else {
+                                    silverMineral2X = (int) recognition.getLeft();
+                                }
+                            }
+                            if (cubepos == -1) {
+                                if (goldMineralX != -1) {
+                                    telemetry.addData("Gold Mineral Position", "Center");
+                                    cubepos = 1;
+
+                                } else {
+                                    telemetry.addData("Gold Mineral Position", "Right");
+                                    cubepos = 2;
+                                }
+                            }
+
+                        }
+                        if(cubepos != -1) {
+                            loop = FALSE;
+                        }
+
+                    }
+                    telemetry.update();
+                }
+            }
+        }
+*/
 
         if (opModeIsActive()) {
-            /** Activate Tensor Flow Object Detection. */
+            // Activate Tensor Flow Object Detection.
             if (tfod != null) {
                 tfod.activate();
             }
@@ -125,6 +197,7 @@ public class Auto_Template_camera extends LinearOpMode {
                                     silverMineral2X = (int) recognition.getLeft();
                                 }
                             }
+
                             if (goldMineralX != -1 && silverMineral1X != -1){
                                 if (goldMineralX < silverMineral1X){
                                     telemetry.addData("Gold Mineral Position", "Center");
@@ -144,7 +217,6 @@ public class Auto_Template_camera extends LinearOpMode {
                                 cubepos = 2;
                                 loop = FALSE;
                             }
-
                         }
                         telemetry.update();
                     }
@@ -155,28 +227,29 @@ public class Auto_Template_camera extends LinearOpMode {
             tfod.shutdown();
         }
 
+        DriveForward(.5,-7,  .5,7);
 
         if (cubepos == 0){
 
-            DriveForward(.7, 20, .7, -20);
-            DriveStrafe(.7,58,.7,-58);
-            DriveStrafe(.7,-18,.7,18);
-            DriveForward(.7, -20, .7, 20);
-            DriveForward(.7, 60, .7, 60);
+            DriveForward(.7, 23, .7, -23);
+            DriveStrafe(.7,70,.7,-70);
+            DriveStrafe(.7,-26,.7,26);
+            DriveForward(.7, -23, .7, 23);
+            DriveForward(.7, 80, .7, 80);
 
         }
         if (cubepos == 1){
             DriveStrafe(.7,58,.7,-58);
             DriveStrafe(.7,-18,.7,18);
-            DriveForward(.7,100,  .7,100);
+            DriveForward(.7,90,  .7,90);
 
         }
         if (cubepos == 2) {
             DriveForward(.7, -20, .7, 20);
-            DriveStrafe(.7,58,.7,-58);
-            DriveStrafe(.7,-18,.7,18);
+            DriveStrafe(.7,70,.7,-70);
+            DriveStrafe(.7,-26,.7,26);
             DriveForward(.7, 20, .7, -20);
-            DriveForward(.7, 140, .7, 140);
+            DriveForward(.7, 120, .7, 120);
 
         }
 /*
@@ -231,11 +304,21 @@ public class Auto_Template_camera extends LinearOpMode {
         DriveForward(.7,-92,  .7,-90);
         robot.mineralarm.setPower(1);
         DriveStrafe(.7,-20,.7,20);
-        DriveForward(.7,20,  .7,-20);
+        DriveForward(.7,23,  .7,-23);
+        DriveStrafe(.7,-70,.7,70);
 
+
+        robot.intake.setPower(0);
+        robot.arm.setPower(.5);
+        robot.arm2.setPower(.5);
+        sleep( 700);
+        robot.arm.setPower(0);
+        robot.arm2.setPower(0);
+        sleep( 4500);
+        robot.mineralarm.setPower(0);
 
         telemetry.update();
-        sleep(5000);
+        sleep(500);
     }
 
 
