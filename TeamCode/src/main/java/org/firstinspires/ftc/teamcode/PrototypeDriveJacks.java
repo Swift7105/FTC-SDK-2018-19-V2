@@ -63,6 +63,7 @@ public class PrototypeDriveJacks extends OpMode{
     double Xposition = 0;
     double Yposition = 0;
     double MyAngle = 0;
+    double MyAnglesbastard = 0;
     double reseter = 0;
 //----------------------------------------------------------------------
 
@@ -122,6 +123,7 @@ public class PrototypeDriveJacks extends OpMode{
      */
 
 
+
     @Override
     public void start() { }
     /*
@@ -150,12 +152,16 @@ public class PrototypeDriveJacks extends OpMode{
         turning = gamepad1.left_stick_x * .75;
         negmecanum = gamepad1.right_stick_y - gamepad1.right_stick_x;
         mecanum = gamepad1.right_stick_y + gamepad1.right_stick_x;
-
+        MyAngle = globalAngle *  3.14159 / 180;
+        MyAngle = Math.cos(MyAngle);
+        MyAnglesbastard = globalAngle *  3.14159 / 180;
+        MyAnglesbastard = Math.sin(MyAnglesbastard);
        // Yposition += (-gamepad1.right_stick_y * Math.cos(Math.abs(globalAngle))) + (gamepad1.right_stick_x * Math.sin(Math.abs(globalAngle)));
        // Xposition += (gamepad1.right_stick_x * Math.sin(Math.abs(globalAngle))) + (-gamepad1.right_stick_y * Math.cos(Math.abs(globalAngle)));
 
 
-        Xposition += (gamepad1.right_stick_x * Math.cos(globalAngle));
+        Xposition += (gamepad1.right_stick_x * MyAngle) + (gamepad1.right_stick_y * MyAnglesbastard);
+        Yposition += (gamepad1.right_stick_x * MyAnglesbastard) + (gamepad1.right_stick_y * MyAngle);
 
         /*
         if (gamepad1.dpad_up) {
@@ -178,11 +184,16 @@ public class PrototypeDriveJacks extends OpMode{
             else{
 
             }
-         /*
+
             mecanum += Xposition / 10;
             negmecanum -= Xposition / 10;
             Xposition -= Xposition / 10;
-            */
+
+            mecanum += Yposition / 10;
+            negmecanum += Yposition / 10;
+            Yposition -= Yposition / 10;
+
+
             reverse = -1;
         }
         else {
@@ -253,7 +264,8 @@ public class PrototypeDriveJacks extends OpMode{
 
 //----------------------------------------------------------------------
         telemetry.addData("1 imu heading",  imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES));
-        telemetry.addData("2 global heading", MyAngle );
+        telemetry.addData("2 global heading", Math.round(Xposition) );
+        telemetry.addData("power", mecanum );
         telemetry.addData("X", Xposition);
         telemetry.addData("Y", Yposition);
 
@@ -303,7 +315,7 @@ public class PrototypeDriveJacks extends OpMode{
 
         return globalAngle;
         */
-        MyAngle = angles.firstAngle - reseter;
+        globalAngle = angles.firstAngle - reseter;
     }
     //----------------------------------------------------------------------
 

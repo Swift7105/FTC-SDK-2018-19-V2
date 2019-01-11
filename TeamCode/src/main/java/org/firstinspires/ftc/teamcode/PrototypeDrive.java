@@ -62,7 +62,7 @@ public class PrototypeDrive extends OpMode{
      double turning;
      double mecanum;
      double negmecanum;
-
+     double reversetimer;
 
      //----------------------------------------------------------------------
     BNO055IMU imu;
@@ -70,6 +70,7 @@ public class PrototypeDrive extends OpMode{
     double globalAngle = 0;
     double Xposition = 0;
     double Yposition = 0;
+    double Reversetimer = 0;
 //----------------------------------------------------------------------
 
 
@@ -175,10 +176,10 @@ public class PrototypeDrive extends OpMode{
         }
 */
         if (gamepad1.right_bumper){
-            if (globalAngle > 1){
+            if (globalAngle > 1 && Reversetimer > 1000){
                 turning += (globalAngle / 40) + .07;
             }
-            else if (globalAngle < -1){
+            else if (globalAngle < -1 && Reversetimer > 1000){
                 turning -= (-globalAngle / 40) + .07;
             }
             else{
@@ -190,9 +191,11 @@ public class PrototypeDrive extends OpMode{
             Xposition -= Xposition / 10;
             */
             reverse = -1;
+            reversetimer += 1;
         }
         else {
             reverse = 1;
+            reversetimer = 0;
         }
 
         robot.leftFrontDrive.setPower((((negmecanum)* reverse)  - (turning)) * speed);
