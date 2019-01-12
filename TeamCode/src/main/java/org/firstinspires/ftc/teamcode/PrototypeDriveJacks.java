@@ -132,22 +132,7 @@ public class PrototypeDriveJacks extends OpMode{
 
     @Override
     public void loop() {
-/*
-        double r = Math.hypot(gamepad1.right_stick_x, gamepad1.right_stick_y);
-        double robotAngle = Math.atan2(gamepad1.right_stick_y, gamepad1.right_stick_x) - Math.PI / 4;
-        double rightX = gamepad1.left_stick_x;
 
-        final double v1 = r * Math.sin(robotAngle) - rightX;
-        final double v2 = r * Math.cos(robotAngle) + rightX;
-        final double v3 = r * Math.cos(robotAngle) - rightX;
-        final double v4 = r * Math.sin(robotAngle) + rightX;
-
-
-            robot.frontleftMotor.setPower(v1 * v1 * v1 * 5);
-            robot.frontrightMotor.setPower(v2 * v2 * v2 * 5 );
-            robot.backleftMotor.setPower(v3 * v3 * v3 * 5);
-            robot.backrightMotor.setPower(v4 * v4 * v4 * 5);
-*/
         getAngle();
         turning = gamepad1.left_stick_x * .75;
         negmecanum = gamepad1.right_stick_y - gamepad1.right_stick_x;
@@ -161,7 +146,7 @@ public class PrototypeDriveJacks extends OpMode{
 
 
         Xposition += (gamepad1.right_stick_x * MyAngle) + (gamepad1.right_stick_y * MyAnglesbastard);
-        Yposition += (gamepad1.right_stick_x * MyAnglesbastard) + (gamepad1.right_stick_y * MyAngle);
+        Yposition -= (gamepad1.right_stick_x * MyAnglesbastard) + (gamepad1.right_stick_y * MyAngle);
 
         /*
         if (gamepad1.dpad_up) {
@@ -182,16 +167,44 @@ public class PrototypeDriveJacks extends OpMode{
                 turning -= (-globalAngle / 40) + .07;
             }
             else{
+                if((Xposition / 5) > 1){
+                    mecanum += 1;
+                    negmecanum -= 1;
+                    Xposition -= 1;
+                }
+                else if ((Xposition / 5) < -1){
+                    mecanum += -1;
+                    negmecanum -= -1;
+                    Xposition -= -1;
+                }
+                else {
+                    mecanum += Xposition / 5;
+                    negmecanum -= Xposition / 5;
+                    Xposition -= Xposition / 5;
+                }
 
+                if((Yposition / 5) > 1){
+                    mecanum -= 1;
+                    negmecanum -= 1;
+                    Yposition -= 1;
+                }
+                else if ((Xposition / 5) < -1){
+                    mecanum += 1;
+                    negmecanum += 1;
+                    Yposition += 1;
+                }
+                else {
+                    mecanum -= Yposition / 5;
+                    negmecanum -= Yposition / 5;
+                    Yposition -= Yposition / 5;
+                }
+/*
+                mecanum -= Yposition / 10;
+                negmecanum -= Yposition / 10;
+                Yposition -= Yposition / 10;
+*/
             }
 
-            mecanum += Xposition / 10;
-            negmecanum -= Xposition / 10;
-            Xposition -= Xposition / 10;
-
-            mecanum += Yposition / 10;
-            negmecanum += Yposition / 10;
-            Yposition -= Yposition / 10;
 
 
             reverse = -1;
