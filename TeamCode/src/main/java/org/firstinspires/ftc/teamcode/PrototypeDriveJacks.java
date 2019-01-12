@@ -180,7 +180,7 @@ public class PrototypeDriveJacks extends OpMode{
                 else {
                     mecanum += Xposition / 5;
                     negmecanum -= Xposition / 5;
-                    Xposition -= Xposition / 5;
+                    Xposition -= (Xposition / 5) * MyAngle;
                 }
 
                 if((Yposition / 5) > 1){
@@ -196,13 +196,14 @@ public class PrototypeDriveJacks extends OpMode{
                 else {
                     mecanum -= Yposition / 5;
                     negmecanum -= Yposition / 5;
-                    Yposition -= Yposition / 5;
+                    Yposition -= (Yposition / 5) * MyAnglesbastard;
                 }
 /*
                 mecanum -= Yposition / 10;
                 negmecanum -= Yposition / 10;
                 Yposition -= Yposition / 10;
 */
+
             }
 
 
