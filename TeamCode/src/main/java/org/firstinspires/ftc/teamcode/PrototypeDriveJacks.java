@@ -167,6 +167,7 @@ public class PrototypeDriveJacks extends OpMode{
                 turning -= (-globalAngle / 40) + .07;
             }
             else{
+                /*
                 if((Xposition / 5) > 1){
                     mecanum += 1;
                     negmecanum -= 1;
@@ -205,10 +206,15 @@ public class PrototypeDriveJacks extends OpMode{
 */
 
             }
+            if (Yposition <= .05 && Yposition >= -.05){
+                Yposition += (gamepad1.right_stick_x * MyAnglesbastard) + (gamepad1.right_stick_y * MyAngle);
+            }
+            if (Xposition <= .05 && Yposition >= -.05){
+                Xposition += (gamepad1.right_stick_x * MyAngle) + (gamepad1.right_stick_y * MyAnglesbastard);
 
-
-
+            }
             reverse = -1;
+
         }
         else {
             reverse = 1;
@@ -219,8 +225,8 @@ public class PrototypeDriveJacks extends OpMode{
         robot.rightFrontDrive.setPower((((mecanum)* reverse) + (turning)) * speed);
         robot.leftBackDrive.setPower(((((mecanum) * reverse) - (turning)) * speed));
 
-        robot.arm.setPower(gamepad2.right_stick_y * gamepad2.right_stick_y * gamepad2.right_stick_y *gamepad2.right_stick_y *gamepad2.right_stick_y / 2 );
-        robot.arm2.setPower(gamepad2.right_stick_y * gamepad2.right_stick_y * gamepad2.right_stick_y *gamepad2.right_stick_y *gamepad2.right_stick_y / 2 );
+        robot.arm.setPower(gamepad2.right_stick_y * gamepad2.right_stick_y * gamepad2.right_stick_y *gamepad2.right_stick_y *gamepad2.right_stick_y * .75 );
+        robot.arm2.setPower(gamepad2.right_stick_y * gamepad2.right_stick_y * gamepad2.right_stick_y *gamepad2.right_stick_y *gamepad2.right_stick_y * .75 );
 
         robot.intake.setPower(-gamepad2.left_stick_y);
 

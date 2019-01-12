@@ -203,9 +203,22 @@ public class PrototypeDrive extends OpMode{
         robot.rightFrontDrive.setPower((((mecanum)* reverse) + (turning)) * speed);
         robot.leftBackDrive.setPower(((((mecanum) * reverse) - (turning)) * speed));
 
-        robot.arm.setPower(gamepad2.right_stick_y * gamepad2.right_stick_y * gamepad2.right_stick_y *gamepad2.right_stick_y *gamepad2.right_stick_y / 2 );
-        robot.arm2.setPower(gamepad2.right_stick_y * gamepad2.right_stick_y * gamepad2.right_stick_y *gamepad2.right_stick_y *gamepad2.right_stick_y / 2 );
+        if (gamepad2.right_stick_y > 0){
 
+            robot.arm.setPower(gamepad2.right_stick_y * gamepad2.right_stick_y * gamepad2.right_stick_y *gamepad2.right_stick_y *gamepad2.right_stick_y * .55 );
+            robot.arm2.setPower(gamepad2.right_stick_y * gamepad2.right_stick_y * gamepad2.right_stick_y *gamepad2.right_stick_y *gamepad2.right_stick_y * .55 );
+
+        }
+        else if (gamepad2.right_stick_y < 0){
+
+            robot.arm.setPower(gamepad2.right_stick_y * gamepad2.right_stick_y * gamepad2.right_stick_y *gamepad2.right_stick_y *gamepad2.right_stick_y * .75 );
+            robot.arm2.setPower(gamepad2.right_stick_y * gamepad2.right_stick_y * gamepad2.right_stick_y *gamepad2.right_stick_y *gamepad2.right_stick_y * .75 );
+
+        }
+        else{
+            robot.arm.setPower(0);
+            robot.arm2.setPower(0);
+        }
         robot.intake.setPower(-gamepad2.left_stick_y);
 
         if (gamepad2.left_trigger > .5){
