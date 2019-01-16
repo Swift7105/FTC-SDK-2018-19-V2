@@ -63,6 +63,7 @@ public class PrototypeDrive extends OpMode{
      double mecanum;
      double negmecanum;
      double reversetimer;
+     double speedturning = 0;
 
      //----------------------------------------------------------------------
     BNO055IMU imu;
@@ -70,7 +71,6 @@ public class PrototypeDrive extends OpMode{
     double globalAngle = 0;
     double Xposition = 0;
     double Yposition = 0;
-    double Reversetimer = 0;
     double armpos = 0;
     double armposreset = 0;
 //----------------------------------------------------------------------
@@ -204,15 +204,15 @@ public class PrototypeDrive extends OpMode{
             reversetimer = 0;
         }
 
-        robot.leftFrontDrive.setPower((((negmecanum)* reverse)  - (turning)) * speed);
-        robot.rightBackDrive.setPower((((negmecanum)* reverse)  + (turning)) * speed);
-        robot.rightFrontDrive.setPower((((mecanum)* reverse) + (turning)) * speed);
-        robot.leftBackDrive.setPower(((((mecanum) * reverse) - (turning)) * speed));
+        robot.leftFrontDrive.setPower(((negmecanum)* reverse)* speed  - (turning * speedturning)) ;
+        robot.rightBackDrive.setPower(((negmecanum)* reverse)* speed  + (turning * speedturning));
+        robot.rightFrontDrive.setPower(((mecanum)* reverse)* speed + (turning * speedturning));
+        robot.leftBackDrive.setPower(((mecanum) * reverse)* speed - (turning * speedturning));
 
         if (gamepad2.right_stick_y > 0){
 
-            robot.arm.setPower(gamepad2.right_stick_y * gamepad2.right_stick_y * gamepad2.right_stick_y *gamepad2.right_stick_y *gamepad2.right_stick_y * .55 );
-            robot.arm2.setPower(gamepad2.right_stick_y * gamepad2.right_stick_y * gamepad2.right_stick_y *gamepad2.right_stick_y *gamepad2.right_stick_y * .55 );
+            robot.arm.setPower(gamepad2.right_stick_y * gamepad2.right_stick_y * gamepad2.right_stick_y *gamepad2.right_stick_y *gamepad2.right_stick_y * .75 );
+            robot.arm2.setPower(gamepad2.right_stick_y * gamepad2.right_stick_y * gamepad2.right_stick_y *gamepad2.right_stick_y *gamepad2.right_stick_y * .75 );
 
         }
         else if (gamepad2.right_stick_y < 0){
@@ -263,9 +263,12 @@ public class PrototypeDrive extends OpMode{
 
         if (gamepad1.left_bumper){
             speed = .5;
+            speedturning = .45;
+
         }
         else {
             speed = 1;
+            speedturning = 1;
         }
 
 
