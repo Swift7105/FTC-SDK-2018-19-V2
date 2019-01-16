@@ -207,15 +207,22 @@ public class PrototypeDriveJacks extends OpMode{
 
             }
             if (Yposition <= .05 && Yposition >= -.05){
-                mecanum += gamepad1.right_stick_y;
-                negmecanum += gamepad1.right_stick_y;
-                Yposition += (gamepad1.right_stick_x * MyAnglesbastard) + (gamepad1.right_stick_y * MyAngle);
+                mecanum += mecanum * mecanum * mecanum;
+                negmecanum += negmecanum * negmecanum * negmecanum;
+                Yposition += 0;
+            }
+            else{
+                mecanum -=Yposition;
+                negmecanum -= Yposition;
             }
             if (Xposition <= .05 && Yposition >= -.05){
-                mecanum += gamepad1.right_stick_x;
-                negmecanum -= gamepad1.right_stick_x;
-                Xposition += (gamepad1.right_stick_x * MyAngle) + (gamepad1.right_stick_y * MyAnglesbastard);
-
+                mecanum += mecanum * mecanum * mecanum;
+                negmecanum -= negmecanum * negmecanum * negmecanum;
+                Xposition += 0;
+            }
+            else {
+                mecanum -= Xposition;
+                negmecanum += Xposition;
             }
             reverse = -1;
 

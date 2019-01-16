@@ -346,7 +346,6 @@ public class Auto_Template_camera extends LinearOpMode {
         robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //sets the position(distance) to drive to
         robot.rightFrontDrive.setTargetPosition(rightdistance * 35);

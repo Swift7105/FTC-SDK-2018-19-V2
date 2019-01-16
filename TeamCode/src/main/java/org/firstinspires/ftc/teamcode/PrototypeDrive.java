@@ -71,6 +71,8 @@ public class PrototypeDrive extends OpMode{
     double Xposition = 0;
     double Yposition = 0;
     double Reversetimer = 0;
+    double armpos = 0;
+    double armposreset = 0;
 //----------------------------------------------------------------------
 
 
@@ -84,6 +86,7 @@ public class PrototypeDrive extends OpMode{
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
+       // robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //  relicclaw = false;
 
 //----------------------------------------------------------------------
@@ -157,7 +160,7 @@ public class PrototypeDrive extends OpMode{
         turning = gamepad1.left_stick_x * .75;
         negmecanum = gamepad1.right_stick_y - gamepad1.right_stick_x;
         mecanum = gamepad1.right_stick_y + gamepad1.right_stick_x;
-
+   //     armpos = (robot.arm2.getCurrentPosition() / 35) - armposreset;
        // Yposition += (-gamepad1.right_stick_y * Math.cos(Math.abs(globalAngle))) + (gamepad1.right_stick_x * Math.sin(Math.abs(globalAngle)));
        // Xposition += (gamepad1.right_stick_x * Math.sin(Math.abs(globalAngle))) + (-gamepad1.right_stick_y * Math.cos(Math.abs(globalAngle)));
 
@@ -176,15 +179,18 @@ public class PrototypeDrive extends OpMode{
         }
 */
         if (gamepad1.right_bumper){
-            if (globalAngle > 1 && Reversetimer > 1000){
-                turning += (globalAngle / 40) + .07;
-            }
-            else if (globalAngle < -1 && Reversetimer > 1000){
-                turning -= (-globalAngle / 40) + .07;
-            }
-            else{
+            if (reversetimer > 10){
+                if (globalAngle > 1){
+                    turning += (globalAngle / 40) + .07;
+                }
+                else if (globalAngle < -1 ){
+                    turning -= (-globalAngle / 40) + .07;
+                }
+                else{
 
+                }
             }
+
          /*
             mecanum += Xposition / 10;
             negmecanum -= Xposition / 10;
@@ -280,6 +286,9 @@ public class PrototypeDrive extends OpMode{
             reversem = 1;
         }
 */
+        if (gamepad2.y){
+            armposreset = armpos;
+        }
         if (gamepad1.x){
             resetAngle();
             Xposition = 0;
@@ -291,6 +300,8 @@ public class PrototypeDrive extends OpMode{
 //----------------------------------------------------------------------
         telemetry.addData("1 imu heading",  imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES));
         telemetry.addData("2 global heading", globalAngle);
+        telemetry.addData("armposition", armpos);
+        telemetry.addData("reversetimer", reversetimer);
         telemetry.addData("X", Xposition);
         telemetry.addData("Y", Yposition);
 
