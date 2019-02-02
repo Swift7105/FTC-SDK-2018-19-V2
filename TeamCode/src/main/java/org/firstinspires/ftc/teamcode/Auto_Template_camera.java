@@ -72,6 +72,8 @@ public class Auto_Template_camera extends LinearOpMode {
 
     private int cubepos = -1;
 
+    double timerreset = 0;
+
     @Override public void runOpMode() {
 
         initVuforia();
@@ -91,85 +93,17 @@ public class Auto_Template_camera extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        robot.lift.setPower(-.7);
-        sleep(3100);
+        timerreset = getRuntime();
+        robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.lift.setPower(-1);
+        sleep(2300);
         robot.lift.setPower(0);
         DriveForward(.7,9,  .7,9);
         DriveStrafe(.7,10,.7,-10);
         DriveForward(.7,-17,  .7,-17);
-        DriveForward(.5,7,  .5,-7);
+        DriveForward(.5,4,  .5,-4);
 
-
- /*       if (opModeIsActive()) {
-             Activate Tensor Flow Object Detection.
-            if (tfod != null) {
-                tfod.activate();
-            }
-
-            while (loop == TRUE) {
-                if (tfod != null) {
-                    // getUpdatedRecognitions() will return null if no new information is available since
-                    // the last time that call was made.
-                    List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-                    if (updatedRecognitions != null) {
-                        telemetry.addData("# Object Detected", updatedRecognitions.size());
-                        if (updatedRecognitions.size() == 1) {
-                            int goldMineralX    = -1;
-                            int silverMineral1X = -1;
-                            int silverMineral2X = -1;
-                            for (Recognition recognition : updatedRecognitions) {
-                                if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                                    goldMineralX = (int) recognition.getLeft();
-                                } else if (silverMineral1X == -1) {
-                                    silverMineral1X = (int) recognition.getLeft();
-                                } else {
-                                    silverMineral2X = (int) recognition.getLeft();
-                                }
-                            }
-                            if (goldMineralX != -1) {
-                                telemetry.addData("Gold Mineral Position", "left");
-                                cubepos = 0;
-                            }
-                            DriveForward(.5, -11, .5, 11);
-
-                        }
-
-                        if (updatedRecognitions.size() == 2) {
-                            sleep(500);
-                            int goldMineralX = -1;
-                            int silverMineral1X = -1;
-                            int silverMineral2X = -1;
-                            for (Recognition recognition : updatedRecognitions) {
-                                if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                                    goldMineralX = (int) recognition.getLeft();
-                                } else if (silverMineral1X == -1) {
-                                    silverMineral1X = (int) recognition.getLeft();
-                                } else {
-                                    silverMineral2X = (int) recognition.getLeft();
-                                }
-                            }
-                            if (cubepos == -1) {
-                                if (goldMineralX != -1) {
-                                    telemetry.addData("Gold Mineral Position", "Center");
-                                    cubepos = 1;
-
-                                } else {
-                                    telemetry.addData("Gold Mineral Position", "Right");
-                                    cubepos = 2;
-                                }
-                            }
-
-                        }
-                        if(cubepos != -1) {
-                            loop = FALSE;
-                        }
-
-                    }
-                    telemetry.update();
-                }
-            }
-        }
-*/
 
         if (opModeIsActive()) {
             // Activate Tensor Flow Object Detection.
@@ -218,6 +152,10 @@ public class Auto_Template_camera extends LinearOpMode {
                                 loop = FALSE;
                             }
                         }
+                        if (getRuntime() - timerreset > 9){
+                            loop = FALSE;
+                            cubepos = 1;
+                        }
                         telemetry.update();
                     }
                 }
@@ -227,7 +165,7 @@ public class Auto_Template_camera extends LinearOpMode {
             tfod.shutdown();
         }
 
-        DriveForward(.5,-7,  .5,7);
+        DriveForward(.5,-4,  .5,4);
 
         if (cubepos == 0){
 
@@ -241,7 +179,7 @@ public class Auto_Template_camera extends LinearOpMode {
         if (cubepos == 1){
             DriveStrafe(.7,58,.7,-58);
             DriveStrafe(.7,-18,.7,18);
-            DriveForward(.7,90,  .7,90);
+            DriveForward(.7,95,  .7,95);
 
         }
         if (cubepos == 2) {
@@ -249,37 +187,13 @@ public class Auto_Template_camera extends LinearOpMode {
             DriveStrafe(.7,70,.7,-70);
             DriveStrafe(.7,-26,.7,26);
             DriveForward(.7, 20, .7, -20);
-            DriveForward(.7, 120, .7, 120);
+            DriveForward(.7, 125, .7, 125);
 
         }
-/*
-        DriveStrafe(.7,40,.7,-40);
 
-        if (cubepos == 0){
-            DriveForward(.7,40,  .7,40);
-            DriveStrafe(.7,18,.7,-18);
-            DriveStrafe(.7,-18,.7,18);
-            DriveForward(.7,60,  .7,60);
-
-        }
-        if (cubepos == 1){
-            DriveStrafe(.7,18,.7,-18);
-            DriveStrafe(.7,-18,.7,18);
-            DriveForward(.7,100,  .7,100);
-
-        }
-        if (cubepos == 2){
-            DriveForward(.7,-40,  .7,-40);
-            DriveStrafe(.7,18,.7,-18);
-            DriveStrafe(.7,-18,.7,18);
-            DriveForward(.7,140,  .7,140);
-
-
-        }
-*/
         DriveForward(.7,24,  .7,-24);
         DriveStrafeTime(70,-70,  1);
-        DriveForward(.7,92,  .7,90);
+        DriveForward(.7,90,  .7,90);
 
 
         robot.intake.setPower(-1);
@@ -301,8 +215,8 @@ public class Auto_Template_camera extends LinearOpMode {
         robot.arm2.setPower(0);
         sleep( 100);
 
-        DriveForward(.7,-92,  .7,-90);
         robot.mineralarm.setPower(1);
+        DriveForward(.7,-90,  .7,-90);
         DriveStrafe(.7,-20,.7,20);
         DriveForward(.7,23,  .7,-23);
         DriveStrafe(.7,-70,.7,70);
@@ -314,8 +228,10 @@ public class Auto_Template_camera extends LinearOpMode {
         sleep( 700);
         robot.arm.setPower(0);
         robot.arm2.setPower(0);
-        sleep( 4500);
+        sleep( 3000);
         robot.mineralarm.setPower(0);
+
+
 
         telemetry.update();
         sleep(500);
@@ -346,6 +262,7 @@ public class Auto_Template_camera extends LinearOpMode {
         robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //sets the position(distance) to drive to
         robot.rightFrontDrive.setTargetPosition(rightdistance * 35);

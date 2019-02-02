@@ -36,6 +36,7 @@ import android.view.View;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -84,7 +85,7 @@ import java.util.Locale;
  */
 
 @Autonomous(name="Pushbot: Jewel Auto Red 2 Encoder", group="Pushbot")
-//@Disabled
+@Disabled
 public class Jewel_Auto_Red_2_With_Encoder extends LinearOpMode {
 
 

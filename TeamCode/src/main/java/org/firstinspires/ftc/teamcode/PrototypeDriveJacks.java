@@ -144,21 +144,16 @@ public class PrototypeDriveJacks extends OpMode{
        // Yposition += (-gamepad1.right_stick_y * Math.cos(Math.abs(globalAngle))) + (gamepad1.right_stick_x * Math.sin(Math.abs(globalAngle)));
        // Xposition += (gamepad1.right_stick_x * Math.sin(Math.abs(globalAngle))) + (-gamepad1.right_stick_y * Math.cos(Math.abs(globalAngle)));
 
-
-        Xposition += (gamepad1.right_stick_x * MyAngle) + (gamepad1.right_stick_y * MyAnglesbastard);
-        Yposition -= (gamepad1.right_stick_x * MyAnglesbastard) + (gamepad1.right_stick_y * MyAngle);
-
-        /*
-        if (gamepad1.dpad_up) {
-            getAngle();
-            if (globalAngle > 0){
-                turning += ((globalAngle / 50) * .5) + .2;
-            }
-            else{
-                turning -= ((-globalAngle / 50) * .5) + .2;
-            }
+        if (gamepad1.left_bumper){
+            speed = .5;
         }
-*/
+        else {
+            speed = 1;
+        }
+
+        Xposition += ((gamepad1.right_stick_x * speed) * MyAngle) + ((gamepad1.right_stick_y * speed) * MyAnglesbastard);
+        Yposition -= ((gamepad1.right_stick_x * speed) * MyAnglesbastard) + ((gamepad1.right_stick_y * speed) * MyAngle);
+
         if (gamepad1.right_bumper){
             if (globalAngle > 1){
                 turning += (globalAngle / 40) + .07;
@@ -167,45 +162,11 @@ public class PrototypeDriveJacks extends OpMode{
                 turning -= (-globalAngle / 40) + .07;
             }
             else{
-                /*
-                if((Xposition / 5) > 1){
-                    mecanum += 1;
-                    negmecanum -= 1;
-                    Xposition -= 1;
-                }
-                else if ((Xposition / 5) < -1){
-                    mecanum += -1;
-                    negmecanum -= -1;
-                    Xposition -= -1;
-                }
-                else {
-                    mecanum += Xposition / 5;
-                    negmecanum -= Xposition / 5;
-                    Xposition -= (Xposition / 5) * MyAngle;
-                }
-
-                if((Yposition / 5) > 1){
-                    mecanum -= 1;
-                    negmecanum -= 1;
-                    Yposition -= 1;
-                }
-                else if ((Xposition / 5) < -1){
-                    mecanum += 1;
-                    negmecanum += 1;
-                    Yposition += 1;
-                }
-                else {
-                    mecanum -= Yposition / 5;
-                    negmecanum -= Yposition / 5;
-                    Yposition -= (Yposition / 5) * MyAnglesbastard;
-                }
-/*
-                mecanum -= Yposition / 10;
-                negmecanum -= Yposition / 10;
-                Yposition -= Yposition / 10;
-*/
 
             }
+            speed += Yposition / 10;
+            speed += Yposition / 10;
+            /*
             if (Yposition <= .05 && Yposition >= -.05){
                 mecanum += mecanum * mecanum * mecanum;
                 negmecanum += negmecanum * negmecanum * negmecanum;
@@ -223,7 +184,7 @@ public class PrototypeDriveJacks extends OpMode{
             else {
                 mecanum -= Xposition;
                 negmecanum += Xposition;
-            }
+            }*/
             reverse = -1;
 
         }
@@ -260,12 +221,7 @@ public class PrototypeDriveJacks extends OpMode{
             robot.mineralarm.setPower(0);
         }
 
-        if (gamepad1.left_bumper){
-            speed = .5;
-        }
-        else {
-            speed = 1;
-        }
+
 
 
 /*
