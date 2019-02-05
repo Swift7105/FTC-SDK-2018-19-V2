@@ -175,15 +175,15 @@ public class Auto_Template_farside1 extends LinearOpMode {
             robot.intake.setPower(0);
 
             robot.intake.setPower(0);
-            robot.arm.setPower(.7);
-            robot.arm2.setPower(.7);
+            robot.arm.setPower(-.7);
+            robot.arm2.setPower(-.7);
             sleep( 700);
             robot.arm.setPower(0);
             robot.arm2.setPower(0);
             sleep( 100);
 
-            robot.arm.setPower(-.7);
-            robot.arm2.setPower(-.7);
+            robot.arm.setPower(.7);
+            robot.arm2.setPower(.7);
             sleep( 500);
             robot.arm.setPower(0);
             robot.arm2.setPower(0);
@@ -203,15 +203,15 @@ public class Auto_Template_farside1 extends LinearOpMode {
             robot.intake.setPower(0);
 
             robot.intake.setPower(0);
-            robot.arm.setPower(.7);
-            robot.arm2.setPower(.7);
+            robot.arm.setPower(-.7);
+            robot.arm2.setPower(-.7);
             sleep( 700);
             robot.arm.setPower(0);
             robot.arm2.setPower(0);
             sleep( 100);
 
-            robot.arm.setPower(-.7);
-            robot.arm2.setPower(-.7);
+            robot.arm.setPower(.7);
+            robot.arm2.setPower(.7);
             sleep( 500);
             robot.arm.setPower(0);
             robot.arm2.setPower(0);
@@ -232,15 +232,15 @@ public class Auto_Template_farside1 extends LinearOpMode {
             robot.intake.setPower(0);
 
             robot.intake.setPower(0);
-            robot.arm.setPower(.7);
-            robot.arm2.setPower(.7);
+            robot.arm.setPower(-.7);
+            robot.arm2.setPower(-.7);
             sleep( 700);
             robot.arm.setPower(0);
             robot.arm2.setPower(0);
             sleep( 100);
 
-            robot.arm.setPower(-.7);
-            robot.arm2.setPower(-.7);
+            robot.arm.setPower(.7);
+            robot.arm2.setPower(.7);
             sleep( 500);
             robot.arm.setPower(0);
             robot.arm2.setPower(0);
@@ -256,8 +256,8 @@ public class Auto_Template_farside1 extends LinearOpMode {
         DriveForward(.7, -150, .7, -150);
 
         robot.intake.setPower(0);
-        robot.arm.setPower(.5);
-        robot.arm2.setPower(.5);
+        robot.arm.setPower(-.5);
+        robot.arm2.setPower(-.5);
         sleep( 700);
         robot.arm.setPower(0);
         robot.arm2.setPower(0);

@@ -67,7 +67,6 @@ public class PrototypeDrive extends OpMode{
      double inittime = 0;
      double armspeed = 0;
      double armpos = 0;
-     double armposreset = 0;
      //----------------------------------------------------------------------
     BNO055IMU imu;
     Orientation             lastAngles = new Orientation();
@@ -126,7 +125,6 @@ public class PrototypeDrive extends OpMode{
     }
     @Override
     public void init_loop() {
-        inittime = getRuntime();
     }
     /*
      * Code to run ONCE when the driver hits PLAY
@@ -169,7 +167,7 @@ public class PrototypeDrive extends OpMode{
        // Xposition += (gamepad1.right_stick_x * Math.sin(Math.abs(globalAngle))) + (-gamepad1.right_stick_y * Math.cos(Math.abs(globalAngle)));
 
 
-        Xposition += (gamepad1.right_stick_x * Math.cos(globalAngle));
+     //   Xposition += (gamepad1.right_stick_x * Math.cos(globalAngle));
 
         /*
         if (gamepad1.dpad_up) {
@@ -186,16 +184,15 @@ public class PrototypeDrive extends OpMode{
         if (gamepad1.right_bumper){
             if (reversetimer > 10){
                 if (globalAngle > 1){
-                    turning += (globalAngle / 40) + .07;
+                    turning += ((globalAngle + (gamepad2.left_trigger - .9))  / 40) + .07;
                 }
                 else if (globalAngle < -1 ){
-                    turning -= (-globalAngle / 40) + .07;
+                    turning -= ((-globalAngle + (gamepad1.left_trigger - .9)) / 40) + .07;
                 }
                 else{
 
                 }
             }
-            speed = speed / 2;
             reverse = -1;
             reversetimer += 1;
         }
@@ -205,8 +202,8 @@ public class PrototypeDrive extends OpMode{
         }
 
         if (gamepad1.left_bumper){
-            speed = speed / 2;
             speedturning = .45;
+            speed = .5;
 
         }
         else {
@@ -224,16 +221,16 @@ public class PrototypeDrive extends OpMode{
 
         if (gamepad2.right_stick_y > 0){
 
-            armspeed = ((armposreset + 40) - (armpos - armposreset)) / 40;
-            robot.arm.setPower(gamepad2.right_stick_y * armspeed);
-            robot.arm2.setPower(gamepad2.right_stick_y * armspeed);
+            armspeed = (55 - armpos) / 50;
+            robot.arm.setPower(-gamepad2.right_stick_y * armspeed);
+            robot.arm2.setPower(-gamepad2.right_stick_y * armspeed);
 
         }
         else if (gamepad2.right_stick_y < 0){
 
-            armspeed = (armpos - armposreset) / 30;
-            robot.arm.setPower(gamepad2.right_stick_y * armspeed);
-            robot.arm2.setPower(gamepad2.right_stick_y * armspeed);
+            armspeed = armpos / 50;
+            robot.arm.setPower(-gamepad2.right_stick_y * armspeed);
+            robot.arm2.setPower(-gamepad2.right_stick_y * armspeed);
 
         }
         else{
@@ -246,6 +243,13 @@ public class PrototypeDrive extends OpMode{
 */
 
         robot.intake.setPower(-gamepad2.left_stick_y);
+        if (gamepad2.left_stick_y > .1 || gamepad2.left_stick_y < -.1){
+            if (inittime == 0){
+                inittime = getRuntime();
+
+            }
+        }
+
 
         if (gamepad2.left_trigger > .5){
             robot.lift.setPower(1);
@@ -279,10 +283,6 @@ public class PrototypeDrive extends OpMode{
 
         if (gamepad2.right_bumper){
             robot.door.setPosition(.05);
-            if (armposreset != 0){
-                armposreset = robot.arm2.getCurrentPosition() / 35;
-            }
-
         }
         else {
             robot.door.setPosition(.3);

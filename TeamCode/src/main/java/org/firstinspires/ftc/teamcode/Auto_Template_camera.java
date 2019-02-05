@@ -97,12 +97,12 @@ public class Auto_Template_camera extends LinearOpMode {
         robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         robot.lift.setPower(-1);
-        sleep(2300);
+        sleep(2100);
         robot.lift.setPower(0);
         DriveForward(.7,9,  .7,9);
         DriveStrafe(.7,10,.7,-10);
         DriveForward(.7,-17,  .7,-17);
-        DriveForward(.5,4,  .5,-4);
+        DriveForward(.5,6,  .5,-6);
 
 
         if (opModeIsActive()) {
@@ -136,24 +136,24 @@ public class Auto_Template_camera extends LinearOpMode {
                                 if (goldMineralX < silverMineral1X){
                                     telemetry.addData("Gold Mineral Position", "Center");
                                     cubepos = 1;
-                                    loop = FALSE;
+                                 //   loop = FALSE;
                                 }
 
                                 if (goldMineralX > silverMineral1X){
                                     telemetry.addData("Gold Mineral Position", "Left");
                                     cubepos = 0;
-                                    loop = FALSE;
+                                //    loop = FALSE;
                                 }
                             }
 
                             if (silverMineral1X != -1 && silverMineral2X != -1){
                                 telemetry.addData("Gold Mineral Position", "Right");
                                 cubepos = 2;
-                                loop = FALSE;
+                               // loop = FALSE;
                             }
                         }
                         if (getRuntime() - timerreset > 9){
-                            loop = FALSE;
+                           // loop = FALSE;
                             cubepos = 1;
                         }
                         telemetry.update();
@@ -165,27 +165,27 @@ public class Auto_Template_camera extends LinearOpMode {
             tfod.shutdown();
         }
 
-        DriveForward(.5,-4,  .5,4);
+        DriveForward(.5,-6,  .5,6);
 
         if (cubepos == 0){
 
             DriveForward(.7, 23, .7, -23);
-            DriveStrafe(.7,70,.7,-70);
-            DriveStrafe(.7,-26,.7,26);
+            DriveStrafe(.9,70,.9,-70);
+            DriveStrafe(.9,-26,.9,26);
             DriveForward(.7, -23, .7, 23);
             DriveForward(.7, 80, .7, 80);
 
         }
         if (cubepos == 1){
             DriveStrafe(.7,58,.7,-58);
-            DriveStrafe(.7,-18,.7,18);
+            DriveStrafe(.9,-19,.9,19);
             DriveForward(.7,95,  .7,95);
 
         }
         if (cubepos == 2) {
             DriveForward(.7, -20, .7, 20);
-            DriveStrafe(.7,70,.7,-70);
-            DriveStrafe(.7,-26,.7,26);
+            DriveStrafe(.9,70,.9,-70);
+            DriveStrafe(.9,-26,.9,26);
             DriveForward(.7, 20, .7, -20);
             DriveForward(.7, 125, .7, 125);
 
@@ -193,7 +193,7 @@ public class Auto_Template_camera extends LinearOpMode {
 
         DriveForward(.7,24,  .7,-24);
         DriveStrafeTime(70,-70,  1);
-        DriveForward(.7,90,  .7,90);
+        DriveForward(.9,100,  .9,100);
 
 
         robot.intake.setPower(-1);
@@ -201,34 +201,37 @@ public class Auto_Template_camera extends LinearOpMode {
         robot.intake.setPower(0);
 
         robot.intake.setPower(0);
-        robot.arm.setPower(.7);
-        robot.arm2.setPower(.7);
+        robot.arm.setPower(-.7);
+        robot.arm2.setPower(-.7);
         sleep( 700);
         robot.arm.setPower(0);
         robot.arm2.setPower(0);
         sleep( 100);
 
-        robot.arm.setPower(-.7);
-        robot.arm2.setPower(-.7);
+        robot.arm.setPower(.7);
+        robot.arm2.setPower(.7);
         sleep( 500);
         robot.arm.setPower(0);
         robot.arm2.setPower(0);
         sleep( 100);
 
         robot.mineralarm.setPower(1);
-        DriveForward(.7,-90,  .7,-90);
-        DriveStrafe(.7,-20,.7,20);
-        DriveForward(.7,23,  .7,-23);
-        DriveStrafe(.7,-70,.7,70);
+        DriveForward(.9,-88,  .9,-88);
+        DriveStrafe(.9,-20,.9,20);
+        DriveForward(.9,23,  .9,-23);
+        DriveStrafe(.9,-83,.9,83);
 
 
         robot.intake.setPower(0);
-        robot.arm.setPower(.5);
-        robot.arm2.setPower(.5);
-        sleep( 700);
+        robot.arm.setPower(-.5);
+        robot.arm2.setPower(-.5);
+        sleep( 1200);
         robot.arm.setPower(0);
         robot.arm2.setPower(0);
-        sleep( 3000);
+        robot.lift.setPower(.7);
+        sleep( 2600);
+        robot.lift.setPower(0);
+        sleep(500);
         robot.mineralarm.setPower(0);
 
 
