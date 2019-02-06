@@ -98,8 +98,9 @@ public class Auto_Template_camera extends LinearOpMode {
 
         robot.lift.setPower(-1);
         sleep(2100);
-        robot.lift.setPower(0);
+        robot.lift.setPower(-.1);
         DriveForward(.7,9,  .7,9);
+        robot.lift.setPower(0);
         DriveStrafe(.7,10,.7,-10);
         DriveForward(.7,-17,  .7,-17);
         DriveForward(.5,6,  .5,-6);
@@ -124,36 +125,35 @@ public class Auto_Template_camera extends LinearOpMode {
                             int silverMineral2X = -1;
                             for (Recognition recognition : updatedRecognitions) {
                                 if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                                    goldMineralX = (int) recognition.getLeft();
+                                    goldMineralX = (int) recognition.getWidth();
                                 } else if (silverMineral1X == -1) {
-                                    silverMineral1X = (int) recognition.getLeft();
+                                    silverMineral1X = (int) recognition.getWidth();
                                 } else {
                                     silverMineral2X = (int) recognition.getLeft();
                                 }
                             }
 
                             if (goldMineralX != -1 && silverMineral1X != -1){
-                                if (goldMineralX < silverMineral1X){
-                                    telemetry.addData("Gold Mineral Position", "Center");
-                                    cubepos = 1;
-                                 //   loop = FALSE;
-                                }
-
                                 if (goldMineralX > silverMineral1X){
+                                    telemetry.addData("Gold Mineral Position", "Center");
+                                    loop = FALSE;
+                                    cubepos = 1;
+                                }
+                                else{
                                     telemetry.addData("Gold Mineral Position", "Left");
+                                    loop = FALSE;
                                     cubepos = 0;
-                                //    loop = FALSE;
                                 }
                             }
 
                             if (silverMineral1X != -1 && silverMineral2X != -1){
                                 telemetry.addData("Gold Mineral Position", "Right");
                                 cubepos = 2;
-                               // loop = FALSE;
+                                loop = FALSE;
                             }
                         }
                         if (getRuntime() - timerreset > 9){
-                           // loop = FALSE;
+                            loop = FALSE;
                             cubepos = 1;
                         }
                         telemetry.update();
@@ -170,10 +170,10 @@ public class Auto_Template_camera extends LinearOpMode {
         if (cubepos == 0){
 
             DriveForward(.7, 23, .7, -23);
-            DriveStrafe(.9,70,.9,-70);
-            DriveStrafe(.9,-26,.9,26);
+            DriveStrafe(.9,80,.9,-80);
+            DriveStrafe(.9,-36,.9,36);
             DriveForward(.7, -23, .7, 23);
-            DriveForward(.7, 80, .7, 80);
+            DriveForward(.7, 70, .7, 70);
 
         }
         if (cubepos == 1){
@@ -187,7 +187,7 @@ public class Auto_Template_camera extends LinearOpMode {
             DriveStrafe(.9,70,.9,-70);
             DriveStrafe(.9,-26,.9,26);
             DriveForward(.7, 20, .7, -20);
-            DriveForward(.7, 125, .7, 125);
+            DriveForward(.7, 115, .7, 115);
 
         }
 
@@ -196,20 +196,20 @@ public class Auto_Template_camera extends LinearOpMode {
         DriveForward(.9,100,  .9,100);
 
 
-        robot.intake.setPower(-1);
+        robot.intake.setPower(1);
         sleep( 700);
         robot.intake.setPower(0);
 
         robot.intake.setPower(0);
-        robot.arm.setPower(-.7);
-        robot.arm2.setPower(-.7);
+        robot.arm.setPower(-.8);
+        robot.arm2.setPower(-.8);
         sleep( 700);
         robot.arm.setPower(0);
         robot.arm2.setPower(0);
         sleep( 100);
 
-        robot.arm.setPower(.7);
-        robot.arm2.setPower(.7);
+        robot.arm.setPower(.8);
+        robot.arm2.setPower(.8);
         sleep( 500);
         robot.arm.setPower(0);
         robot.arm2.setPower(0);
@@ -219,7 +219,7 @@ public class Auto_Template_camera extends LinearOpMode {
         DriveForward(.9,-88,  .9,-88);
         DriveStrafe(.9,-20,.9,20);
         DriveForward(.9,23,  .9,-23);
-        DriveStrafe(.9,-83,.9,83);
+        DriveStrafe(.9,-90,.9,90);
 
 
         robot.intake.setPower(0);
@@ -231,7 +231,7 @@ public class Auto_Template_camera extends LinearOpMode {
         robot.lift.setPower(.7);
         sleep( 2600);
         robot.lift.setPower(0);
-        sleep(500);
+        sleep(1000);
         robot.mineralarm.setPower(0);
 
 

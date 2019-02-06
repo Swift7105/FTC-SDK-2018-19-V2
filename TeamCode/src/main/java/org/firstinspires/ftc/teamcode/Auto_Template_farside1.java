@@ -105,60 +105,58 @@ public class Auto_Template_farside1 extends LinearOpMode {
             if (tfod != null) {
                 tfod.activate();
             }
-
-            while (loop == TRUE) {
-                if (tfod != null) {
-                    // getUpdatedRecognitions() will return null if no new information is available since
-                    // the last time that call was made.
-                    List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-                    if (updatedRecognitions != null) {
-                        telemetry.addData("# Object Detected", updatedRecognitions.size());
-                        if (updatedRecognitions.size() == 2) {
-                            int goldMineralX = -1;
-                            int silverMineral1X = -1;
-                            int silverMineral2X = -1;
-                            for (Recognition recognition : updatedRecognitions) {
-                                if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                                    goldMineralX = (int) recognition.getLeft();
-                                } else if (silverMineral1X == -1) {
-                                    silverMineral1X = (int) recognition.getLeft();
-                                } else {
-                                    silverMineral2X = (int) recognition.getLeft();
+                while (loop == TRUE) {
+                    if (tfod != null) {
+                        // getUpdatedRecognitions() will return null if no new information is available since
+                        // the last time that call was made.
+                        List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                        if (updatedRecognitions != null) {
+                            telemetry.addData("# Object Detected", updatedRecognitions.size());
+                            if (updatedRecognitions.size() == 2) {
+                                int goldMineralX = -1;
+                                int silverMineral1X = -1;
+                                int silverMineral2X = -1;
+                                for (Recognition recognition : updatedRecognitions) {
+                                    if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                                        goldMineralX = (int) recognition.getWidth();
+                                    } else if (silverMineral1X == -1) {
+                                        silverMineral1X = (int) recognition.getWidth();
+                                    } else {
+                                        silverMineral2X = (int) recognition.getLeft();
+                                    }
                                 }
-                            }
 
-                            if (goldMineralX != -1 && silverMineral1X != -1){
-                                if (goldMineralX < silverMineral1X){
-                                    telemetry.addData("Gold Mineral Position", "Center");
-                                    cubepos = 1;
+                                if (goldMineralX != -1 && silverMineral1X != -1){
+                                    if (goldMineralX > silverMineral1X){
+                                        telemetry.addData("Gold Mineral Position", "Center");
+                                        loop = FALSE;
+                                        cubepos = 0;
+                                    }
+                                    else{
+                                        telemetry.addData("Gold Mineral Position", "Left");
+                                        loop = FALSE;
+                                        cubepos = 1;
+                                    }
+                                }
+
+                                if (silverMineral1X != -1 && silverMineral2X != -1){
+                                    telemetry.addData("Gold Mineral Position", "Right");
+                                    cubepos = 2;
                                     loop = FALSE;
                                 }
-
-                                if (goldMineralX > silverMineral1X){
-                                    telemetry.addData("Gold Mineral Position", "Left");
-                                    cubepos = 0;
-                                    loop = FALSE;
-                                }
                             }
-
-                            if (silverMineral1X != -1 && silverMineral2X != -1){
-                                telemetry.addData("Gold Mineral Position", "Right");
-                                cubepos = 2;
+                            if (getRuntime() - timerreset > 9){
                                 loop = FALSE;
+                                cubepos = 1;
                             }
+                            telemetry.update();
                         }
-                        if (getRuntime() - timerreset > 9){
-                            loop = FALSE;
-                            cubepos = 1;
-                        }
-                        telemetry.update();
                     }
                 }
             }
-        }
-        if (tfod != null) {
-            tfod.shutdown();
-        }
+            if (tfod != null) {
+                tfod.shutdown();
+            }
 
         DriveForward(.5,-4,  .5,4);
 
