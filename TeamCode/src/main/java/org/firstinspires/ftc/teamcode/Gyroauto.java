@@ -54,27 +54,25 @@ public class Gyroauto extends LinearOpMode {
     PrototypeHWSetup robot = new PrototypeHWSetup();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
+    BNO055IMU   imu;
+    Orientation lastAngles  = new Orientation();
+    double      globalAngle = 0;
+    BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+
+
 
 
 
     @Override public void runOpMode() {
 
         robot.init(hardwareMap);
-        BNO055IMU   imu;
-        Orientation lastAngles  = new Orientation();
-        double      globalAngle = 0;
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
         parameters.mode = BNO055IMU.SensorMode.IMU;
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.loggingEnabled = false;
 
-        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
-        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
-        // and named "imu".
         imu = hardwareMap.get(BNO055IMU.class, "imu");
-
         imu.initialize(parameters);
 
 
@@ -82,8 +80,10 @@ public class Gyroauto extends LinearOpMode {
         telemetry.update();
 
         waitForStart();
-
+        resetAngle();
+        getAngle();
         robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        DriveForward(.7 ,-.7,45);
         sleep(500);
     }
 
@@ -106,44 +106,54 @@ public class Gyroauto extends LinearOpMode {
 
 
     //Allows the ability to run the Mechanum as a tank drive using the encoders to run to a spcific distance at a cetain speed.
-    public void DriveForward (double leftpower, int leftdistance, double rightpower, int rightdistance){
+    public void DriveForward (double leftpower, double rightpower, int turndegrees){
 
 
-        //sets the encoder values to zero
-        robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        //sets the position(distance) to drive to
-        robot.rightFrontDrive.setTargetPosition(rightdistance * 35);
-        robot.rightBackDrive.setTargetPosition(rightdistance * 35);
-        robot.leftFrontDrive.setTargetPosition(leftdistance * 35);
-        robot.leftBackDrive.setTargetPosition(leftdistance * 35);
-
-        //engages the encoders to start tracking revolutions of the motor axel
-        robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        //powers up the left and right side of the drivetrain independently
         DrivePower(leftpower, rightpower);
 
         //will pause the program until the motors have run to the previously specified position
-        while (robot.rightFrontDrive.isBusy() && robot.rightBackDrive.isBusy() &&
-                robot.leftFrontDrive.isBusy() && robot.leftBackDrive.isBusy())
+        while (turndegrees < globalAngle)
         {
-
-
+            telemetry.addData("Mode", globalAngle);
+            telemetry.update();
         }
 
         //stops the motors and sets them back to normal operation mode
         DriveStop();
-        robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+    private void resetAngle()
+    {
+        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        globalAngle = 0;
+    }
+
+    /**
+     * Get current cumulative angle rotation from last reset.
+     * @return Angle in degrees. + = left, - = right.
+     */
+
+    private double getAngle()
+    {
+        // We experimentally determined the Z axis is the axis we want to use for heading angle.
+        // We have to process the angle because the imu works in euler angles so the Z axis is
+        // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
+        // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
+
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
+
+        if (deltaAngle < -180)
+            deltaAngle += 360;
+        else if (deltaAngle > 180)
+            deltaAngle -= 360;
+
+        globalAngle += deltaAngle;
+
+        lastAngles = angles;
+
+        return globalAngle;
     }
 }
 

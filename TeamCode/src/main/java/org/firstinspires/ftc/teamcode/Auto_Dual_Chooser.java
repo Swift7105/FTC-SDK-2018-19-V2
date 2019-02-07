@@ -45,9 +45,9 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 
-@Autonomous(name="Pushbot: Auto_Template_farside1", group="Pushbot")
+@Autonomous(name="Pushbot: Auto_Dual_Chooser", group="Pushbot")
 //@Disabled
-public class Auto_Template_farside1 extends LinearOpMode {
+public class Auto_Dual_Chooser extends LinearOpMode {
 
     /* Declare OpMode members. */
     PrototypeHWSetup robot = new PrototypeHWSetup();   // Use a Pushbot's hardware
@@ -92,11 +92,11 @@ public class Auto_Template_farside1 extends LinearOpMode {
         robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         robot.lift.setPower(-1);
-        sleep(2300);
+        sleep(2100);
         robot.lift.setPower(-.1);
         DriveForward(.7,9,  .7,9);
         robot.lift.setPower(0);
-        DriveStrafe(.7,10,.7,-10);
+        DriveStrafe(.7,14,.7,-14);
         DriveForward(.7,-17,  .7,-17);
         DriveForward(.5,6,  .5,-6);
 
@@ -106,6 +106,7 @@ public class Auto_Template_farside1 extends LinearOpMode {
             if (tfod != null) {
                 tfod.activate();
             }
+
             while (loop == TRUE) {
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
@@ -159,112 +160,51 @@ public class Auto_Template_farside1 extends LinearOpMode {
             tfod.shutdown();
         }
 
+        DriveForward(.5,-12,  .5,12);
+        DriveForward(1,100,.5,50);
+  /*      DriveStrafe(.9,39,.9,-39);
+        DriveForward(.7,95,  .7,95);
+        DriveForward(.7,27,  .7,-27);
+        DriveStrafe(.9,18,.9,-18);
+        DriveForward(.9,95,  .9,95);
 
-        DriveForward(.5,-6,  .5,6);
+        robot.intake.setPower(1);
+        sleep( 700);
+        robot.intake.setPower(0);
 
-        if (cubepos == 0){
-
-            DriveForward(.7, 23, .7, -23);
-            DriveStrafe(.7,84,.7,-84);
-            DriveForward(.7, -38, .7, 38);
-            DriveStrafe(.7,78,.7,-78);
-            DriveForward(.7, -50, .7, 50);
-
-            robot.intake.setPower(1);
-            sleep( 700);
-            robot.intake.setPower(0);
-
-            robot.intake.setPower(0);
-            robot.arm.setPower(-.8);
-            robot.arm2.setPower(-.8);
-            sleep( 700);
-            robot.arm.setPower(0);
-            robot.arm2.setPower(0);
-            sleep( 100);
-
-            robot.arm.setPower(.8);
-            robot.arm2.setPower(.8);
-            sleep( 500);
-            robot.arm.setPower(0);
-            robot.arm2.setPower(0);
-            sleep( 100);
-
-            DriveForward(.7, -13, .7, 13);
-
-            DriveStrafeTime(-.7, .7, 1);
-
-        }
-        if (cubepos == 1){
-            DriveStrafe(.7,116,.7,-116);
-            DriveForward(.7, -60, .7, 60);
-
-            robot.intake.setPower(1);
-            sleep( 700);
-            robot.intake.setPower(0);
+        if(cubepos == 0){
+            DriveForward(.8,30,  .8,30);
+            DriveForward(.7,-50,  .7,50);
 
             robot.arm.setPower(-.8);
             robot.arm2.setPower(-.8);
-            sleep( 700);
-            robot.arm.setPower(0);
-            robot.arm2.setPower(0);
-            sleep( 100);
-
-            robot.arm.setPower(.8);
-            robot.arm2.setPower(.8);
-            sleep( 500);
-            robot.arm.setPower(0);
-            robot.arm2.setPower(0);
-            sleep( 100);
-            DriveForward(.7, -18, .7, 18);
-
-            DriveStrafeTime(-.7, .7, 2);
-        }
-        if (cubepos == 2) {
-            DriveForward(.7, -20, .7, 20);
-            DriveStrafe(.7,78,.7,-78);
-            DriveForward(.7, 40, .7, -40);
-            DriveStrafe(.7,78,.7,-78);
-            DriveForward(.7, -80, .7, 80);
+            DriveStrafeTime(.3,.3, 1);
+            sleep( 800);
+            robot.arm.setPower(-.2);
+            robot.arm2.setPower(-.2);
 
             robot.intake.setPower(1);
-            sleep( 700);
+            DriveForward(.7,-35,  .7,-35);
             robot.intake.setPower(0);
-
-            robot.intake.setPower(0);
-            robot.arm.setPower(-.8);
-            robot.arm2.setPower(-.8);
-            sleep( 700);
             robot.arm.setPower(0);
             robot.arm2.setPower(0);
-            sleep( 100);
 
-            robot.arm.setPower(.8);
-            robot.arm2.setPower(.8);
-            sleep( 500);
-            robot.arm.setPower(0);
-            robot.arm2.setPower(0);
-            sleep( 100);
-            DriveForward(.7, -13, .7, 13);
-
-            DriveStrafeTime(-.7, .7, 2);
 
 
         }
-        robot.mineralarm.setPower(1);
+        if(cubepos == 1){
 
-        DriveForward(.7, -150, .7, -150);
+        }
+        if(cubepos == 2){
 
-        robot.arm.setPower(-.5);
-        robot.arm2.setPower(-.5);
-        sleep( 1200);
-        robot.arm.setPower(0);
-        robot.arm2.setPower(0);
-        robot.lift.setPower(.7);
-        sleep( 2600);
-        robot.lift.setPower(0);
-        sleep(1000);
-        robot.mineralarm.setPower(0);
+        }
 
+*/
+
+
+
+        telemetry.update();
+        sleep(500);
     }
 
 

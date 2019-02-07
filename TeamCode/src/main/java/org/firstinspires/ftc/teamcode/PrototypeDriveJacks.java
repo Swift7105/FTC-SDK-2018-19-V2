@@ -33,6 +33,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -43,7 +44,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 
 @TeleOp(name="Pushbot: PrototypeDriveJacks", group="Pushbot")
-//@Disabled
+@Disabled
 public class PrototypeDriveJacks extends OpMode{
    /* int relicdistace;
       boolean relicclaw;
