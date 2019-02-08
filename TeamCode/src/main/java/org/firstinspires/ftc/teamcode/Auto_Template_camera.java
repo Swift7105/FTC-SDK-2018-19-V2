@@ -101,8 +101,8 @@ public class Auto_Template_camera extends LinearOpMode {
         robot.lift.setPower(-.1);
         DriveForward(.7,9,  .7,9);
         robot.lift.setPower(0);
-        DriveStrafe(.7,14,.7,-14);
-        DriveForward(.7,-17,  .7,-17);
+        DriveStrafe(.9,14,.9,-14);
+        DriveForward(.9,-17,  .9,-17);
         DriveForward(.5,6,  .5,-6);
 
 
@@ -196,7 +196,7 @@ public class Auto_Template_camera extends LinearOpMode {
         DriveForward(.9,100,  .9,100);
 
 
-        robot.intake.setPower(1);
+        robot.intake.setPower(.5);
         sleep( 700);
         robot.intake.setPower(0);
 
@@ -231,7 +231,8 @@ public class Auto_Template_camera extends LinearOpMode {
         robot.lift.setPower(.7);
         sleep( 2600);
         robot.lift.setPower(0);
-        sleep(1000);
+        DriveForward(.9,15,  .9,15);
+        DriveForward(.9,-15,  .9,-15);
         robot.intake.setPower(0);
         robot.mineralarm.setPower(0);
 
