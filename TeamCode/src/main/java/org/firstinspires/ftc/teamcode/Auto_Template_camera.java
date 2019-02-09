@@ -169,34 +169,34 @@ public class Auto_Template_camera extends LinearOpMode {
 
         if (cubepos == 0){
 
-            DriveForward(.7, 23, .7, -23);
+            DriveForward(1, 23, 1, -23);
             DriveStrafe(.9,76,.9,-76);
             DriveStrafe(.9,-32,.9,32);
             DriveForward(.7, -23, .7, 23);
-            DriveForward(.7, 70, .7, 70);
+            DriveForward(1, 70, 1, 70);
 
         }
         if (cubepos == 1){
-            DriveStrafe(.7,54,.7,-54);
+            DriveStrafe(1,54,1,-54);
             DriveStrafe(.9,-15,.9,15);
-            DriveForward(.7,95,  .7,95);
+            DriveForward(1,95,  1,95);
 
         }
         if (cubepos == 2) {
-            DriveForward(.7, -20, .7, 20);
-            DriveStrafe(.9,66,.9,-66);
-            DriveStrafe(.9,-22,.9,22);
+            DriveForward(1, -20, 1, 20);
+            DriveStrafe(.9,71,.9,-71);
+            DriveStrafe(.9,-27,.9,27);
             DriveForward(.7, 20, .7, -20);
-            DriveForward(.7, 115, .7, 115);
+            DriveForward(1, 115, 1, 115);
 
         }
 
         DriveForward(.7,24,  .7,-24);
         DriveStrafeTime(70,-70,  1);
-        DriveForward(.9,100,  .9,100);
+        DriveForward(1,120,  1,120);
 
 
-        robot.intake.setPower(.5);
+        robot.intake.setPower(.3);
         sleep( 700);
         robot.intake.setPower(0);
 
@@ -216,7 +216,7 @@ public class Auto_Template_camera extends LinearOpMode {
         sleep( 100);
 
         robot.mineralarm.setPower(1);
-        DriveForward(.9,-88,  .9,-88);
+        DriveForward(1,-108,  1,-108);
         DriveStrafe(.9,-20,.9,20);
         DriveForward(.9,23,  .9,-23);
         DriveStrafe(.9,-90,.9,90);
