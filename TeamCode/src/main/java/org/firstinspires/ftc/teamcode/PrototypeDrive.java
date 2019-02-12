@@ -255,7 +255,7 @@ public class PrototypeDrive extends OpMode{
             robot.lift.setPower(1);
         }
         else {
-            if ((getRuntime() - inittime) > 110 && (getRuntime() - inittime) < 113){
+            if ((getRuntime() - inittime) > 108 && (getRuntime() - inittime) < 111){
                 robot.lift.setPower(-1);
 
             }
@@ -320,20 +320,20 @@ public class PrototypeDrive extends OpMode{
 
 
 //----------------------------------------------------------------------
-        telemetry.addData("1 imu heading",  imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES));
+/*        telemetry.addData("1 imu heading",  imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES));
         telemetry.addData("2 global heading", globalAngle);
         telemetry.addData("armspeed", armspeed);
         telemetry.addData("bbep", robot.arm2.getCurrentPosition() / 35);
         telemetry.addData("X", Xposition);
         telemetry.addData("Y", Yposition);
-
+*/
 
 
     /*    if (robot.arm.getCurrentPosition() < 415){
             telemetry.addData("angle", robot.arm.getCurrentPosition());
 
         } */
-        telemetry.update();
+   //     telemetry.update();
 //----------------------------------------------------------------------
     }
 

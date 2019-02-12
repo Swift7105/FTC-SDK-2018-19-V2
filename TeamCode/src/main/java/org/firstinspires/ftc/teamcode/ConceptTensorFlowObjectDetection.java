@@ -53,7 +53,7 @@ import java.util.List;
  * is explained below.
  */
 @TeleOp(name = "Concept: TensorFlow Object Detection", group = "Pushbot")
-@Disabled
+//@Disabled
 public class ConceptTensorFlowObjectDetection extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
@@ -121,10 +121,10 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
                             int silverMineral2X = -1;
                             for (Recognition recognition : updatedRecognitions) {
                                 if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                                    goldMineralX = (int) recognition.getWidth();
+                                    goldMineralX = (int) recognition.getHeight();
                                     telemetry.addData("gold width", goldMineralX);
                                 } else if (silverMineral1X == -1) {
-                                    silverMineral1X = (int) recognition.getWidth();
+                                    silverMineral1X = (int) recognition.getHeight();
                                     telemetry.addData("silver width", silverMineral1X);
                                 } else {
                                     silverMineral2X = (int) recognition.getLeft();
