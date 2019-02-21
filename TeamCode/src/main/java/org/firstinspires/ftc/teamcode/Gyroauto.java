@@ -47,7 +47,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 
 @Autonomous(name="Pushbot: Gyroauto", group="Pushbot")
-@Disabled
+//@Disabled
 public class Gyroauto extends LinearOpMode {
 
     /* Declare OpMode members. */
