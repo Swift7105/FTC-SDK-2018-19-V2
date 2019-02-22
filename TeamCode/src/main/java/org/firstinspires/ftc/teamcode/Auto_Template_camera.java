@@ -91,11 +91,12 @@ public class Auto_Template_camera extends LinearOpMode {
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
+
         waitForStart();
 
         timerreset = getRuntime();
         robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
+/*
         robot.lift.setPower(-1);
         sleep(2100);
         robot.lift.setPower(-.1);
@@ -104,7 +105,7 @@ public class Auto_Template_camera extends LinearOpMode {
         DriveStrafe(.9,14,.9,-14);
         DriveForward(.9,-17,  .9,-17);
         DriveForward(.5,6,  .5,-6);
-
+*/
 
         if (opModeIsActive()) {
             // Activate Tensor Flow Object Detection.
@@ -125,9 +126,9 @@ public class Auto_Template_camera extends LinearOpMode {
                             int silverMineral2X = -1;
                             for (Recognition recognition : updatedRecognitions) {
                                 if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                                    goldMineralX = (int) recognition.getWidth();
+                                    goldMineralX = (int) recognition.getTop();
                                 } else if (silverMineral1X == -1) {
-                                    silverMineral1X = (int) recognition.getWidth();
+                                    silverMineral1X = (int) recognition.getTop();
                                 } else {
                                     silverMineral2X = (int) recognition.getLeft();
                                 }
@@ -152,7 +153,7 @@ public class Auto_Template_camera extends LinearOpMode {
                                 loop = FALSE;
                             }
                         }
-                        if (getRuntime() - timerreset > 9){
+                        if (getRuntime() - timerreset > 4){
                             loop = FALSE;
                             cubepos = 1;
                         }
@@ -165,7 +166,14 @@ public class Auto_Template_camera extends LinearOpMode {
             tfod.shutdown();
         }
 
-        DriveForward(.5,-6,  .5,6);
+        robot.lift.setPower(-1);
+        sleep(2100);
+        robot.lift.setPower(-.1);
+        DriveForward(.7,9,  .7,9);
+        robot.lift.setPower(0);
+        DriveStrafe(.9,14,.9,-14);
+
+     //   DriveForward(.5,-6,  .5,6);
 
         if (cubepos == 0){
 
@@ -183,9 +191,9 @@ public class Auto_Template_camera extends LinearOpMode {
 
         }
         if (cubepos == 2) {
-            DriveForward(1, -20, 1, 20);
-            DriveStrafe(.9,71,.9,-71);
-            DriveStrafe(.9,-27,.9,27);
+            DriveForward(.9, -25, .9, 25);
+            DriveStrafe(.9,85,.9,-85);
+            DriveStrafe(.9,-41,.9,41);
             DriveForward(.7, 20, .7, -20);
             DriveForward(1, 115, 1, 115);
 

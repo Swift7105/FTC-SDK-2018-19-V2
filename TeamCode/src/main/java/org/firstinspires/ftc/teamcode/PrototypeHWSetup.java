@@ -29,6 +29,7 @@ public class PrototypeHWSetup
 
 
 
+    public DcMotor  leds        = null;
 
     //public AnalogInput armsensor = null;
   //  public SensorDigitalTouch armsensor = null;
@@ -69,7 +70,11 @@ public class PrototypeHWSetup
         arm.setDirection(DcMotor.Direction.FORWARD);
         arm2.setDirection(DcMotor.Direction.FORWARD);
 
+        leds = hwMap.dcMotor.get("leds");
 
+        leds.setDirection(DcMotor.Direction.FORWARD);
+
+        leds.setPower(.5);
 
         // Set to FORWARD if using AndyMark motors
 

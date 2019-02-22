@@ -67,10 +67,14 @@ public class PrototypeDrive extends OpMode{
      double inittime = 0;
      double armspeed = 0;
      double armpos = 0;
+
+     double ledbrightness = 1;
+     double ledmultiplier = 1;
      //----------------------------------------------------------------------
     BNO055IMU imu;
     Orientation             lastAngles = new Orientation();
     double globalAngle = 0;
+    double global90 = 0;
     double Xposition = 0;
     double Yposition = 0;
 //----------------------------------------------------------------------
@@ -181,10 +185,23 @@ public class PrototypeDrive extends OpMode{
         }
 */
 
+        if (ledbrightness < -1){
+            ledbrightness = 1;
+        }
+        else {
+            ledbrightness -= .05 * ledmultiplier;
+            if (ledbrightness < 0){
+                robot.leds.setPower(-ledbrightness);
+            }
+            else {
+                robot.leds.setPower(ledbrightness);
+            }
+        }
+
         if (gamepad1.right_bumper){
             if (reversetimer > 10){
                 if (globalAngle > 1){
-                    turning += ((globalAngle + (gamepad2.left_trigger - .9))  / 40) + .07;
+                    turning += ((globalAngle + (gamepad1.left_trigger - .9))  / 40) + .07;
                 }
                 else if (globalAngle < -1 ){
                     turning -= ((-globalAngle + (gamepad1.left_trigger - .9)) / 40) + .07;
@@ -200,6 +217,25 @@ public class PrototypeDrive extends OpMode{
             reverse = 1;
             reversetimer = 0;
         }
+
+        global90 = globalAngle + 90;
+
+        if (gamepad1.right_trigger > .5){
+            if (global90 > 1){
+                turning += ((global90 + (gamepad1.left_trigger - .9))  / 40) + .07;
+
+           //     turning += (global90 * global90 * global90 / 729000);
+            }
+            else if ((globalAngle + 90) < -1 ){
+                turning -= ((-global90 + (gamepad1.left_trigger - .9)) / 40) + .07;
+
+          //      turning -= (-global90 * -global90 * -global90 / 729000 );
+            }
+            else{
+
+            }
+        }
+
 
         if (gamepad1.left_bumper){
             speedturning = .45;
@@ -257,7 +293,7 @@ public class PrototypeDrive extends OpMode{
         else {
             if ((getRuntime() - inittime) > 108 && (getRuntime() - inittime) < 111){
                 robot.lift.setPower(-1);
-
+                ledmultiplier = 10;
             }
             else{
                 robot.lift.setPower(0);
@@ -323,9 +359,9 @@ public class PrototypeDrive extends OpMode{
         telemetry.addData("1 imu heading",  imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES));
         telemetry.addData("2 global heading", globalAngle);
         telemetry.addData("armspeed", armspeed);
+        telemetry.addData("ledpower", ledbrightness);
         telemetry.addData("bbep", robot.arm2.getCurrentPosition() / 35);
-        telemetry.addData("X", Xposition);
-        telemetry.addData("Y", Yposition);
+
 
 
 
