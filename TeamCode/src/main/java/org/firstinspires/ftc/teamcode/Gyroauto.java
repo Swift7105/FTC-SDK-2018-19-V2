@@ -46,6 +46,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 
+
+
 @Autonomous(name="Pushbot: Gyroauto", group="Pushbot")
 //@Disabled
 public class Gyroauto extends LinearOpMode {
@@ -112,7 +114,7 @@ public class Gyroauto extends LinearOpMode {
         DrivePower(leftpower, rightpower);
 
         //will pause the program until the motors have run to the previously specified position
-        while (turndegrees < globalAngle)
+        while (turndegrees < Math.abs(globalAngle))
         {
             telemetry.addData("Mode", globalAngle);
             telemetry.update();

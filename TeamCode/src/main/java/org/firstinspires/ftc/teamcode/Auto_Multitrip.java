@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -45,9 +46,9 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 
-@Autonomous(name="Pushbot: The one we don't use", group="Pushbot")
-//@Disabled
-public class Auto_Template_farside1 extends LinearOpMode {
+@Autonomous(name="Pushbot: Crater Side", group="Pushbot")
+@Disabled
+public class Auto_Multitrip extends LinearOpMode {
 
     /* Declare OpMode members. */
     PrototypeHWSetup robot = new PrototypeHWSetup();   // Use a Pushbot's hardware
@@ -86,26 +87,19 @@ public class Auto_Template_farside1 extends LinearOpMode {
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
+
         waitForStart();
 
         timerreset = getRuntime();
         robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-   /*     robot.lift.setPower(-1);
-        sleep(2300);
-        robot.lift.setPower(-.1);
-        DriveForward(.7,9,  .7,9);
-        robot.lift.setPower(0);
-        DriveStrafe(.7,10,.7,-10);
-        DriveForward(.7,-17,  .7,-17);
-        DriveForward(.5,6,  .5,-6);
-*/
 
         if (opModeIsActive()) {
             // Activate Tensor Flow Object Detection.
             if (tfod != null) {
                 tfod.activate();
             }
+
             while (loop == TRUE) {
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
@@ -119,9 +113,9 @@ public class Auto_Template_farside1 extends LinearOpMode {
                             int silverMineral2X = -1;
                             for (Recognition recognition : updatedRecognitions) {
                                 if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                                    goldMineralX = (int) recognition.getWidth();
+                                    goldMineralX = (int) recognition.getTop();
                                 } else if (silverMineral1X == -1) {
-                                    silverMineral1X = (int) recognition.getWidth();
+                                    silverMineral1X = (int) recognition.getTop();
                                 } else {
                                     silverMineral2X = (int) recognition.getLeft();
                                 }
@@ -146,7 +140,7 @@ public class Auto_Template_farside1 extends LinearOpMode {
                                 loop = FALSE;
                             }
                         }
-                        if (getRuntime() - timerreset > 9){
+                        if (getRuntime() - timerreset > 4){
                             loop = FALSE;
                             cubepos = 1;
                         }
@@ -160,107 +154,75 @@ public class Auto_Template_farside1 extends LinearOpMode {
         }
 
         robot.lift.setPower(-1);
-        sleep(2300);
+        sleep(2100);
         robot.lift.setPower(-.1);
         DriveForward(.7,9,  .7,9);
         robot.lift.setPower(0);
-        DriveStrafe(.7,10,.7,-10);
-        DriveForward(.7,-17,  .7,-17);
+        DriveStrafe(.9,14,.9,-14);
 
-       // DriveForward(.5,-6,  .5,6);
+     //   DriveForward(.5,-6,  .5,6);
 
         if (cubepos == 0){
 
-            DriveForward(.7, 23, .7, -23);
-            DriveStrafe(.7,84,.7,-84);
-            DriveForward(.7, -38, .7, 38);
-            DriveStrafe(.7,78,.7,-78);
-            DriveForward(.7, -50, .7, 50);
-
-            robot.intake.setPower(1);
-            sleep( 700);
-            robot.intake.setPower(0);
-
-            robot.intake.setPower(0);
-            robot.arm.setPower(-.8);
-            robot.arm2.setPower(-.8);
-            sleep( 700);
-            robot.arm.setPower(0);
-            robot.arm2.setPower(0);
-            sleep( 100);
-
-            robot.arm.setPower(.8);
-            robot.arm2.setPower(.8);
-            sleep( 500);
-            robot.arm.setPower(0);
-            robot.arm2.setPower(0);
-            sleep( 100);
-
-            DriveForward(.7, -13, .7, 13);
-
-            DriveStrafeTime(-.7, .7, 1);
+            DriveForward(1, 18, 1, -18);
+            DriveStrafe(.9,76,.9,-76);
+            DriveStrafe(.9,-32,.9,32);
+            DriveForward(.7, -18, .7, 18);
+            DriveForward(1, 70, 1, 70);
 
         }
         if (cubepos == 1){
-            DriveStrafe(.7,116,.7,-116);
-            DriveForward(.7, -60, .7, 60);
+            DriveForward(1,-10,  1,-10);
+            DriveStrafe(1,64,1,-64);
+            DriveStrafe(.9,-29,.9,29);
+            DriveForward(1,95,  1,95);
 
-            robot.intake.setPower(1);
-            sleep( 700);
-            robot.intake.setPower(0);
-
-            robot.arm.setPower(-.8);
-            robot.arm2.setPower(-.8);
-            sleep( 700);
-            robot.arm.setPower(0);
-            robot.arm2.setPower(0);
-            sleep( 100);
-
-            robot.arm.setPower(.8);
-            robot.arm2.setPower(.8);
-            sleep( 500);
-            robot.arm.setPower(0);
-            robot.arm2.setPower(0);
-            sleep( 100);
-            DriveForward(.7, -18, .7, 18);
-
-            DriveStrafeTime(-.7, .7, 2);
         }
         if (cubepos == 2) {
-            DriveForward(.7, -20, .7, 20);
-            DriveStrafe(.7,78,.7,-78);
-            DriveForward(.7, 40, .7, -40);
-            DriveStrafe(.7,78,.7,-78);
-            DriveForward(.7, -80, .7, 80);
-
-            robot.intake.setPower(1);
-            sleep( 700);
-            robot.intake.setPower(0);
-
-            robot.intake.setPower(0);
-            robot.arm.setPower(-.8);
-            robot.arm2.setPower(-.8);
-            sleep( 700);
-            robot.arm.setPower(0);
-            robot.arm2.setPower(0);
-            sleep( 100);
-
-            robot.arm.setPower(.8);
-            robot.arm2.setPower(.8);
-            sleep( 500);
-            robot.arm.setPower(0);
-            robot.arm2.setPower(0);
-            sleep( 100);
-            DriveForward(.7, -13, .7, 13);
-
-            DriveStrafeTime(-.7, .7, 2);
-
+            DriveForward(.9, -25, .9, 25);
+            DriveStrafe(.9,78,.9,-78);
+            DriveStrafe(.9,-34,.9,34);
+            DriveForward(.7, 25, .7, -25);
+            DriveForward(1, 115, 1, 115);
 
         }
+/*
+        DriveForward(.7,24,  .7,-24);
+        DriveStrafeTime(70,-70,  1);
+        DriveForward(1,120,  1,120);
+*/
+        DriveForward(.7,27,  .7,-27);
+        DriveStrafe(.9,18,.9,-18);
+        DriveForward(.9,105,  .9,105);
+
+        robot.intake.setPower(.3);
+        sleep( 700);
+        robot.intake.setPower(0);
+
+        robot.intake.setPower(0);
+        robot.arm.setPower(-.8);
+        robot.arm2.setPower(-.8);
+        sleep( 800);
+
+        robot.arm.setPower(0);
+        robot.arm2.setPower(0);
+        sleep( 100);
+
+        robot.arm.setPower(.8);
+        robot.arm2.setPower(.8);
+        sleep( 500);
+        robot.arm.setPower(0);
+        robot.arm2.setPower(0);
+        sleep( 100);
+
         robot.mineralarm.setPower(1);
+        DriveForward(1,-100,  1,-100);
+        DriveStrafe(.9,-20,.9,20);
+        DriveForward(.9,23,  .9,-23);
+        DriveStrafe(.9,-90,.9,90);
 
-        DriveForward(.7, -150, .7, -150);
 
+        robot.intake.setPower(-1);
         robot.arm.setPower(-.5);
         robot.arm2.setPower(-.5);
         sleep( 1200);
@@ -269,9 +231,15 @@ public class Auto_Template_farside1 extends LinearOpMode {
         robot.lift.setPower(.7);
         sleep( 2600);
         robot.lift.setPower(0);
-        sleep(1000);
+        DriveForward(.9,15,  .9,15);
+        DriveForward(.9,-15,  .9,-15);
+        robot.intake.setPower(0);
         robot.mineralarm.setPower(0);
 
+
+
+        telemetry.update();
+        sleep(500);
     }
 
 

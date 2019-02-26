@@ -67,6 +67,7 @@ public class PrototypeDrive extends OpMode{
      double inittime = 0;
      double armspeed = 0;
      double armpos = 0;
+     double armreset = 0;
 
      double ledbrightness = 1;
      double ledmultiplier = 1;
@@ -257,7 +258,9 @@ public class PrototypeDrive extends OpMode{
 
         if (gamepad2.right_stick_y > 0){
 
-            armspeed = (55 - armpos) / 50;
+            armspeed = (65 - armpos) / 50;
+          //  armpos = armpos - 60;
+          //  armspeed = armpos * armpos * armpos;
             robot.arm.setPower(-gamepad2.right_stick_y * armspeed);
             robot.arm2.setPower(-gamepad2.right_stick_y * armspeed);
 
@@ -265,6 +268,8 @@ public class PrototypeDrive extends OpMode{
         else if (gamepad2.right_stick_y < 0){
 
             armspeed = armpos / 50;
+           // armpos = armpos - 15;
+            //armspeed = armpos * armpos * armpos;
             robot.arm.setPower(-gamepad2.right_stick_y * armspeed);
             robot.arm2.setPower(-gamepad2.right_stick_y * armspeed);
 
@@ -322,7 +327,6 @@ public class PrototypeDrive extends OpMode{
         }
         else {
             robot.door.setPosition(.3);
-
         }
 
 
@@ -359,6 +363,7 @@ public class PrototypeDrive extends OpMode{
         telemetry.addData("1 imu heading",  imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES));
         telemetry.addData("2 global heading", globalAngle);
         telemetry.addData("armspeed", armspeed);
+        telemetry.addData("armjoystick", gamepad2.right_stick_y);
         telemetry.addData("ledpower", ledbrightness);
         telemetry.addData("bbep", robot.arm2.getCurrentPosition() / 35);
 
@@ -369,7 +374,7 @@ public class PrototypeDrive extends OpMode{
             telemetry.addData("angle", robot.arm.getCurrentPosition());
 
         } */
-   //     telemetry.update();
+       telemetry.update();
 //----------------------------------------------------------------------
     }
 

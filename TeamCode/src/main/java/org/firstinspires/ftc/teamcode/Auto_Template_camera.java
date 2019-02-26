@@ -50,7 +50,7 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 
-@Autonomous(name="Pushbot: Auto_Template_camera", group="Pushbot")
+@Autonomous(name="Pushbot: Crater Side", group="Pushbot")
 //@Disabled
 public class Auto_Template_camera extends LinearOpMode {
 
@@ -85,12 +85,15 @@ public class Auto_Template_camera extends LinearOpMode {
         }
 
         robot.init(hardwareMap);
-
+        robot.leds.setPower(0);
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
+        if (tfod != null) {
+            tfod.activate();
+        }
 
         waitForStart();
 
@@ -107,11 +110,9 @@ public class Auto_Template_camera extends LinearOpMode {
         DriveForward(.5,6,  .5,-6);
 */
 
-        if (opModeIsActive()) {
+     //   if (opModeIsActive()) {
             // Activate Tensor Flow Object Detection.
-            if (tfod != null) {
-                tfod.activate();
-            }
+
 
             while (loop == TRUE) {
                 if (tfod != null) {
@@ -153,18 +154,20 @@ public class Auto_Template_camera extends LinearOpMode {
                                 loop = FALSE;
                             }
                         }
-                        if (getRuntime() - timerreset > 4){
+                        if (getRuntime() - timerreset > 3){
                             loop = FALSE;
-                            cubepos = 1;
+                            cubepos = 2;
                         }
                         telemetry.update();
                     }
                 }
             }
-        }
+   //     }
         if (tfod != null) {
             tfod.shutdown();
         }
+
+        robot.leds.setPower(1);
 
         robot.lift.setPower(-1);
         sleep(2100);
@@ -178,13 +181,14 @@ public class Auto_Template_camera extends LinearOpMode {
         if (cubepos == 0){
 
             DriveForward(1, 18, 1, -18);
-            DriveStrafe(.9,76,.9,-76);
-            DriveStrafe(.9,-32,.9,32);
+            DriveStrafe(.9,72,.9,-72);
+            DriveStrafe(.9,-28,.9,28);
             DriveForward(.7, -18, .7, 18);
             DriveForward(1, 70, 1, 70);
 
         }
         if (cubepos == 1){
+            DriveForward(1,-10,  1,-10);
             DriveStrafe(1,64,1,-64);
             DriveStrafe(.9,-29,.9,29);
             DriveForward(1,95,  1,95);
@@ -192,10 +196,10 @@ public class Auto_Template_camera extends LinearOpMode {
         }
         if (cubepos == 2) {
             DriveForward(.9, -25, .9, 25);
-            DriveStrafe(.9,85,.9,-85);
-            DriveStrafe(.9,-41,.9,41);
-            DriveForward(.7, 20, .7, -20);
-            DriveForward(1, 115, 1, 115);
+            DriveStrafe(.9,78,.9,-78);
+            DriveStrafe(.9,-34,.9,34);
+            DriveForward(.7, 25, .7, -25);
+            DriveForward(1, 120, 1, 120);
 
         }
 /*
@@ -214,7 +218,8 @@ public class Auto_Template_camera extends LinearOpMode {
         robot.intake.setPower(0);
         robot.arm.setPower(-.8);
         robot.arm2.setPower(-.8);
-        sleep( 700);
+        sleep( 800);
+
         robot.arm.setPower(0);
         robot.arm2.setPower(0);
         sleep( 100);
