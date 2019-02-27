@@ -323,7 +323,7 @@ public class PrototypeDrive extends OpMode{
         }
 
         if (gamepad2.right_bumper){
-            robot.door.setPosition(.05);
+            robot.door.setPosition(.1);
         }
         else {
             robot.door.setPosition(.3);

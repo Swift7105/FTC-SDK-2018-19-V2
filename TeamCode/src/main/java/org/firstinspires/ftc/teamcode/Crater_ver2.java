@@ -152,7 +152,7 @@ public class Crater_ver2 extends LinearOpMode {
                                 loop = FALSE;
                             }
                         }
-                        if (getRuntime() - timerreset > 3){
+                        if (getRuntime() - timerreset > 5){
                             loop = FALSE;
                             cubepos = 2;
                         }
@@ -231,10 +231,10 @@ public class Crater_ver2 extends LinearOpMode {
         robot.mineralarm.setPower(1);
         DriveForward(1,-100,  1,-100);
         DriveStrafe(.9,-20,.9,20);
-        DriveForward(.9,23,  .9,-23);
+        DriveForward(.9,25,  .9,-25);
         DriveStrafe(.9,-90,.9,90);
 
-
+/*
         robot.intake.setPower(-1);
         robot.arm.setPower(-.5);
         robot.arm2.setPower(-.5);
@@ -248,7 +248,7 @@ public class Crater_ver2 extends LinearOpMode {
         DriveForward(.9,-15,  .9,-15);
         robot.intake.setPower(0);
         robot.mineralarm.setPower(0);
-
+*/
 
 
         telemetry.update();

@@ -112,7 +112,9 @@ public class Auto_Template_camera extends LinearOpMode {
 
      //   if (opModeIsActive()) {
             // Activate Tensor Flow Object Detection.
-
+        robot.lift.setPower(-1);
+        sleep(2100);
+        robot.lift.setPower(-.1);
 
             while (loop == TRUE) {
                 if (tfod != null) {
@@ -154,7 +156,7 @@ public class Auto_Template_camera extends LinearOpMode {
                                 loop = FALSE;
                             }
                         }
-                        if (getRuntime() - timerreset > 3){
+                        if (getRuntime() - timerreset > 5){
                             loop = FALSE;
                             cubepos = 2;
                         }
@@ -169,9 +171,6 @@ public class Auto_Template_camera extends LinearOpMode {
 
         robot.leds.setPower(1);
 
-        robot.lift.setPower(-1);
-        sleep(2100);
-        robot.lift.setPower(-.1);
         DriveForward(.7,9,  .7,9);
         robot.lift.setPower(0);
         DriveStrafe(.9,14,.9,-14);
@@ -234,7 +233,7 @@ public class Auto_Template_camera extends LinearOpMode {
         robot.mineralarm.setPower(1);
         DriveForward(1,-100,  1,-100);
         DriveStrafe(.9,-20,.9,20);
-        DriveForward(.9,23,  .9,-23);
+        DriveForward(.9,25,  .9,-25);
         DriveStrafe(.9,-90,.9,90);
 
 
