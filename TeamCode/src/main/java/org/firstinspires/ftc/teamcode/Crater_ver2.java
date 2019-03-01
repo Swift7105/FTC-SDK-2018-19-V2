@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -46,7 +47,7 @@ import static java.lang.Boolean.TRUE;
 
 
 @Autonomous(name="Pushbot: FASTER", group="Pushbot")
-//@Disabled
+@Disabled
 public class Crater_ver2 extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -68,6 +69,7 @@ public class Crater_ver2 extends LinearOpMode {
     private int cubepos = -1;
 
     double timerreset = 0;
+
 
     @Override public void runOpMode() {
 

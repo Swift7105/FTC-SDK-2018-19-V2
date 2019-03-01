@@ -123,7 +123,7 @@ public class Auto_Template_camera extends LinearOpMode {
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                     if (updatedRecognitions != null) {
                         telemetry.addData("# Object Detected", updatedRecognitions.size());
-                        if (updatedRecognitions.size() == 2) {
+                        if (updatedRecognitions.size() > 0) {
                             int goldMineralX = -1;
                             int silverMineral1X = -1;
                             int silverMineral2X = -1;
@@ -137,6 +137,24 @@ public class Auto_Template_camera extends LinearOpMode {
                                 }
                             }
 
+                            if (goldMineralX != -1){
+                                if (goldMineralX > 650){
+                                    telemetry.addData("Gold Mineral Position", "Center");
+                                    loop = FALSE;
+                                    cubepos = 1;
+                                }
+                                else{
+                                    telemetry.addData("Gold Mineral Position", "Left");
+                                    loop = FALSE;
+                                    cubepos = 0;
+                                }
+                            }
+                            else{
+                                telemetry.addData("Gold Mineral Position", "Right");
+                                cubepos = 2;
+                                loop = FALSE;
+                            }
+/*
                             if (goldMineralX != -1 && silverMineral1X != -1){
                                 if (goldMineralX > silverMineral1X){
                                     telemetry.addData("Gold Mineral Position", "Center");
@@ -154,17 +172,17 @@ public class Auto_Template_camera extends LinearOpMode {
                                 telemetry.addData("Gold Mineral Position", "Right");
                                 cubepos = 2;
                                 loop = FALSE;
-                            }
+                            }*/
                         }
                         if (getRuntime() - timerreset > 5){
                             loop = FALSE;
-                            cubepos = 2;
+                            cubepos = 1;
                         }
                         telemetry.update();
                     }
                 }
             }
-   //     }
+
         if (tfod != null) {
             tfod.shutdown();
         }
@@ -181,7 +199,7 @@ public class Auto_Template_camera extends LinearOpMode {
 
             DriveForward(1, 18, 1, -18);
             DriveStrafe(.9,72,.9,-72);
-            DriveStrafe(.9,-28,.9,28);
+            DriveStrafe(.9,-30,.9,30);
             DriveForward(.7, -18, .7, 18);
             DriveForward(1, 70, 1, 70);
 
@@ -189,16 +207,16 @@ public class Auto_Template_camera extends LinearOpMode {
         if (cubepos == 1){
             DriveForward(1,-10,  1,-10);
             DriveStrafe(1,64,1,-64);
-            DriveStrafe(.9,-29,.9,29);
-            DriveForward(1,95,  1,95);
+            DriveStrafe(.9,-32,.9,32);
+            DriveForward(1,100,  1,100);
 
         }
         if (cubepos == 2) {
-            DriveForward(.9, -25, .9, 25);
-            DriveStrafe(.9,78,.9,-78);
-            DriveStrafe(.9,-34,.9,34);
-            DriveForward(.7, 25, .7, -25);
-            DriveForward(1, 120, 1, 120);
+            DriveForward(.9, -27, .9, 27);
+            DriveStrafe(.9,75,.9,-75);
+            DriveStrafe(.9,-31,.9,31);
+            DriveForward(.7, 27, .7, -27);
+            DriveForward(1, 123, 1, 123);
 
         }
 /*
@@ -211,7 +229,7 @@ public class Auto_Template_camera extends LinearOpMode {
         DriveForward(.9,105,  .9,105);
 
         robot.intake.setPower(.3);
-        sleep( 700);
+        sleep( 1200);
         robot.intake.setPower(0);
 
         robot.intake.setPower(0);
@@ -234,13 +252,13 @@ public class Auto_Template_camera extends LinearOpMode {
         DriveForward(1,-100,  1,-100);
         DriveStrafe(.9,-20,.9,20);
         DriveForward(.9,25,  .9,-25);
-        DriveStrafe(.9,-90,.9,90);
+        DriveStrafe(.9,-100,.9,100);
 
 
         robot.intake.setPower(-1);
         robot.arm.setPower(-.5);
         robot.arm2.setPower(-.5);
-        sleep( 1200);
+        sleep( 1600);
         robot.arm.setPower(0);
         robot.arm2.setPower(0);
         robot.lift.setPower(.7);

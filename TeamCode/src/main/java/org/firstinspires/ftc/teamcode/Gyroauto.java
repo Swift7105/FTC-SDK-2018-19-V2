@@ -82,11 +82,13 @@ public class Gyroauto extends LinearOpMode {
         telemetry.update();
 
         waitForStart();
-        resetAngle();
         getAngle();
-        robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        DriveForward(.7 ,-.7,45);
-        sleep(500);
+        while (getRuntime() > 30){
+            telemetry.addData("abs", Math.abs(globalAngle));
+            telemetry.addData("Mode", globalAngle);
+            telemetry.update();
+        }
+
     }
 
 
@@ -108,21 +110,7 @@ public class Gyroauto extends LinearOpMode {
 
 
     //Allows the ability to run the Mechanum as a tank drive using the encoders to run to a spcific distance at a cetain speed.
-    public void DriveForward (double leftpower, double rightpower, int turndegrees){
 
-
-        DrivePower(leftpower, rightpower);
-
-        //will pause the program until the motors have run to the previously specified position
-        while (turndegrees < Math.abs(globalAngle))
-        {
-            telemetry.addData("Mode", globalAngle);
-            telemetry.update();
-        }
-
-        //stops the motors and sets them back to normal operation mode
-        DriveStop();
-    }
     private void resetAngle()
     {
         lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -156,6 +144,23 @@ public class Gyroauto extends LinearOpMode {
         lastAngles = angles;
 
         return globalAngle;
+    }
+
+    public void DriveForward (double leftpower, double rightpower, int turndegrees){
+
+
+        DrivePower(leftpower, rightpower);
+
+        //will pause the program until the motors have run to the previously specified position
+        while (turndegrees < 46)
+        {
+            telemetry.addData("abs", Math.abs(globalAngle));
+            telemetry.addData("Mode", globalAngle);
+            telemetry.update();
+        }
+
+        //stops the motors and sets them back to normal operation mode
+        DriveStop();
     }
 }
 

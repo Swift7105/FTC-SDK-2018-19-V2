@@ -219,7 +219,7 @@ public class PrototypeDrive extends OpMode{
             reversetimer = 0;
         }
 
-        global90 = globalAngle + 90;
+        global90 = globalAngle + 95;
 
         if (gamepad1.right_trigger > .5){
             if (global90 > 1){

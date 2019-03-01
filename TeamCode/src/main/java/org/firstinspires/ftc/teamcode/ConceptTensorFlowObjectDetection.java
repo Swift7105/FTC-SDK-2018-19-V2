@@ -123,16 +123,18 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
                                 if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
                                     goldMineralX = (int) recognition.getTop();
                                     telemetry.addData("gold width", goldMineralX);
+                                    telemetry.addData("gold confidence", recognition.getConfidence());
                                 } else if (silverMineral1X == -1) {
                                     silverMineral1X = (int) recognition.getTop();
                                     telemetry.addData("silver width", silverMineral1X);
+                                    telemetry.addData("silver confidence", recognition.getConfidence());
                                 } else {
                                     silverMineral2X = (int) recognition.getLeft();
                                 }
                             }
 
                             if (goldMineralX != -1 && silverMineral1X != -1){
-                                if (goldMineralX > silverMineral1X){
+                                if (goldMineralX > 850){
                                     telemetry.addData("Gold Mineral Position", "Center");
                                     //   loop = FALSE;
                                 }

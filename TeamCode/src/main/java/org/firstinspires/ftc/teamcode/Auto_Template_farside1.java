@@ -86,6 +86,10 @@ public class Auto_Template_farside1 extends LinearOpMode {
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
+        if (tfod != null) {
+            tfod.activate();
+        }
+
         waitForStart();
 
         timerreset = getRuntime();
@@ -100,68 +104,86 @@ public class Auto_Template_farside1 extends LinearOpMode {
         DriveForward(.7,-17,  .7,-17);
         DriveForward(.5,6,  .5,-6);
 */
+        robot.lift.setPower(-1);
+        sleep(2300);
+        robot.lift.setPower(-.1);
 
-        if (opModeIsActive()) {
             // Activate Tensor Flow Object Detection.
+
+        while (loop == TRUE) {
             if (tfod != null) {
-                tfod.activate();
-            }
-            while (loop == TRUE) {
-                if (tfod != null) {
-                    // getUpdatedRecognitions() will return null if no new information is available since
-                    // the last time that call was made.
-                    List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-                    if (updatedRecognitions != null) {
-                        telemetry.addData("# Object Detected", updatedRecognitions.size());
-                        if (updatedRecognitions.size() == 2) {
-                            int goldMineralX = -1;
-                            int silverMineral1X = -1;
-                            int silverMineral2X = -1;
-                            for (Recognition recognition : updatedRecognitions) {
-                                if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                                    goldMineralX = (int) recognition.getWidth();
-                                } else if (silverMineral1X == -1) {
-                                    silverMineral1X = (int) recognition.getWidth();
-                                } else {
-                                    silverMineral2X = (int) recognition.getLeft();
-                                }
+                // getUpdatedRecognitions() will return null if no new information is available since
+                // the last time that call was made.
+                List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    telemetry.addData("# Object Detected", updatedRecognitions.size());
+                    if (updatedRecognitions.size() > 0) {
+                        int goldMineralX = -1;
+                        int silverMineral1X = -1;
+                        int silverMineral2X = -1;
+                        for (Recognition recognition : updatedRecognitions) {
+                            if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                                goldMineralX = (int) recognition.getTop();
+                            } else if (silverMineral1X == -1) {
+                                silverMineral1X = (int) recognition.getTop();
+                            } else {
+                                silverMineral2X = (int) recognition.getLeft();
                             }
-
-                            if (goldMineralX != -1 && silverMineral1X != -1){
-                                if (goldMineralX > silverMineral1X){
-                                    telemetry.addData("Gold Mineral Position", "Center");
-                                    loop = FALSE;
-                                    cubepos = 1;
-                                }
-                                else{
-                                    telemetry.addData("Gold Mineral Position", "Left");
-                                    loop = FALSE;
-                                    cubepos = 0;
-                                }
-                            }
-
-                            if (silverMineral1X != -1 && silverMineral2X != -1){
-                                telemetry.addData("Gold Mineral Position", "Right");
-                                cubepos = 2;
+                        }
+/*
+                        if (goldMineralX != -1 && silverMineral1X != -1){
+                            if (goldMineralX > silverMineral1X){
+                                telemetry.addData("Gold Mineral Position", "Center");
                                 loop = FALSE;
+                                cubepos = 1;
+                            }
+                            else{
+                                telemetry.addData("Gold Mineral Position", "Left");
+                                loop = FALSE;
+                                cubepos = 0;
                             }
                         }
-                        if (getRuntime() - timerreset > 9){
+
+                        if (silverMineral1X != -1 && silverMineral2X != -1){
+                            telemetry.addData("Gold Mineral Position", "Right");
+                            cubepos = 2;
                             loop = FALSE;
-                            cubepos = 1;
+                        }*/
+
+                        if (goldMineralX != -1){
+                            if (goldMineralX > 650){
+                                telemetry.addData("Gold Mineral Position", "Center");
+                                loop = FALSE;
+                                cubepos = 1;
+                            }
+                            else{
+                                telemetry.addData("Gold Mineral Position", "Left");
+                                loop = FALSE;
+                                cubepos = 0;
+                            }
                         }
-                        telemetry.update();
+                        else{
+                            telemetry.addData("Gold Mineral Position", "Right");
+                            cubepos = 2;
+                            loop = FALSE;
+                        }
+
                     }
+
+                    if (getRuntime() - timerreset > 5){
+                        loop = FALSE;
+                        cubepos = 2;
+                    }
+                    telemetry.update();
                 }
             }
         }
+
         if (tfod != null) {
             tfod.shutdown();
         }
 
-        robot.lift.setPower(-1);
-        sleep(2300);
-        robot.lift.setPower(-.1);
+
         DriveForward(.7,9,  .7,9);
         robot.lift.setPower(0);
         DriveStrafe(.7,10,.7,-10);
@@ -269,7 +291,7 @@ public class Auto_Template_farside1 extends LinearOpMode {
         robot.lift.setPower(.7);
         sleep( 2600);
         robot.lift.setPower(0);
-        sleep(1000);
+        sleep(2000);
         robot.mineralarm.setPower(0);
 
     }
