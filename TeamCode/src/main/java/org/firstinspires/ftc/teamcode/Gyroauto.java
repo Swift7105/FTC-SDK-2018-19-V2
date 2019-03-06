@@ -191,8 +191,8 @@ public class Gyroauto extends LinearOpMode {
             angle2 = angle2 / 2; */
             lf = Math.cos(robotangle);
             lb = Math.sin(robotangle);
-            rf = -lb;
-            rb = -lf;
+            rf = -Math.sin(robotangle);
+            rb = -Math.cos(robotangle);
             robot.rightFrontDrive.setPower(angle2 + rb); // rf rb lb lf
             robot.rightBackDrive.setPower(angle + rf);
             robot.leftFrontDrive.setPower(angle + lb);
