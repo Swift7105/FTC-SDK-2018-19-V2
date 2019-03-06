@@ -82,12 +82,9 @@ public class Gyroauto extends LinearOpMode {
         telemetry.update();
 
         waitForStart();
-        getAngle();
-        while (getRuntime() > 30){
-            telemetry.addData("abs", Math.abs(globalAngle));
-            telemetry.addData("Mode", globalAngle);
-            telemetry.update();
-        }
+      //  DriveForward(.5, -.5, 45);
+        resetAngle();
+        oneighty();
 
     }
 
@@ -152,8 +149,9 @@ public class Gyroauto extends LinearOpMode {
         DrivePower(leftpower, rightpower);
 
         //will pause the program until the motors have run to the previously specified position
-        while (turndegrees < 46)
+        while (Math.abs(turndegrees) < Math.abs(globalAngle))
         {
+            getAngle();
             telemetry.addData("abs", Math.abs(globalAngle));
             telemetry.addData("Mode", globalAngle);
             telemetry.update();
@@ -161,6 +159,54 @@ public class Gyroauto extends LinearOpMode {
 
         //stops the motors and sets them back to normal operation mode
         DriveStop();
+    }
+
+    public void oneighty (){
+        double angle = 0;
+        double angle2 = 0;
+        double rf = 0;
+        double rb = 0;
+        double lf = 0;
+        double lb = 0;
+        // Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        //double robotangle = angles.firstAngle;
+        double robotangle = 0;
+/*
+        double angle2 = Math.cos(angle) - Math.sin(angle);
+        angle = Math.cos(angle) + Math.sin(angle);
+        robot.rightFrontDrive.setPower(angle2);
+        robot.rightBackDrive.setPower(angle);
+        robot.leftFrontDrive.setPower(angle);
+        robot.leftBackDrive.setPower(angle2);
+        sleep(time);
+*/
+
+        while (globalAngle > -180) {
+
+            getAngle();
+            robotangle = globalAngle *  3.14159 / 180;
+       /*     angle = Math.cos(robotangle) + Math.sin(robotangle);
+            angle2 = Math.cos(robotangle) - Math.sin(robotangle);
+            angle = angle / 2;
+            angle2 = angle2 / 2; */
+            lf = Math.cos(robotangle);
+            lb = Math.sin(robotangle);
+            rf = -lb;
+            rb = -lf;
+            robot.rightFrontDrive.setPower(angle2 + rb); // rf rb lb lf
+            robot.rightBackDrive.setPower(angle + rf);
+            robot.leftFrontDrive.setPower(angle + lb);
+            robot.leftBackDrive.setPower(angle2 + lf);
+
+        telemetry.addData("globalangle2", globalAngle);
+        telemetry.addData("angle", angle);
+        telemetry.addData("angle2", angle2);
+
+        telemetry.update();
+
+    }
+    //stops the motors and sets them back to normal operation mode
+    DriveStop();
     }
 }
 

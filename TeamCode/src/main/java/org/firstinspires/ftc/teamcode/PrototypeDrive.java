@@ -323,9 +323,11 @@ public class PrototypeDrive extends OpMode{
         }
 
         if (gamepad2.right_bumper){
-            robot.door.setPosition(.1);
+            //open
+            robot.door.setPosition(0);
         }
         else {
+            //closed
             robot.door.setPosition(.3);
         }
 
@@ -360,7 +362,7 @@ public class PrototypeDrive extends OpMode{
 
 
 //----------------------------------------------------------------------
-        telemetry.addData("1 imu heading",  imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES));
+        telemetry.addData("1 global heading", Math.abs(globalAngle));
         telemetry.addData("2 global heading", globalAngle);
         telemetry.addData("armspeed", armspeed);
         telemetry.addData("armjoystick", gamepad2.right_stick_y);
