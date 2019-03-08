@@ -82,7 +82,7 @@ public class Crater_ver2 extends LinearOpMode {
         }
 
         robot.init(hardwareMap);
-        robot.leds.setPower(0);
+       // robot.leds.setPower(0);
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
         telemetry.update();
@@ -167,7 +167,7 @@ public class Crater_ver2 extends LinearOpMode {
             tfod.shutdown();
         }
 
-        robot.leds.setPower(1);
+       // robot.leds.setPower(1);
 
 
         DriveForward(.7,9,  .7,9);

@@ -147,22 +147,7 @@ public class PrototypeDrive extends OpMode{
 
     @Override
     public void loop() {
-/*
-        double r = Math.hypot(gamepad1.right_stick_x, gamepad1.right_stick_y);
-        double robotAngle = Math.atan2(gamepad1.right_stick_y, gamepad1.right_stick_x) - Math.PI / 4;
-        double rightX = gamepad1.left_stick_x;
 
-        final double v1 = r * Math.sin(robotAngle) - rightX;
-        final double v2 = r * Math.cos(robotAngle) + rightX;
-        final double v3 = r * Math.cos(robotAngle) - rightX;
-        final double v4 = r * Math.sin(robotAngle) + rightX;
-
-
-            robot.frontleftMotor.setPower(v1 * v1 * v1 * 5);
-            robot.frontrightMotor.setPower(v2 * v2 * v2 * 5 );
-            robot.backleftMotor.setPower(v3 * v3 * v3 * 5);
-            robot.backrightMotor.setPower(v4 * v4 * v4 * 5);
-*/
         getAngle();
         turning = gamepad1.left_stick_x * .75;
         negmecanum = gamepad1.right_stick_y - gamepad1.right_stick_x;
@@ -192,10 +177,10 @@ public class PrototypeDrive extends OpMode{
         else {
             ledbrightness -= .05 * ledmultiplier;
             if (ledbrightness < 0){
-                robot.leds.setPower(-ledbrightness);
+             //   robot.leds.setPower(-ledbrightness);
             }
             else {
-                robot.leds.setPower(ledbrightness);
+            //    robot.leds.setPower(ledbrightness);
             }
         }
 
@@ -267,7 +252,9 @@ public class PrototypeDrive extends OpMode{
         }
         else if (gamepad2.right_stick_y < 0){
 
-            armspeed = armpos / 50;
+            //armspeed = armpos / 50;
+            armspeed = armpos ;
+            armspeed = armspeed * armspeed * armspeed * .00007;
            // armpos = armpos - 15;
             //armspeed = armpos * armpos * armpos;
             robot.arm.setPower(-gamepad2.right_stick_y * armspeed);
@@ -282,8 +269,21 @@ public class PrototypeDrive extends OpMode{
         robot.arm.setPower(gamepad2.right_stick_y * armspeed);
         robot.arm2.setPower(gamepad2.right_stick_y * armspeed);
 */
+        if ( gamepad2.left_stick_y < 0){
+            robot.intake.setPower(-gamepad2.left_stick_y * .2);
 
-        robot.intake.setPower(-gamepad2.left_stick_y);
+        }
+        else{
+            if(armpos < 28){
+                robot.intake.setPower(-gamepad2.left_stick_y * .4);
+
+            }
+            else{
+                robot.intake.setPower(-gamepad2.left_stick_y);
+
+            }
+        }
+
         if (gamepad2.left_stick_y > .1 || gamepad2.left_stick_y < -.1){
             if (inittime == 0){
                 inittime = getRuntime();
@@ -324,7 +324,7 @@ public class PrototypeDrive extends OpMode{
 
         if (gamepad2.right_bumper){
             //open
-            robot.door.setPosition(0);
+            robot.door.setPosition(0.1);
         }
         else {
             //closed
