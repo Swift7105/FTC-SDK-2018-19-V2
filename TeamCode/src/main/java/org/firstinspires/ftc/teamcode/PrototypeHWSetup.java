@@ -19,18 +19,17 @@ public class PrototypeHWSetup
     public DcMotor  lift = null;
     public DcMotor  arm      = null;
     public DcMotor  arm2     = null;
-    public DcMotor intake  = null;
+   // public DcMotor intake  = null;
 
     public CRServo mineralarm = null;
-    //public CRServo intake = null;
+    public CRServo intake = null;
     public Servo door = null;
-    public Servo sensorarm;
     /*   public DcMotor driveleft = null;
        public DcMotor driveright = null; */
 
 
 
-  //  public DcMotor  leds        = null;
+    public DcMotor  leds        = null;
 
     //public AnalogInput armsensor = null;
   //  public SensorDigitalTouch armsensor = null;
@@ -59,7 +58,7 @@ public class PrototypeHWSetup
         arm = hwMap.dcMotor.get("arm");
         arm2 = hwMap.dcMotor.get("arm2");
 
-        intake = hwMap.dcMotor.get("intake");
+        //intake = hwMap.dcMotor.get("intake");
 
 
 
@@ -72,13 +71,12 @@ public class PrototypeHWSetup
         lift.setDirection(DcMotor.Direction.FORWARD);
         arm.setDirection(DcMotor.Direction.FORWARD);
         arm2.setDirection(DcMotor.Direction.FORWARD);
-        intake.setPower(0);
 
-       // leds = hwMap.dcMotor.get("leds");
+        leds = hwMap.dcMotor.get("leds");
 
-     //   leds.setDirection(DcMotor.Direction.FORWARD);
+        leds.setDirection(DcMotor.Direction.FORWARD);
 
-      //  leds.setPower(.5);
+        leds.setPower(.5);
 
         // Set to FORWARD if using AndyMark motors
 
@@ -92,15 +90,13 @@ public class PrototypeHWSetup
         arm.setPower(0);
         arm2.setPower(0);
 
-  //      intake   =hwMap.get(CRServo.class, "intake");
+        intake   =hwMap.get(CRServo.class, "intake");
         door   =hwMap.get(Servo.class, "door");
         mineralarm   =hwMap.get(CRServo.class, "mineral_arm");
-        sensorarm =hwMap.get(Servo.class, "sensor_arm");
 
         intake.setPower(0);
         door.setPosition(0);
         mineralarm.setPower(0);
-        sensorarm.setPosition(.4);
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
 

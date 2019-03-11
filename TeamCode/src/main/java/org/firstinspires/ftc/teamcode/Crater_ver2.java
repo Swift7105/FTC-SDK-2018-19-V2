@@ -82,7 +82,7 @@ public class Crater_ver2 extends LinearOpMode {
         }
 
         robot.init(hardwareMap);
-       // robot.leds.setPower(0);
+        robot.leds.setPower(0);
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
         telemetry.update();
@@ -167,7 +167,7 @@ public class Crater_ver2 extends LinearOpMode {
             tfod.shutdown();
         }
 
-       // robot.leds.setPower(1);
+        robot.leds.setPower(1);
 
 
         DriveForward(.7,9,  .7,9);
@@ -393,8 +393,71 @@ public class Crater_ver2 extends LinearOpMode {
 
 }
 
+/*
+    public void DriveForwardnow (int leftdistance, int rightdistance){
+
+        double resetM1 = Math.abs(robot.rightFrontDrive.getCurrentPosition());
+        double resetM2 = Math.abs(robot.rightBackDrive.getCurrentPosition());
+        double resetM3 = Math.abs(robot.leftBackDrive.getCurrentPosition());
+        double resetM4 = Math.abs(robot.leftFrontDrive.getCurrentPosition());
+        double M1moved = 0;
+        double M2moved = 0;
+        double M3moved = 0;
+        double M4moved = 0;
+        double leftpower = 0;
+        double rightpower = 0;
+        double leftpower2 = 0;
+        double rightpower2 = 0;
+        //   robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
+        rightdistance = rightdistance * 35;
+        leftdistance = leftdistance * 35;
+
+        while ( Math.abs(rightdistance) > Math.abs(M2moved) && Math.abs(leftdistance) > Math.abs(M4moved))
+        {
+            M1moved = resetM1 - robot.rightFrontDrive.getCurrentPosition();
+            rightpower2 = Math.abs(rightdistance) / 2;  Math.abs(rightdistance) > Math.abs(M1moved) &&
+            rightpower2 = (Math.abs(M1moved) - rightpower2) / rightpower2;
+            rightpower2 = rightpower2 * rightpower2;
+            rightpower2 = rightpower2 * -(Math.abs(rightdistance) / rightdistance)  + ((Math.abs(rightdistance) / rightdistance) * 1.3);
+
+            M2moved = resetM2 - robot.rightBackDrive.getCurrentPosition();
+            rightpower = Math.abs(rightdistance) / 2;
+            rightpower = (Math.abs(M2moved) - rightpower) / rightpower;
+            rightpower = rightpower * rightpower;
+            rightpower = rightpower * -(Math.abs(rightdistance) / rightdistance)  + ((Math.abs(rightdistance) / rightdistance) * 1.3);
+
+            M3moved = resetM3 - robot.leftBackDrive.getCurrentPosition();
+            leftpower2 = Math.abs(leftdistance) / 2;   Math.abs(leftdistance) > Math.abs(M3moved) &&
+            leftpower2 = (Math.abs(M3moved) - leftpower2) / leftpower2;
+            leftpower2 = leftpower2 * leftpower2;
+            leftpower2 = leftpower2 * -(Math.abs(leftdistance) / leftdistance)  + ((Math.abs(leftdistance) / leftdistance) * 1.3);
+
+            M4moved = resetM4 - robot.leftFrontDrive.getCurrentPosition();
+            leftpower = Math.abs(leftdistance) / 2;
+            leftpower = (Math.abs(M4moved) - leftpower) / leftpower;
+            leftpower = leftpower * leftpower;
+            leftpower = leftpower * -(Math.abs(leftdistance) / leftdistance)  + ((Math.abs(leftdistance) / leftdistance) * 1.3);
+
+            //  leftpower = leftpower + ((Math.abs(leftdistance) / leftdistance) * 1.3);
+
+
+            robot.rightFrontDrive.setPower(rightpower);
+            robot.rightBackDrive.setPower(rightpower);
+            robot.leftBackDrive.setPower(leftpower);
+            robot.leftFrontDrive.setPower(leftpower);
+
+            telemetry.addData("stuff", Math.abs(robot.leftFrontDrive.getCurrentPosition()));
+            telemetry.addData("moved1",Math.abs(leftdistance));
+            telemetry.addData("moved2", Math.abs(M4moved));
+            telemetry.addData("equation 1", leftpower);
+
+            telemetry.update();
+        }
+        DriveStop();
+
+    }*/
 
 
 

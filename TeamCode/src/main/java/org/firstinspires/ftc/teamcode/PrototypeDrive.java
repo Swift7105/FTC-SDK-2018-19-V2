@@ -95,19 +95,10 @@ public class PrototypeDrive extends OpMode{
 
 //----------------------------------------------------------------------
 
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-
-        parameters.mode = BNO055IMU.SensorMode.IMU;
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.loggingEnabled = false;
 
         // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
         // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
         // and named "imu".
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-
-        imu.initialize(parameters);
 
 
         telemetry.addData("Mode", "calibrating...");
@@ -119,7 +110,6 @@ public class PrototypeDrive extends OpMode{
         }
         */
         telemetry.addData("Mode", "waiting for start");
-        telemetry.addData("imu calib status", imu.getCalibrationStatus().toString());
         telemetry.update();
 //----------------------------------------------------------------------
 
@@ -130,6 +120,17 @@ public class PrototypeDrive extends OpMode{
     }
     @Override
     public void init_loop() {
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+
+        parameters.mode = BNO055IMU.SensorMode.IMU;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.loggingEnabled = false;
+
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+
+        imu.initialize(parameters);
+
     }
     /*
      * Code to run ONCE when the driver hits PLAY
@@ -177,10 +178,10 @@ public class PrototypeDrive extends OpMode{
         else {
             ledbrightness -= .05 * ledmultiplier;
             if (ledbrightness < 0){
-             //   robot.leds.setPower(-ledbrightness);
+                robot.leds.setPower(-ledbrightness);
             }
             else {
-            //    robot.leds.setPower(ledbrightness);
+                robot.leds.setPower(ledbrightness);
             }
         }
 
@@ -252,24 +253,26 @@ public class PrototypeDrive extends OpMode{
         }
         else if (gamepad2.right_stick_y < 0){
 
-            //armspeed = armpos / 50;
-            armspeed = armpos ;
-            armspeed = armspeed * armspeed * armspeed * .00007;
+            armspeed = armpos / 50;
+            //armspeed = armpos ;
+            //armspeed = armspeed * armspeed * armspeed * .00008;
            // armpos = armpos - 15;
             //armspeed = armpos * armpos * armpos;
             robot.arm.setPower(-gamepad2.right_stick_y * armspeed);
             robot.arm2.setPower(-gamepad2.right_stick_y * armspeed);
 
         }
+
         else{
             robot.arm.setPower(0);
             robot.arm2.setPower(0);
         }
+
  /*
         robot.arm.setPower(gamepad2.right_stick_y * armspeed);
         robot.arm2.setPower(gamepad2.right_stick_y * armspeed);
 */
-        if ( gamepad2.left_stick_y < 0){
+ /*       if ( gamepad2.left_stick_y < 0){
             robot.intake.setPower(-gamepad2.left_stick_y * .2);
 
         }
@@ -282,6 +285,17 @@ public class PrototypeDrive extends OpMode{
                 robot.intake.setPower(-gamepad2.left_stick_y);
 
             }
+        }*/
+
+        if(gamepad2.dpad_up){
+            robot.intake.setPower(.8);
+
+        }
+        else if (gamepad2.dpad_down){
+            robot.intake.setPower(-.9);
+        }
+        else {
+            robot.intake.setPower(0);
         }
 
         if (gamepad2.left_stick_y > .1 || gamepad2.left_stick_y < -.1){

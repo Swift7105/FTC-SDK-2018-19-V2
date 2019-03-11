@@ -85,7 +85,7 @@ public class Auto_Template_camera extends LinearOpMode {
         }
 
         robot.init(hardwareMap);
-    //    robot.leds.setPower(0);
+        robot.leds.setPower(0);
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
         telemetry.update();
@@ -212,7 +212,7 @@ public class Auto_Template_camera extends LinearOpMode {
             tfod.shutdown();
         }
 
-   //     robot.leds.setPower(1);
+        robot.leds.setPower(1);
 
         DriveForward(.7,9,  .7,9);
         robot.lift.setPower(0);

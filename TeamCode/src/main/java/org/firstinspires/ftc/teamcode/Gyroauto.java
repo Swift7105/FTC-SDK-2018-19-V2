@@ -93,8 +93,6 @@ public class Gyroauto extends LinearOpMode {
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.loggingEnabled = false;
 
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
 
         initVuforia();
 
@@ -113,11 +111,13 @@ public class Gyroauto extends LinearOpMode {
 
         waitForStart();
 
-        DriveForwardnow(1,80,1,80);
-        sleep(5000);
-  /*      timerreset = getRuntime();
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
+
+
         robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        resetAngle();
+
+        timerreset = getRuntime();
         robot.lift.setPower(-1);
         sleep(2100);
         robot.lift.setPower(-.1);
@@ -172,11 +172,68 @@ public class Gyroauto extends LinearOpMode {
             tfod.shutdown();
         }
 
-        DriveForward(.7,9,  .7,9);
+        resetAngle();
+        DriveForward(.7, 9, .7, 9);
         robot.lift.setPower(0);
-*/
+        DriveStrafe(.9, 40, .9, -40);
+        DriveForward(.8, 70, .8, 70);
+
+        robot.mineralarm.setPower(1);
+        onethirtyfive(-120, 45);
+        robot.mineralarm.setPower(1);
+
+        while ((robot.arm2.getCurrentPosition() / 35) < 43 ){
+            robot.arm.setPower(-.8);
+            robot.arm2.setPower(-.8);
+            DrivePower(-.5,-.5);
+            telemetry.addData("arm angle", robot.arm2.getCurrentPosition() / 35);
+            telemetry.addData("globalangle2", globalAngle);
+            telemetry.update();
+        }
+        robot.arm.setPower(0);
+        robot.arm2.setPower(0);
+
+        DrivePower(-.5, -.5);
+        sleep(1000);
+        DriveStop();
+
+        robot.intake.setPower(-.3);
+        sleep( 1000);
 
 
+        robot.arm.setPower(.6);
+        robot.arm2.setPower(.6);
+        DriveForward(.9,45,.9,45);
+        robot.arm.setPower(0);
+        robot.arm2.setPower(0);
+
+        robot.intake.setPower(0);
+
+        onethirtyfive(-250, 180);
+        robot.mineralarm.setPower(0);
+        sleep(500);
+
+        if(cubepos == 0){
+            DriveStrafe(.9, -60, .9, 60);
+        }
+        if(cubepos == 1){
+            DriveStrafe(.9, -100, .9, 100);
+        }
+        if(cubepos == 2){
+            DriveStrafe(.9, -140, .9, 140);
+        }
+
+        DriveForward(.9, -40, .9, -40);
+        robot.mineralarm.setPower(1);
+        robot.lift.setPower(1);
+        robot.arm.setPower(-.5);
+        robot.arm2.setPower(-.5);
+        DriveForward(.9, 40, .9, 40);
+        robot.mineralarm.setPower(0);
+        sleep( 1000);
+        robot.arm.setPower(0);
+        robot.arm2.setPower(0);
+        robot.lift.setPower(0);
 
     }
 
@@ -235,9 +292,83 @@ public class Gyroauto extends LinearOpMode {
         return globalAngle;
     }
 
+    public void onethirtyfive (int turnangle , int strafeangle){
+        double angle = 0;
+        double angle2 = 0;
+        double direction = 0;
+   /*     double rf = 0;
+        double rb = 0;
+        double lf = 0;
+        double lb = 0;*/
+        // Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        //double robotangle = angles.firstAngle;
+        double robotangle = 0;
+
+        while (Math.abs(globalAngle) < Math.abs(turnangle)) {
+
+            getAngle();
+            robotangle = globalAngle + strafeangle;
+            robotangle = robotangle *  3.14159 / 180;
+            angle = Math.cos(robotangle) + Math.sin(robotangle);
+            angle2 = Math.cos(robotangle) - Math.sin(robotangle);
+            angle = angle * .3;
+            angle2 = angle2 * .3;
+
+            direction = .7 * (Math.abs(turnangle) / turnangle);
+            /*
+            lf = Math.cos(robotangle) + 1;
+            lb = Math.sin(robotangle) * -1;
+            rb = -lf;
+            rf = -lb;*/
+
+/*
+            robot.rightFrontDrive.setPower(angle2 + lb); //lb lf
+            robot.rightBackDrive.setPower(angle + rb);
+            robot.leftFrontDrive.setPower(angle + lf);
+            robot.leftBackDrive.setPower(angle2 + rf);
+*/
+            robot.rightFrontDrive.setPower(angle2 - direction); //lb lf
+            robot.rightBackDrive.setPower(angle - direction);
+            robot.leftFrontDrive.setPower(angle + direction);
+            robot.leftBackDrive.setPower(angle2 + direction);
+
+            telemetry.addData("globalangle2", globalAngle);
+            telemetry.addData("angle", angle);
+            telemetry.addData("angle2", angle2);
+
+            telemetry.update();
+
+        }
+
+        DriveStop();
+    }
+
+    public void turnangle (int angle){
+
+
+        while (Math.abs(globalAngle) < Math.abs(angle)) {
+
+            getAngle();
+
+            robot.rightFrontDrive.setPower((globalAngle - angle) / 15);
+            robot.rightBackDrive.setPower((globalAngle - angle) / 15);
+            robot.leftFrontDrive.setPower((angle - globalAngle) / 15);
+            robot.leftBackDrive.setPower((angle - globalAngle) / 15);
+
+            telemetry.addData("globalangle2", globalAngle);
+            telemetry.addData("angle", angle);
+
+            telemetry.update();
+
+        }
+
+        DriveStop();
+    }
+
     public void DriveForward (double leftpower, int leftdistance, double rightpower, int rightdistance){
 
         //sets the encoder values to zero
+
         robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -273,23 +404,36 @@ public class Gyroauto extends LinearOpMode {
         robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void DriveForwardnow (double leftpower, int leftdistance, double rightpower, int rightdistance){
 
-        double resetM1 = Math.abs(robot.rightFrontDrive.getCurrentPosition());
-        double M1moved = 0;
-     //   robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    public void DriveStrafe (double leftpower, int leftdistance, double rightpower, int rightdistance){
 
-        robot.rightFrontDrive.setPower(rightpower);
 
-        while (Math.abs(rightdistance) * 35 > Math.abs(M1moved))
+        //sets the encoder values to zero
+        robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        //sets the position(distance) to drive to
+        robot.rightFrontDrive.setTargetPosition(rightdistance * 35);
+        robot.rightBackDrive.setTargetPosition(leftdistance * 35);
+        robot.leftFrontDrive.setTargetPosition(leftdistance * 35);
+        robot.leftBackDrive.setTargetPosition(rightdistance * 35);
+
+        //engages the encoders to start tracking revolutions of the motor axel
+        robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        //powers up the left and right side of the drivetrain independently
+        DrivePower(leftpower, rightpower);
+
+        //will pause the program until the motors have run to the previously specified position
+        while (robot.rightFrontDrive.isBusy() && robot.rightBackDrive.isBusy() &&
+                robot.leftFrontDrive.isBusy() && robot.leftBackDrive.isBusy())
         {
-            M1moved = resetM1 - Math.abs(robot.rightFrontDrive.getCurrentPosition());
-            rightpower = rightdistance - M1moved;
-            robot.rightFrontDrive.setPower(0);
 
-            telemetry.addData("angle2", rightpower / 90 * rightpower / 90 * rightpower / 90 );
-            telemetry.addData("stuff", Math.abs(robot.rightFrontDrive.getCurrentPosition()));
-            telemetry.update();
         }
 
         //stops the motors and sets them back to normal operation mode
@@ -298,56 +442,6 @@ public class Gyroauto extends LinearOpMode {
         robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-    public void oneighty (){
-        double angle = 0;
-        double angle2 = 0;
-        double rf = 0;
-        double rb = 0;
-        double lf = 0;
-        double lb = 0;
-        // Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        //double robotangle = angles.firstAngle;
-        double robotangle = 0;
-/*
-        double angle2 = Math.cos(angle) - Math.sin(angle);
-        angle = Math.cos(angle) + Math.sin(angle);
-        robot.rightFrontDrive.setPower(angle2);
-        robot.rightBackDrive.setPower(angle);
-        robot.leftFrontDrive.setPower(angle);
-        robot.leftBackDrive.setPower(angle2);
-        sleep(time);
-*/
-
-        while (globalAngle > -180) {
-
-            getAngle();
-            robotangle = globalAngle *  3.14159 / 180;
-  /*          angle = Math.cos(robotangle) + Math.sin(robotangle);
-            angle2 = Math.cos(robotangle) - Math.sin(robotangle);
-            angle = angle / 2;
-            angle2 = angle2 / 2; */
-
-         /*   lf = Math.cos(robotangle) * .5 + .5;
-            lb = Math.sin(robotangle) * -.5; */
-
-
-
-            robot.rightFrontDrive.setPower(angle2 + lb); //lb lf
-            robot.rightBackDrive.setPower(angle + lb);
-            robot.leftFrontDrive.setPower(angle + lf);
-            robot.leftBackDrive.setPower(angle2 + lf);
-
-        telemetry.addData("globalangle2", globalAngle);
-        telemetry.addData("angle", angle);
-        telemetry.addData("angle2", angle2);
-
-        telemetry.update();
-
-      }
-
-      DriveStop();
     }
 
     private void initVuforia() {

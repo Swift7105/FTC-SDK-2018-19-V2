@@ -135,7 +135,7 @@ public class Auto_Template extends LinearOpMode {
         ambient = sensorColor.red();
         ambient2 = sensorColor.green();
 
-        robot.sensorarm.setPosition(1);
+       // robot.sensorarm.setPosition(1);
         sleep(1000);
 
         DriveForward(.7, -14,.7,-14);
