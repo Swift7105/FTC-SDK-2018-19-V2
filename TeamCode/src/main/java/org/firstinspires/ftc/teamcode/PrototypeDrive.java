@@ -40,6 +40,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -68,16 +69,19 @@ public class PrototypeDrive extends OpMode{
      double armspeed = 0;
      double armpos = 0;
      double armreset = 0;
+     boolean bbep = FALSE;
 
      double ledbrightness = 1;
      double ledmultiplier = 1;
+
+     double gravcomp = 0.05;
      //----------------------------------------------------------------------
     BNO055IMU imu;
     Orientation             lastAngles = new Orientation();
     double globalAngle = 0;
     double global90 = 0;
-    double Xposition = 0;
-    double Yposition = 0;
+  //  double Xposition = 0;
+  //  double Yposition = 0;
 //----------------------------------------------------------------------
 
 
@@ -90,6 +94,7 @@ public class PrototypeDrive extends OpMode{
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
+
        // robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //  relicclaw = false;
 
@@ -178,10 +183,10 @@ public class PrototypeDrive extends OpMode{
         else {
             ledbrightness -= .05 * ledmultiplier;
             if (ledbrightness < 0){
-                robot.leds.setPower(-ledbrightness);
+            //    robot.leds.setPower(-ledbrightness);
             }
             else {
-                robot.leds.setPower(ledbrightness);
+             //   robot.leds.setPower(ledbrightness);
             }
         }
 
@@ -240,8 +245,17 @@ public class PrototypeDrive extends OpMode{
         robot.rightFrontDrive.setPower(((mecanum)* reverse)* speed + (turning * speedturning));
         robot.leftBackDrive.setPower(((mecanum) * reverse)* speed - (turning * speedturning));
 
-        armpos = robot.arm2.getCurrentPosition() / 35 ;
-
+        if (gamepad2.b){
+            if (bbep == FALSE){
+                armreset += 1;
+                bbep = TRUE;
+            }
+        }
+        else {
+            bbep = FALSE;
+        }
+ /*       armpos = robot.arm2.getCurrentPosition() / 35 ;
+        armpos = armpos + armreset;
         if (gamepad2.right_stick_y > 0){
 
             armspeed = (65 - armpos) / 50;
@@ -266,13 +280,15 @@ public class PrototypeDrive extends OpMode{
         else{
             robot.arm.setPower(0);
             robot.arm2.setPower(0);
-        }
-
+        }*/
+ 
+     //   robot.arm.setPower(-gamepad2.right_stick_y * .7);
+     //   robot.arm2.setPower(-gamepad2.right_stick_y * .7);
  /*
         robot.arm.setPower(gamepad2.right_stick_y * armspeed);
         robot.arm2.setPower(gamepad2.right_stick_y * armspeed);
-*/
- /*       if ( gamepad2.left_stick_y < 0){
+
+        if ( gamepad2.left_stick_y < 0){
             robot.intake.setPower(-gamepad2.left_stick_y * .2);
 
         }
@@ -286,8 +302,10 @@ public class PrototypeDrive extends OpMode{
 
             }
         }*/
+        robot.intake.setPower(-gamepad2.left_stick_y);
 
-        if(gamepad2.dpad_up){
+
+        /*if(gamepad2.dpad_up){
             robot.intake.setPower(.8);
 
         }
@@ -296,7 +314,7 @@ public class PrototypeDrive extends OpMode{
         }
         else {
             robot.intake.setPower(0);
-        }
+        }*/
 
         if (gamepad2.left_stick_y > .1 || gamepad2.left_stick_y < -.1){
             if (inittime == 0){
@@ -338,7 +356,7 @@ public class PrototypeDrive extends OpMode{
 
         if (gamepad2.right_bumper){
             //open
-            robot.door.setPosition(0.1);
+            robot.door.setPosition(0.05);
         }
         else {
             //closed
@@ -368,8 +386,8 @@ public class PrototypeDrive extends OpMode{
 
         if (gamepad1.x){
             resetAngle();
-            Xposition = 0;
-            Yposition = 0;
+     //       Xposition = 0;
+            //Yposition = 0;
         }
 
 
@@ -393,7 +411,6 @@ public class PrototypeDrive extends OpMode{
        telemetry.update();
 //----------------------------------------------------------------------
     }
-
 
 
     //----------------------------------------------------------------------

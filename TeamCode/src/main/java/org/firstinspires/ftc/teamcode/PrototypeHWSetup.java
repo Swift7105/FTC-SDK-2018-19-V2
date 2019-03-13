@@ -19,17 +19,17 @@ public class PrototypeHWSetup
     public DcMotor  lift = null;
     public DcMotor  arm      = null;
     public DcMotor  arm2     = null;
-   // public DcMotor intake  = null;
+    public DcMotor intake  = null;
 
     public CRServo mineralarm = null;
-    public CRServo intake = null;
+   // public CRServo intake = null;
     public Servo door = null;
     /*   public DcMotor driveleft = null;
        public DcMotor driveright = null; */
 
 
 
-    public DcMotor  leds        = null;
+  //  public DcMotor  leds        = null;
 
     //public AnalogInput armsensor = null;
   //  public SensorDigitalTouch armsensor = null;
@@ -58,7 +58,7 @@ public class PrototypeHWSetup
         arm = hwMap.dcMotor.get("arm");
         arm2 = hwMap.dcMotor.get("arm2");
 
-        //intake = hwMap.dcMotor.get("intake");
+        intake = hwMap.dcMotor.get("leds");
 
 
 
@@ -71,12 +71,13 @@ public class PrototypeHWSetup
         lift.setDirection(DcMotor.Direction.FORWARD);
         arm.setDirection(DcMotor.Direction.FORWARD);
         arm2.setDirection(DcMotor.Direction.FORWARD);
+        intake.setDirection(DcMotor.Direction.FORWARD);
 
-        leds = hwMap.dcMotor.get("leds");
+    /*    leds = hwMap.dcMotor.get("leds");
 
         leds.setDirection(DcMotor.Direction.FORWARD);
 
-        leds.setPower(.5);
+        leds.setPower(.5);*/
 
         // Set to FORWARD if using AndyMark motors
 
@@ -89,12 +90,13 @@ public class PrototypeHWSetup
         lift.setPower(0);
         arm.setPower(0);
         arm2.setPower(0);
+        intake.setPower(0);
 
-        intake   =hwMap.get(CRServo.class, "intake");
+      //  intake   =hwMap.get(CRServo.class, "intake");
         door   =hwMap.get(Servo.class, "door");
         mineralarm   =hwMap.get(CRServo.class, "mineral_arm");
 
-        intake.setPower(0);
+      //  intake.setPower(0);
         door.setPosition(0);
         mineralarm.setPower(0);
         // Set all motors to run without encoders.
