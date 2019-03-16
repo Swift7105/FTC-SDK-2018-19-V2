@@ -201,7 +201,6 @@ public class Gyroauto extends LinearOpMode {
 
         robot.intake.setPower(.3);
         sleep( 1000);
-        robot.mineralarm.setPower(0);
 
 
         robot.arm.setPower(.8);
@@ -216,6 +215,8 @@ public class Gyroauto extends LinearOpMode {
             telemetry.addData("globalangle2", globalAngle);
             telemetry.update();
         }
+
+        robot.mineralarm.setPower(0);
 
         robot.arm.setPower(0);
         robot.arm2.setPower(0);
@@ -245,14 +246,17 @@ public class Gyroauto extends LinearOpMode {
             DriveForward(.9, -40, .9, -40);
             robot.mineralarm.setPower(1);
             robot.lift.setPower(1);
-            robot.arm.setPower(-.4);
-            robot.arm2.setPower(-.4);
+            robot.arm.setPower(-.5);
+            robot.arm2.setPower(-.5);
             DriveForward(.9, 50, .9, 50);
             robot.mineralarm.setPower(0);
             sleep( 1000);
             robot.arm.setPower(0);
             robot.arm2.setPower(0);
             robot.lift.setPower(0);
+            robot.intake.setPower(-1);
+            DriveForward(.9, -40, .9, -40);
+
         }
         if(cubepos == 2){
             DriveStrafe(.9, -150, .9, 150);

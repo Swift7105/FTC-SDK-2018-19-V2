@@ -67,11 +67,11 @@ public class PrototypeDrive extends OpMode{
      double speedturning = 0;
      double inittime = 0;
      double armspeed = 0;
-     double armpos = 0;
      double armreset = 0;
      boolean bbep = FALSE;
+     double armpos = 0;
 
-     double ledbrightness = 1;
+    double ledbrightness = 1;
      double ledmultiplier = 1;
 
      double gravcomp = 0.05;
@@ -94,6 +94,8 @@ public class PrototypeDrive extends OpMode{
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
+
+        armreset = robot.arm2.getCurrentPosition();
 
        // robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //  relicclaw = false;
@@ -245,7 +247,17 @@ public class PrototypeDrive extends OpMode{
         robot.rightFrontDrive.setPower(((mecanum)* reverse)* speed + (turning * speedturning));
         robot.leftBackDrive.setPower(((mecanum) * reverse)* speed - (turning * speedturning));
 
-        if (gamepad2.b){
+        if (Math.abs(gamepad2.right_stick_y) > .5){
+            armreset += (Math.abs(gamepad2.right_stick_y) / gamepad2.right_stick_y) * 60;
+        }
+        armpos = robot.arm2.getCurrentPosition() - armreset ;
+        armpos = armpos / 300 ;
+        armspeed = armpos * armpos * armpos;
+        robot.arm.setPower(armspeed);
+        robot.arm2.setPower(armspeed);
+
+
+ /*       if (gamepad2.b){
             if (bbep == FALSE){
                 armreset += 1;
                 bbep = TRUE;
@@ -254,7 +266,9 @@ public class PrototypeDrive extends OpMode{
         else {
             bbep = FALSE;
         }
- /*       armpos = robot.arm2.getCurrentPosition() / 35 ;
+
+
+        armpos = robot.arm2.getCurrentPosition() / 35 ;
         armpos = armpos + armreset;
         if (gamepad2.right_stick_y > 0){
 
@@ -280,10 +294,8 @@ public class PrototypeDrive extends OpMode{
         else{
             robot.arm.setPower(0);
             robot.arm2.setPower(0);
-        }*/
- 
-     //   robot.arm.setPower(-gamepad2.right_stick_y * .7);
-     //   robot.arm2.setPower(-gamepad2.right_stick_y * .7);
+        } */
+
  /*
         robot.arm.setPower(gamepad2.right_stick_y * armspeed);
         robot.arm2.setPower(gamepad2.right_stick_y * armspeed);
@@ -397,9 +409,7 @@ public class PrototypeDrive extends OpMode{
         telemetry.addData("1 global heading", Math.abs(globalAngle));
         telemetry.addData("2 global heading", globalAngle);
         telemetry.addData("armspeed", armspeed);
-        telemetry.addData("armjoystick", gamepad2.right_stick_y);
-        telemetry.addData("ledpower", ledbrightness);
-        telemetry.addData("bbep", robot.arm2.getCurrentPosition() / 35);
+        telemetry.addData("armreset", armreset);
 
 
 
