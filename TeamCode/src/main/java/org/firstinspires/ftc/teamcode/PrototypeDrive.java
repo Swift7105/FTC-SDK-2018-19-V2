@@ -247,15 +247,38 @@ public class PrototypeDrive extends OpMode{
         robot.rightFrontDrive.setPower(((mecanum)* reverse)* speed + (turning * speedturning));
         robot.leftBackDrive.setPower(((mecanum) * reverse)* speed - (turning * speedturning));
 
+
+
+        if (Math.abs(gamepad2.right_stick_y) > .1) {
+            armspeed = robot.arm2.getCurrentPosition() - armreset;
+            armspeed = Math.abs(armspeed);
+            armspeed = 2100 - armspeed;
+            armspeed = armspeed / 2100;
+            robot.arm.setPower(gamepad2.right_stick_y * -armspeed);
+            robot.arm2.setPower(gamepad2.right_stick_y * -armspeed);
+        }
+        else{
+
+            armreset = robot.arm2.getCurrentPosition();
+
+            robot.arm.setPower(0);
+            robot.arm2.setPower(0);
+        }
+
+
+        /*
         if (Math.abs(gamepad2.right_stick_y) > .5){
-            armreset += (Math.abs(gamepad2.right_stick_y) / gamepad2.right_stick_y) * 60;
+            armreset += (Math.abs(gamepad2.right_stick_y) / gamepad2.right_stick_y) * 30;
+        }
+        else{
+            armreset = robot.arm2.getCurrentPosition();
         }
         armpos = robot.arm2.getCurrentPosition() - armreset ;
         armpos = armpos / 300 ;
         armspeed = armpos * armpos * armpos;
         robot.arm.setPower(armspeed);
         robot.arm2.setPower(armspeed);
-
+*/
 
  /*       if (gamepad2.b){
             if (bbep == FALSE){
@@ -406,10 +429,13 @@ public class PrototypeDrive extends OpMode{
 
 
 //----------------------------------------------------------------------
-        telemetry.addData("1 global heading", Math.abs(globalAngle));
+        telemetry.addData(" arm", robot.arm2.getCurrentPosition());
         telemetry.addData("2 global heading", globalAngle);
         telemetry.addData("armspeed", armspeed);
         telemetry.addData("armreset", armreset);
+        telemetry.addData("sticky", gamepad2.right_stick_y);
+
+        telemetry.update();
 
 
 
@@ -418,7 +444,6 @@ public class PrototypeDrive extends OpMode{
             telemetry.addData("angle", robot.arm.getCurrentPosition());
 
         } */
-       telemetry.update();
 //----------------------------------------------------------------------
     }
 

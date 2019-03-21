@@ -112,9 +112,10 @@ public class Gyroauto extends LinearOpMode {
 
         waitForStart();
 
+
+
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
-
 
         robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -183,7 +184,7 @@ public class Gyroauto extends LinearOpMode {
 
         onethirtyfive(-115, 45);
 
-        while ((robot.arm2.getCurrentPosition() / 35) < 40 ){
+        while ((robot.arm2.getCurrentPosition() / 35) < 30 ){
             robot.arm.setPower(-.7);
             robot.arm2.setPower(-.7);
     //        DrivePower(-.5,-.5);
@@ -199,8 +200,9 @@ public class Gyroauto extends LinearOpMode {
         DriveStop();
 
 
-        robot.intake.setPower(.3);
+        robot.intake.setPower(1);
         sleep( 1000);
+        robot.mineralarm.setPower(0);
 
 
         robot.arm.setPower(.8);
@@ -216,8 +218,6 @@ public class Gyroauto extends LinearOpMode {
             telemetry.update();
         }
 
-        robot.mineralarm.setPower(0);
-
         robot.arm.setPower(0);
         robot.arm2.setPower(0);
 
@@ -227,6 +227,7 @@ public class Gyroauto extends LinearOpMode {
         onethirtyfive(-250, 170);
         sleep(200);
 
+        resetAngle();
         if(cubepos == 0){
             DriveStrafe(.9, -70, .9, 70);
             DriveForward(.9, -40, .9, -40);
@@ -234,7 +235,7 @@ public class Gyroauto extends LinearOpMode {
             robot.lift.setPower(1);
             robot.arm.setPower(-.5);
             robot.arm2.setPower(-.5);
-            DriveForward(.9, 40, .9, 40);
+            DriveStrafe(.9, -40, 0, 0);
             robot.mineralarm.setPower(0);
             sleep( 1000);
             robot.arm.setPower(0);
@@ -249,15 +250,45 @@ public class Gyroauto extends LinearOpMode {
             robot.arm.setPower(-.5);
             robot.arm2.setPower(-.5);
             DriveForward(.9, 50, .9, 50);
-            robot.mineralarm.setPower(0);
             sleep( 1000);
-            robot.arm.setPower(0);
-            robot.arm2.setPower(0);
+
+            robot.arm.setPower(-.1);
+            robot.arm2.setPower(-.1);
             robot.lift.setPower(0);
             robot.intake.setPower(-1);
+
+            robot.door.setPosition(.3);
+
             DriveForward(.9, -40, .9, -40);
 
+            robot.arm.setPower(.8);
+            robot.arm2.setPower(.8);
+            DriveForward(.9, 40, .9, 40);
+            DriveForward(.6, -20, .6, 20);
+            robot.mineralarm.setPower(0);
+
+            DriveForward(.9, 50, .9, 50);
+            robot.arm.setPower(0);
+            robot.arm2.setPower(0);
+
+            robot.intake.setPower(-1);
+
+            robot.door.setPosition(0.05);
+
+            sleep(500);
+            robot.intake.setPower(0);
+
+            DriveStrafe(.9, -50, .9, -50);
+
+           // DriveForward(.9, -50, .9, -50);
+            robot.arm.setPower(-.5);
+            robot.arm2.setPower(-.5);
+            sleep(2000);
+            robot.arm.setPower(0);
+            robot.arm2.setPower(0);
+
         }
+
         if(cubepos == 2){
             DriveStrafe(.9, -150, .9, 150);
             DriveForward(.9, -40, .9, -40);
@@ -330,6 +361,39 @@ public class Gyroauto extends LinearOpMode {
         lastAngles = angles;
 
         return globalAngle;
+    }
+
+    public void angledrive (int time , int strafeangle){
+        double angle = 0;
+        double angle2 = 0;
+        double robotangle = 0;
+
+
+            getAngle();
+            robotangle = globalAngle + strafeangle;
+            robotangle = robotangle *  3.14159 / 180;
+            angle = Math.cos(robotangle) + Math.sin(robotangle);
+            angle2 = Math.cos(robotangle) - Math.sin(robotangle);
+            angle = angle * .8;
+            angle2 = angle2 * .8;
+
+
+            robot.rightFrontDrive.setPower(angle2 ); //lb lf
+            robot.rightBackDrive.setPower(angle );
+            robot.leftFrontDrive.setPower(angle );
+            robot.leftBackDrive.setPower(angle2 );
+
+            sleep(time * 1000);
+
+            telemetry.addData("globalangle2", globalAngle);
+            telemetry.addData("angle", angle);
+            telemetry.addData("angle2", angle2);
+
+            telemetry.update();
+
+
+
+        DriveStop();
     }
 
     public void onethirtyfive (int turnangle , int strafeangle){
