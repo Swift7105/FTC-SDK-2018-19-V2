@@ -287,6 +287,8 @@ public class Gyroauto extends LinearOpMode {
             robot.arm.setPower(0);
             robot.arm2.setPower(0);
 
+            turnangle(0);
+
         }
 
         if(cubepos == 2){

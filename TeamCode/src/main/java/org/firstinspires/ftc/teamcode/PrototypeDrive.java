@@ -229,6 +229,7 @@ public class PrototypeDrive extends OpMode{
 
             }
         }
+        Range.clip(turning,-1,1);
 
 
         if (gamepad1.left_bumper){
