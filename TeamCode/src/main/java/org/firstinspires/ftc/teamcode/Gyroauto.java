@@ -179,8 +179,8 @@ public class Gyroauto extends LinearOpMode {
         DriveForward(.7, 9, .7, 9);
         robot.lift.setPower(0);
         robot.mineralarm.setPower(1);
-        DriveStrafe(.9, 40, .9, -40);
-        DriveForward(.8, 70, .8, 70);
+        DriveStrafe(1, 40, 1, -40);
+        DriveForward(1, 70, 1, 70);
 
         onethirtyfive(-115, 45);
 
@@ -229,13 +229,13 @@ public class Gyroauto extends LinearOpMode {
 
         resetAngle();
         if(cubepos == 0){
-            DriveStrafe(.9, -70, .9, 70);
-            DriveForward(.9, -40, .9, -40);
+            DriveStrafe(1, -70, 1, 70);
+            DriveForward(1, -40, 1, -40);
             robot.mineralarm.setPower(1);
             robot.lift.setPower(1);
             robot.arm.setPower(-.5);
             robot.arm2.setPower(-.5);
-            DriveStrafe(.9, -40, 0, 0);
+            DriveStrafe(1, -40, 0, 0);
             robot.mineralarm.setPower(0);
             sleep( 1000);
             robot.arm.setPower(0);
@@ -243,13 +243,13 @@ public class Gyroauto extends LinearOpMode {
             robot.lift.setPower(0);
         }
         if(cubepos == 1){
-            DriveStrafe(.9, -110, .9, 110);
-            DriveForward(.9, -40, .9, -40);
+            DriveStrafe(1, -110, 1, 110);
+            DriveForward(1, -40, 1, -40);
             robot.mineralarm.setPower(1);
             robot.lift.setPower(1);
             robot.arm.setPower(-.5);
             robot.arm2.setPower(-.5);
-            DriveForward(.9, 50, .9, 50);
+            DriveForward(1, 50, 1, 50);
             sleep( 1000);
 
             robot.arm.setPower(-.1);
@@ -259,15 +259,15 @@ public class Gyroauto extends LinearOpMode {
 
             robot.door.setPosition(.3);
 
-            DriveForward(.9, -40, .9, -40);
+            DriveForward(1, -40, 1, -40);
 
             robot.arm.setPower(.8);
             robot.arm2.setPower(.8);
-            DriveForward(.9, 40, .9, 40);
-            DriveForward(.6, -20, .6, 20);
+            DriveForward(1, 40, 1, 40);
+            DriveForward(1, -20, 1, 20);
             robot.mineralarm.setPower(0);
 
-            DriveForward(.9, 50, .9, 50);
+            DriveForward(1, 50, 1, 50);
             robot.arm.setPower(0);
             robot.arm2.setPower(0);
 
@@ -278,7 +278,7 @@ public class Gyroauto extends LinearOpMode {
             sleep(500);
             robot.intake.setPower(0);
 
-            DriveStrafe(.9, -50, .9, -50);
+            DriveStrafe(1, -50, 1, -50);
 
            // DriveForward(.9, -50, .9, -50);
             robot.arm.setPower(-.5);
@@ -292,13 +292,13 @@ public class Gyroauto extends LinearOpMode {
         }
 
         if(cubepos == 2){
-            DriveStrafe(.9, -150, .9, 150);
-            DriveForward(.9, -40, .9, -40);
+            DriveStrafe(1, -150, 1, 150);
+            DriveForward(1, -40, 1, -40);
             robot.mineralarm.setPower(1);
             robot.lift.setPower(1);
             robot.arm.setPower(-.5);
             robot.arm2.setPower(-.5);
-            DriveForward(.9, 40, .9, 40);
+            DriveForward(1, 40, 1, 40);
             robot.mineralarm.setPower(0);
             sleep( 1000);
             robot.arm.setPower(0);

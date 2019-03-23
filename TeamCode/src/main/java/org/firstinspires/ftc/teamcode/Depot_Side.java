@@ -27,18 +27,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+        package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.teamcode.PrototypeHWSetup;
 
 import java.util.List;
 
@@ -46,13 +57,18 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 
-@Autonomous(name="Pushbot: The one we don't use", group="Pushbot")
-@Disabled
-public class Auto_Template_farside1 extends LinearOpMode {
+@Autonomous(name="Pushbot: Depot Side", group="Pushbot")
+//@Disabled
+public class Depot_Side extends LinearOpMode {
 
     /* Declare OpMode members. */
     PrototypeHWSetup robot = new PrototypeHWSetup();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
+
+    BNO055IMU   imu;
+    Orientation lastAngles  = new Orientation();
+    double      globalAngle = 0;
+    BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
@@ -72,6 +88,14 @@ public class Auto_Template_farside1 extends LinearOpMode {
 
     @Override public void runOpMode() {
 
+        robot.init(hardwareMap);
+
+        parameters.mode = BNO055IMU.SensorMode.IMU;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.loggingEnabled = false;
+
+
         initVuforia();
 
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
@@ -80,37 +104,27 @@ public class Auto_Template_farside1 extends LinearOpMode {
             telemetry.addData("Sorry!", "This device is not compatible with TFOD");
         }
 
-        robot.init(hardwareMap);
-
-        // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Ready to run");    //
+        telemetry.addData("Mode", "calibrating...");
         telemetry.update();
 
-        // Wait for the game to start (driver presses PLAY)
         if (tfod != null) {
             tfod.activate();
         }
 
         waitForStart();
 
-        timerreset = getRuntime();
+
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
+
         robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-   /*     robot.lift.setPower(-1);
-        sleep(2300);
-        robot.lift.setPower(-.1);
-        DriveForward(.7,9,  .7,9);
-        robot.lift.setPower(0);
-        DriveStrafe(.7,10,.7,-10);
-        DriveForward(.7,-17,  .7,-17);
-        DriveForward(.5,6,  .5,-6);
-*/
+        timerreset = getRuntime();
         robot.lift.setPower(-1);
-        sleep(2300);
+        sleep(2100);
         robot.lift.setPower(-.1);
 
-            // Activate Tensor Flow Object Detection.
-
+        sleep(200);
         while (loop == TRUE) {
             if (tfod != null) {
                 // getUpdatedRecognitions() will return null if no new information is available since
@@ -118,8 +132,9 @@ public class Auto_Template_farside1 extends LinearOpMode {
                 List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                 if (updatedRecognitions != null) {
                     telemetry.addData("# Object Detected", updatedRecognitions.size());
+
                     if (updatedRecognitions.size() > 0) {
-                        int goldMineralX = -1;
+                        int goldMineralX    = -1;
                         int silverMineral1X = -1;
                         int silverMineral2X = -1;
                         for (Recognition recognition : updatedRecognitions) {
@@ -131,169 +146,60 @@ public class Auto_Template_farside1 extends LinearOpMode {
                                 silverMineral2X = (int) recognition.getLeft();
                             }
                         }
-/*
-                        if (goldMineralX != -1 && silverMineral1X != -1){
-                            if (goldMineralX > silverMineral1X){
+
+                        if (goldMineralX != -1) {
+                            if (goldMineralX > 650) {
                                 telemetry.addData("Gold Mineral Position", "Center");
                                 loop = FALSE;
                                 cubepos = 1;
-                            }
-                            else{
+                            } else {
                                 telemetry.addData("Gold Mineral Position", "Left");
                                 loop = FALSE;
                                 cubepos = 0;
                             }
-                        }
-
-                        if (silverMineral1X != -1 && silverMineral2X != -1){
-                            telemetry.addData("Gold Mineral Position", "Right");
-                            cubepos = 2;
-                            loop = FALSE;
-                        }*/
-
-                        if (goldMineralX != -1){
-                            if (goldMineralX > 650){
-                                telemetry.addData("Gold Mineral Position", "Center");
-                                loop = FALSE;
-                                cubepos = 1;
-                            }
-                            else{
-                                telemetry.addData("Gold Mineral Position", "Left");
-                                loop = FALSE;
-                                cubepos = 0;
-                            }
-                        }
-                        else{
+                        } else {
                             telemetry.addData("Gold Mineral Position", "Right");
                             cubepos = 2;
                             loop = FALSE;
                         }
 
+                        telemetry.update();
                     }
 
-                    if (getRuntime() - timerreset > 5){
-                        loop = FALSE;
-                        cubepos = 2;
-                    }
-                    telemetry.update();
+                }
+                if (getRuntime() - timerreset > 4) {
+                    loop = FALSE;
+                    cubepos = 1;
                 }
             }
         }
-
         if (tfod != null) {
             tfod.shutdown();
         }
 
-
-        DriveForward(.7,9,  .7,9);
-        robot.lift.setPower(0);
-        DriveStrafe(.7,10,.7,-10);
-        DriveForward(.7,-17,  .7,-17);
-
-       // DriveForward(.5,-6,  .5,6);
-
-        if (cubepos == 0){
-
-            DriveForward(.7, 23, .7, -23);
-            DriveStrafe(.7,84,.7,-84);
-            DriveForward(.7, -38, .7, 38);
-            DriveStrafe(.7,78,.7,-78);
-            DriveForward(.7, -50, .7, 50);
-
-            robot.intake.setPower(1);
-            sleep( 700);
-            robot.intake.setPower(0);
-
-            robot.intake.setPower(0);
-            robot.arm.setPower(-.8);
-            robot.arm2.setPower(-.8);
-            sleep( 700);
-            robot.arm.setPower(0);
-            robot.arm2.setPower(0);
-            sleep( 100);
-
-            robot.arm.setPower(.8);
-            robot.arm2.setPower(.8);
-            sleep( 500);
-            robot.arm.setPower(0);
-            robot.arm2.setPower(0);
-            sleep( 100);
-
-            DriveForward(.7, -13, .7, 13);
-
-            DriveStrafeTime(-.7, .7, 1);
-
-        }
-        if (cubepos == 1){
-            DriveStrafe(.7,116,.7,-116);
-            DriveForward(.7, -60, .7, 60);
-
-            robot.intake.setPower(1);
-            sleep( 700);
-            robot.intake.setPower(0);
-
-            robot.arm.setPower(-.8);
-            robot.arm2.setPower(-.8);
-            sleep( 700);
-            robot.arm.setPower(0);
-            robot.arm2.setPower(0);
-            sleep( 100);
-
-            robot.arm.setPower(.8);
-            robot.arm2.setPower(.8);
-            sleep( 500);
-            robot.arm.setPower(0);
-            robot.arm2.setPower(0);
-            sleep( 100);
-            DriveForward(.7, -18, .7, 18);
-
-            DriveStrafeTime(-.7, .7, 2);
-        }
-        if (cubepos == 2) {
-            DriveForward(.7, -20, .7, 20);
-            DriveStrafe(.7,78,.7,-78);
-            DriveForward(.7, 40, .7, -40);
-            DriveStrafe(.7,78,.7,-78);
-            DriveForward(.7, -80, .7, 80);
-
-            robot.intake.setPower(1);
-            sleep( 700);
-            robot.intake.setPower(0);
-
-            robot.intake.setPower(0);
-            robot.arm.setPower(-.8);
-            robot.arm2.setPower(-.8);
-            sleep( 700);
-            robot.arm.setPower(0);
-            robot.arm2.setPower(0);
-            sleep( 100);
-
-            robot.arm.setPower(.8);
-            robot.arm2.setPower(.8);
-            sleep( 500);
-            robot.arm.setPower(0);
-            robot.arm2.setPower(0);
-            sleep( 100);
-            DriveForward(.7, -13, .7, 13);
-
-            DriveStrafeTime(-.7, .7, 2);
-
-
-        }
+        resetAngle();
         robot.mineralarm.setPower(1);
+        DriveForward(.7, 9, .7, 9);
+        onethirtyfive(80,120,1);
+        turnangle(90);
+        DriveForward(.7, -12, .7, -12);
+      //  DriveStrafe(1,20,1,-20);
+        resetAngle();
+        if(cubepos == 0){
+            angledrive(2,120);
+            angledrive(2,-60);
+        }
+        if(cubepos == 1){
+            angledrive(1,180);
+            sleep(200);
+            angledrive(1,0);
+        }
+        if(cubepos == 2){
+            angledrive(2,-120);
+            angledrive(2,60);
 
-        DriveForward(.7, -150, .7, -150);
+        }
 
-        robot.arm.setPower(-.5);
-        robot.arm2.setPower(-.5);
-        sleep( 1200);
-        robot.arm.setPower(0);
-        robot.arm2.setPower(0);
-        robot.lift.setPower(.7);
-        sleep( 2600);
-        robot.lift.setPower(0);
-        sleep(2000);
-        robot.mineralarm.setPower(0);
 
     }
 
@@ -316,9 +222,153 @@ public class Auto_Template_farside1 extends LinearOpMode {
 
 
     //Allows the ability to run the Mechanum as a tank drive using the encoders to run to a spcific distance at a cetain speed.
+
+    private void resetAngle()
+    {
+        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        globalAngle = 0;
+    }
+
+    /**
+     * Get current cumulative angle rotation from last reset.
+     * @return Angle in degrees. + = left, - = right.
+     */
+
+    private double getAngle()
+    {
+        // We experimentally determined the Z axis is the axis we want to use for heading angle.
+        // We have to process the angle because the imu works in euler angles so the Z axis is
+        // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
+        // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
+
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
+
+        if (deltaAngle < -180)
+            deltaAngle += 360;
+        else if (deltaAngle > 180)
+            deltaAngle -= 360;
+
+        globalAngle += deltaAngle;
+
+        lastAngles = angles;
+
+        return globalAngle;
+    }
+
+    public void angledrive (int time , int strafeangle){
+        double angle = 0;
+        double angle2 = 0;
+        double robotangle = 0;
+
+
+        getAngle();
+        robotangle = globalAngle + strafeangle;
+        robotangle = robotangle *  3.14159 / 180;
+        angle = Math.cos(robotangle) + Math.sin(robotangle);
+        angle2 = Math.cos(robotangle) - Math.sin(robotangle);
+        angle = angle * .7;
+        angle2 = angle2 * .7;
+
+
+        robot.rightFrontDrive.setPower(angle2 ); //lb lf
+        robot.rightBackDrive.setPower(angle );
+        robot.leftFrontDrive.setPower(angle );
+        robot.leftBackDrive.setPower(angle2 );
+
+        sleep(time * 1000);
+
+     /*   telemetry.addData("globalangle2", globalAngle);
+        telemetry.addData("angle", angle);
+        telemetry.addData("angle2", angle2);
+
+        telemetry.update();*/
+
+
+
+        DriveStop();
+    }
+
+    public void onethirtyfive (int turnangle , int strafeangle , int drivedirection){
+        double angle = 0;
+        double angle2 = 0;
+        double direction = 0;
+   /*     double rf = 0;
+        double rb = 0;
+        double lf = 0;
+        double lb = 0;*/
+        // Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        //double robotangle = angles.firstAngle;
+        double robotangle = 0;
+
+        while (Math.abs(globalAngle) < Math.abs(turnangle)) {
+
+            getAngle();
+            robotangle = globalAngle + strafeangle;
+            robotangle = robotangle *  3.14159 / 180;
+            angle = Math.cos(robotangle) + Math.sin(robotangle);
+            angle2 = Math.cos(robotangle) - Math.sin(robotangle);
+            angle = angle * .3;
+            angle2 = angle2 * .3;
+
+            direction = .7 * (Math.abs(turnangle) / turnangle);
+            /*
+            lf = Math.cos(robotangle) + 1;
+            lb = Math.sin(robotangle) * -1;
+            rb = -lf;
+            rf = -lb;*/
+
+/*
+            robot.rightFrontDrive.setPower(angle2 + lb); //lb lf
+            robot.rightBackDrive.setPower(angle + rb);
+            robot.leftFrontDrive.setPower(angle + lf);
+            robot.leftBackDrive.setPower(angle2 + rf);
+*/
+            direction = drivedirection * direction;
+            robot.rightFrontDrive.setPower(angle2 - direction); //lb lf
+            robot.rightBackDrive.setPower(angle - direction);
+            robot.leftFrontDrive.setPower(angle + direction);
+            robot.leftBackDrive.setPower(angle2 + direction);
+
+            telemetry.addData("globalangle2", globalAngle);
+            telemetry.addData("angle", angle);
+            telemetry.addData("angle2", angle2);
+
+            telemetry.update();
+
+        }
+
+        DriveStop();
+    }
+
+    public void turnangle (int angle){
+
+
+        while (Math.abs(globalAngle) < Math.abs(angle)) {
+
+            getAngle();
+
+            robot.rightFrontDrive.setPower((globalAngle - angle) / 15);
+            robot.rightBackDrive.setPower((globalAngle - angle) / 15);
+            robot.leftFrontDrive.setPower((angle - globalAngle) / 15);
+            robot.leftBackDrive.setPower((angle - globalAngle) / 15);
+
+            telemetry.addData("globalangle2", globalAngle);
+            telemetry.addData("angle", angle);
+
+            telemetry.update();
+
+        }
+
+        DriveStop();
+    }
+
     public void DriveForward (double leftpower, int leftdistance, double rightpower, int rightdistance){
 
         //sets the encoder values to zero
+
         robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -353,7 +403,8 @@ public class Auto_Template_farside1 extends LinearOpMode {
         robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
-    //Allows the ability to run the Mechanum as a tank drive using the encoders to run to a spcific distance at a cetain speed.
+
+
     public void DriveStrafe (double leftpower, int leftdistance, double rightpower, int rightdistance){
 
 
@@ -392,20 +443,6 @@ public class Auto_Template_farside1 extends LinearOpMode {
         robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
-    public void DriveStrafeTime (double leftpower,double rightpower, long timetime){
-
-
-        //engages the encoders to start tracking revolutions of the motor axel
-        robot.rightFrontDrive.setPower(rightpower);
-        robot.rightBackDrive.setPower(leftpower);
-        robot.leftFrontDrive.setPower(leftpower);
-        robot.leftBackDrive.setPower(rightpower);
-
-        sleep(1000 * timetime);
-
-        //stops the motors and sets them back to normal operation mode
-        DriveStop();
-    }
 
     private void initVuforia() {
         /*
@@ -430,7 +467,6 @@ public class Auto_Template_farside1 extends LinearOpMode {
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
     }
-
 }
 
 

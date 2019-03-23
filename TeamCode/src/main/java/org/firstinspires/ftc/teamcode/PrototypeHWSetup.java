@@ -2,12 +2,16 @@ package org.firstinspires.ftc.teamcode;
 
 import android.hardware.Sensor;
 
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcontroller.external.samples.SensorDigitalTouch;
 
 public class PrototypeHWSetup
 {
@@ -31,8 +35,9 @@ public class PrototypeHWSetup
 
   //  public DcMotor  leds        = null;
 
-    //public AnalogInput armsensor = null;
-  //  public SensorDigitalTouch armsensor = null;
+   // public AnalogInput armsensor = null;
+//    public SensorDigitalTouch touchsensor = null;
+ //  public SensorDigitalTouch armsensor = null;
 
 
     /* local OpMode members. */
@@ -122,6 +127,7 @@ public class PrototypeHWSetup
         
 
        // armsensor = hwMap.get(SensorDigitalTouch.class, "armsensor");
+     //   touchsensor = hwMap.get(SensorDigitalTouch.class, "touchsensor");
 
 
 

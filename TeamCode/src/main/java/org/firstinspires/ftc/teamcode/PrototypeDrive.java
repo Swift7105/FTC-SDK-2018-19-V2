@@ -253,10 +253,14 @@ public class PrototypeDrive extends OpMode{
         if (Math.abs(gamepad2.right_stick_y) > .1) {
             armspeed = robot.arm2.getCurrentPosition() - armreset;
             armspeed = Math.abs(armspeed);
-            armspeed = 2100 - armspeed;
-            armspeed = armspeed / 2100;
+            armspeed = 2800 - armspeed;
+            armspeed = armspeed / 2800;
             robot.arm.setPower(gamepad2.right_stick_y * -armspeed);
             robot.arm2.setPower(gamepad2.right_stick_y * -armspeed);
+        }
+        else if(gamepad2.right_trigger > .5){
+            robot.arm.setPower(-.3);
+            robot.arm2.setPower(-.3);
         }
         else{
 
@@ -428,13 +432,12 @@ public class PrototypeDrive extends OpMode{
 
 
 
-
 //----------------------------------------------------------------------
         telemetry.addData(" arm", robot.arm2.getCurrentPosition());
         telemetry.addData("2 global heading", globalAngle);
-        telemetry.addData("armspeed", armspeed);
-        telemetry.addData("armreset", armreset);
-        telemetry.addData("sticky", gamepad2.right_stick_y);
+        telemetry.addData("trigger", gamepad2.right_trigger);
+        telemetry.addData("gamestick", gamepad2.right_stick_y);
+       // telemetry.addData("sticky", robot.touchsensor);
 
         telemetry.update();
 
