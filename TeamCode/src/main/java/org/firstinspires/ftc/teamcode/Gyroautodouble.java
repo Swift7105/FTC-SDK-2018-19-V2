@@ -27,19 +27,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-        package org.firstinspires.ftc.teamcode;
-
-import android.graphics.Color;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -50,7 +44,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.teamcode.PrototypeHWSetup;
 
 import java.util.List;
 
@@ -58,9 +51,9 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 
-@Autonomous(name="Pushbot: Depot Side", group="Pushbot")
+@Autonomous(name="Pushbot: Gyroautodouble", group="Pushbot")
 //@Disabled
-public class Depot_Side extends LinearOpMode {
+public class Gyroautodouble extends LinearOpMode {
 
     /* Declare OpMode members. */
     PrototypeHWSetup robot = new PrototypeHWSetup();   // Use a Pushbot's hardware
@@ -95,8 +88,7 @@ public class Depot_Side extends LinearOpMode {
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.loggingEnabled = false;
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
+
 
         initVuforia();
 
@@ -115,15 +107,29 @@ public class Depot_Side extends LinearOpMode {
 
         waitForStart();
 
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
 
-
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
 
         robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         timerreset = getRuntime();
         robot.lift.setPower(-1);
-        sleep(2100);
+    //    sleep(2100);
+        while ((robot.arm2.getCurrentPosition() / 35) < 5 ){
+            robot.arm.setPower(-.6);
+            robot.arm2.setPower(-.6);
+
+        }
+        robot.arm.setPower(0);
+        robot.arm2.setPower(0);
+        while(getRuntime() - timerreset < 2.1){
+
+        }
         robot.lift.setPower(-.1);
+
+        CameraDevice.getInstance().setFlashTorchMode(true) ;
 
         sleep(200);
         while (loop == TRUE) {
@@ -165,16 +171,12 @@ public class Depot_Side extends LinearOpMode {
                             cubepos = 2;
                             loop = FALSE;
                         }
-
-
-
+                        if (getRuntime() - timerreset > 5) {
+                            loop = FALSE;
+                            cubepos = 1;
+                        }
+                        telemetry.update();
                     }
-                    if (getRuntime() - timerreset > 5) {
-                        loop = FALSE;
-                        cubepos = 1;
-                    }
-                    telemetry.addData("time", getRuntime() - timerreset);
-
                 }
             }
         }
@@ -186,47 +188,16 @@ public class Depot_Side extends LinearOpMode {
         resetAngle();
         robot.mineralarm.setPower(1);
         DriveForward(.7, 9, .7, 9);
-        onethirtyfive(80,120,1);
-        turnangle(90);
-       // sleep(200);
-        DriveForward(.7, -25, .7, -25);
-      //  DriveStrafe(1,20,1,-20);
-        resetAngle();
-
-        robot.lift.setPower(1);
-        sleep(2100);
         robot.lift.setPower(0);
-        robot.mineralarm.setPower(0);
+        DriveStrafe(1, 40, 1, -40);
+        DriveForward(1, 70, 1, 70);
 
-        if(cubepos == 0){
-            DriveStrafe(1,40,1,-40);
-        }
-        if(cubepos == 1){
+        onethirtyfive(-115, 45);
 
-        }
-        if(cubepos == 2){
-            DriveStrafe(1,-50,1,50);
-        }
-        robot.mineralarm.setPower(1);
-
-        DriveForward(.7, -20, .7, -20);
-        DriveForward(.7, 20, .7, 20);
-        robot.mineralarm.setPower(0);
-
-        if(cubepos == 0){
-            DriveStrafe(1,-40,1,40);
-        }
-        if(cubepos == 1){
-
-        }
-        if(cubepos == 2){
-            DriveStrafe(1,50,1,-50);
-        }
-
-        while ((robot.arm2.getCurrentPosition() / 35) < 38 ){
+        while ((robot.arm2.getCurrentPosition() / 35) < 40 ){
             robot.arm.setPower(-.6);
             robot.arm2.setPower(-.6);
-            //        DrivePower(-.5,-.5);
+    //        DrivePower(-.5,-.5);
             telemetry.addData("arm angle", robot.arm2.getCurrentPosition() / 35);
             telemetry.addData("globalangle2", globalAngle);
             telemetry.update();
@@ -234,35 +205,84 @@ public class Depot_Side extends LinearOpMode {
         robot.arm.setPower(0);
         robot.arm2.setPower(0);
 
-      //  DrivePower(-.5, -.5);
+        DrivePower(-.5, -.5);
         sleep(1000);
         DriveStop();
-
-        robot.mineralarm.setPower(1);
 
 
         robot.intake.setPower(1);
         sleep( 1000);
+        robot.intake.setPower(0);
+
         robot.mineralarm.setPower(0);
+        resetAngle();
 
-
-        robot.arm.setPower(.8);
-        robot.arm2.setPower(.8);
-        //   DriveForward(.9,35,.9,35);
-
-        while ((robot.arm2.getCurrentPosition() / 35) > 20 ){
-            robot.arm.setPower(.8);
-            robot.arm2.setPower(.8);
-            //        DrivePower(-.5,-.5);
-            telemetry.addData("arm angle", robot.arm2.getCurrentPosition() / 35);
-            telemetry.addData("globalangle2", globalAngle);
-            telemetry.update();
+        if (cubepos == 2){
+            robot.rightFrontDrive.setPower(-1);
+            robot.leftBackDrive.setPower(-1);
+            sleep(1000);
+            robot.rightFrontDrive.setPower(0);
+            robot.leftBackDrive.setPower(0);
+            sleep(200);
+            robot.rightFrontDrive.setPower(1);
+            robot.leftBackDrive.setPower(1);
+            sleep(1000);
+            robot.rightFrontDrive.setPower(0);
+            robot.leftBackDrive.setPower(0);
         }
-        robot.arm.setPower(0);
-        robot.arm2.setPower(0);
+        if (cubepos == 1){
 
-        DriveStrafe(1,50,1,-50);
-        DriveForward(1,50 , 1 , -50);
+            DriveForward(1,25,1,-25);
+
+            while ((robot.arm2.getCurrentPosition() / 35) < 55 ){
+                robot.arm.setPower(-.6);
+                robot.arm2.setPower(-.6);
+
+            }
+            robot.arm.setPower(0);
+            robot.arm2.setPower(0);
+
+            DriveForward(1,15,1,-15);
+
+            robot.arm.setPower(.6);
+            robot.arm2.setPower(.6);
+            DriveForward(1,-40,1,40);
+
+        }
+        if (cubepos == 0){
+       //     DriveForward(1,-30,1,-30);
+
+            DriveForward(1,32,1,-32);
+
+            DriveForward(1,-18,1,-18);
+
+            while ((robot.arm2.getCurrentPosition() / 35) < 55 ){
+                robot.arm.setPower(-.6);
+                robot.arm2.setPower(-.6);
+
+            }
+            robot.arm.setPower(0);
+            robot.arm2.setPower(0);
+         //   DriveForward(1,-20,1,-20);
+            robot.mineralarm.setPower(1);
+            robot.intake.setPower(-1);
+            sleep(3000);
+            robot.intake.setPower(0);
+
+            robot.arm.setPower(.6);
+            robot.arm2.setPower(.6);
+            sleep(2000);
+            robot.arm.setPower(0);
+            robot.arm2.setPower(0);
+            DriveForward(1,18,1,18);
+
+            DriveForward(1,-32,1,32);
+            //DriveForward(1,30,1,30);
+
+        }
+
+
+
     }
 
 
@@ -326,43 +346,38 @@ public class Depot_Side extends LinearOpMode {
         double robotangle = 0;
 
 
-        getAngle();
-        robotangle = globalAngle + strafeangle;
-        robotangle = robotangle *  3.14159 / 180;
-        angle = Math.cos(robotangle) + Math.sin(robotangle);
-        angle2 = Math.cos(robotangle) - Math.sin(robotangle);
-        angle = angle * .7;
-        angle2 = angle2 * .7;
+            getAngle();
+            robotangle = globalAngle + strafeangle;
+            robotangle = robotangle *  3.14159 / 180;
+            angle = Math.cos(robotangle) + Math.sin(robotangle);
+            angle2 = Math.cos(robotangle) - Math.sin(robotangle);
+            angle = angle * .8;
+            angle2 = angle2 * .8;
 
 
-        robot.rightFrontDrive.setPower(angle2 ); //lb lf
-        robot.rightBackDrive.setPower(angle );
-        robot.leftFrontDrive.setPower(angle );
-        robot.leftBackDrive.setPower(angle2 );
+            robot.rightFrontDrive.setPower(angle2 ); //lb lf
+            robot.rightBackDrive.setPower(angle );
+            robot.leftFrontDrive.setPower(angle );
+            robot.leftBackDrive.setPower(angle2 );
 
-        sleep(time * 1000);
+            sleep(time * 1000);
 
-     /*   telemetry.addData("globalangle2", globalAngle);
-        telemetry.addData("angle", angle);
-        telemetry.addData("angle2", angle2);
+            telemetry.addData("globalangle2", globalAngle);
+            telemetry.addData("angle", angle);
+            telemetry.addData("angle2", angle2);
 
-        telemetry.update();*/
+            telemetry.update();
 
 
 
         DriveStop();
     }
 
-    public void onethirtyfive (int turnangle , int strafeangle , int drivedirection){
+    public void onethirtyfive (int turnangle , int strafeangle){
         double angle = 0;
         double angle2 = 0;
         double direction = 0;
-   /*     double rf = 0;
-        double rb = 0;
-        double lf = 0;
-        double lb = 0;*/
-        // Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        //double robotangle = angles.firstAngle;
+
         double robotangle = 0;
 
         while (Math.abs(globalAngle) < Math.abs(turnangle)) {
@@ -376,19 +391,7 @@ public class Depot_Side extends LinearOpMode {
             angle2 = angle2 * .3;
 
             direction = .7 * (Math.abs(turnangle) / turnangle);
-            /*
-            lf = Math.cos(robotangle) + 1;
-            lb = Math.sin(robotangle) * -1;
-            rb = -lf;
-            rf = -lb;*/
 
-/*
-            robot.rightFrontDrive.setPower(angle2 + lb); //lb lf
-            robot.rightBackDrive.setPower(angle + rb);
-            robot.leftFrontDrive.setPower(angle + lf);
-            robot.leftBackDrive.setPower(angle2 + rf);
-*/
-            direction = drivedirection * direction;
             robot.rightFrontDrive.setPower(angle2 - direction); //lb lf
             robot.rightBackDrive.setPower(angle - direction);
             robot.leftFrontDrive.setPower(angle + direction);
@@ -407,8 +410,9 @@ public class Depot_Side extends LinearOpMode {
 
     public void turnangle (int angle){
 
+        double anglereseter = Math.abs(globalAngle);
 
-        while (Math.abs(globalAngle) < Math.abs(angle)) {
+        while (Math.abs(globalAngle) - anglereseter < Math.abs(angle)) {
 
             getAngle();
 

@@ -102,7 +102,7 @@ public class PrototypeHWSetup
         mineralarm   =hwMap.get(CRServo.class, "mineral_arm");
 
       //  intake.setPower(0);
-        door.setPosition(0);
+        door.setPosition(.15);
         mineralarm.setPower(0);
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -114,6 +114,7 @@ public class PrototypeHWSetup
         lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         arm2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
       /*  driveright.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         driveleft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); */

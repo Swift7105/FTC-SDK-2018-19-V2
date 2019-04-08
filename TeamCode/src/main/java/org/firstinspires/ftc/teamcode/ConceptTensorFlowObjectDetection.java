@@ -29,6 +29,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.util.Range;
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -41,6 +43,8 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
+
+import static java.lang.Boolean.FALSE;
 
 /**
  * This 2018-2019 OpMode illustrates the basics of using the TensorFlow Object Detection API to
@@ -97,67 +101,71 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
             telemetry.addData("Sorry!", "This device is not compatible with TFOD");
         }
 
+        if (tfod != null) {
+            tfod.activate();
+        }
+
         /** Wait for the game to begin */
         telemetry.addData(">", "Press Play to start tracking");
         telemetry.update();
         waitForStart();
 
-        if (opModeIsActive()) {
-            /** Activate Tensor Flow Object Detection. */
+        CameraDevice.getInstance().setFlashTorchMode(true) ;
+
+
+
+
+        while(opModeIsActive()) {
             if (tfod != null) {
-                tfod.activate();
-            }
+                // getUpdatedRecognitions() will return null if no new information is available since
+                // the last time that call was made.
+                List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    telemetry.addData("# Object Detected2", updatedRecognitions.size());
 
-            while (opModeIsActive()) {
-                if (tfod != null) {
-                    // getUpdatedRecognitions() will return null if no new information is available since
-                    // the last time that call was made.
-                    List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-                    if (updatedRecognitions != null) {
-                        telemetry.addData("# Object Detected", updatedRecognitions.size());
-                        if (updatedRecognitions.size() > 0) {
-                            int goldMineralX = -1;
-                            int silverMineral1X = -1;
-                            int silverMineral2X = -1;
-                            for (Recognition recognition : updatedRecognitions) {
-                                if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                        int goldMineralX    = -1;
+                        int silverMineral1X = -1;
+                        int silverMineral2X = -1;
+                        for (Recognition recognition : updatedRecognitions) {
+                            if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                                if (recognition.getHeight() < recognition.getWidth() + 60){
                                     goldMineralX = (int) recognition.getTop();
-                                    telemetry.addData("gold width", goldMineralX);
-                                    telemetry.addData("gold confidence", recognition.getConfidence());
-                                } else if (silverMineral1X == -1) {
-                                    silverMineral1X = (int) recognition.getTop();
-                                    telemetry.addData("silver width", silverMineral1X);
-                                    telemetry.addData("silver confidence", recognition.getConfidence());
-                                } else {
-                                    silverMineral2X = (int) recognition.getLeft();
                                 }
-                            }
+                                telemetry.addData("Gold mineral confidence", recognition.getConfidence());
+                                telemetry.addData("Gold mineral hiht", recognition.getHeight());
+                                telemetry.addData("Gold mineral width", recognition.getWidth());
+                                telemetry.addData("Gold mineral lable", recognition.getLabel());
 
-                            if (goldMineralX != -1 && silverMineral1X != -1){
-                                if (goldMineralX > 850){
-                                    telemetry.addData("Gold Mineral Position", "Center");
-                                    //   loop = FALSE;
-                                }
-                                else{
-                                    telemetry.addData("Gold Mineral Position", "Left");
-                                    //    loop = FALSE;
-                                }
                             }
+                            /*else if(recognition.getLabel().equals(LABEL_SILVER_MINERAL)){
 
-                            if (silverMineral1X != -1 && silverMineral2X != -1){
-                                telemetry.addData("Gold Mineral Position", "Right");
-                                // loop = FALSE;
+                            }*/
+                            else if (silverMineral1X == -1) {
+                                silverMineral1X = (int) recognition.getTop();
                             }
-
+                            else {
+                                silverMineral2X = (int) recognition.getLeft();
+                            }
                         }
 
-                        telemetry.update();
+                        if (goldMineralX != -1) {
+                            if (goldMineralX > 650) {
+                                telemetry.addData("Gold Mineral Position", "Center");
+                            } else {
+                                telemetry.addData("Gold Mineral Position", "Left");
+                            }
+                        }
+                        else {
+                            telemetry.addData("Gold Mineral Position", "Right");
+                        }
+
+
                     }
-                }
+
             }
-        }
-        if (tfod != null) {
-            tfod.shutdown();
+
+            telemetry.update();
+
         }
     }
 
@@ -188,5 +196,7 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
+
+      //  tfodParameters.minimumConfidence = 0.65;
     }
 }

@@ -29,18 +29,11 @@
 
         package org.firstinspires.ftc.teamcode;
 
-import android.graphics.Color;
-
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
-import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -50,7 +43,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.teamcode.PrototypeHWSetup;
 
 import java.util.List;
 
@@ -58,9 +50,9 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 
-@Autonomous(name="Pushbot: Depot Side", group="Pushbot")
+@Autonomous(name="Pushbot: Depot Side double chooser", group="Pushbot")
 //@Disabled
-public class Depot_Side extends LinearOpMode {
+public class Depot_Side_Doubleblock extends LinearOpMode {
 
     /* Declare OpMode members. */
     PrototypeHWSetup robot = new PrototypeHWSetup();   // Use a Pushbot's hardware
@@ -95,8 +87,7 @@ public class Depot_Side extends LinearOpMode {
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.loggingEnabled = false;
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
+
 
         initVuforia();
 
@@ -116,7 +107,8 @@ public class Depot_Side extends LinearOpMode {
         waitForStart();
 
 
-
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
 
         robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -140,7 +132,7 @@ public class Depot_Side extends LinearOpMode {
                         int silverMineral2X = -1;
                         for (Recognition recognition : updatedRecognitions) {
                             if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                                if (recognition.getHeight() < recognition.getWidth() + 60){
+                                if (recognition.getHeight() < recognition.getWidth() + 70){
                                     goldMineralX = (int) recognition.getTop();
                                 }
                             } else if (silverMineral1X == -1) {
@@ -166,25 +158,22 @@ public class Depot_Side extends LinearOpMode {
                             loop = FALSE;
                         }
 
-
-
+                        telemetry.update();
                     }
-                    if (getRuntime() - timerreset > 5) {
-                        loop = FALSE;
-                        cubepos = 1;
-                    }
-                    telemetry.addData("time", getRuntime() - timerreset);
 
+                }
+                if (getRuntime() - timerreset > 4) {
+                    loop = FALSE;
+                    cubepos = 1;
                 }
             }
         }
         if (tfod != null) {
             tfod.shutdown();
         }
-        CameraDevice.getInstance().setFlashTorchMode(false) ;
 
         resetAngle();
-        robot.mineralarm.setPower(1);
+        //robot.mineralarm.setPower(1);
         DriveForward(.7, 9, .7, 9);
         onethirtyfive(80,120,1);
         turnangle(90);
@@ -196,7 +185,6 @@ public class Depot_Side extends LinearOpMode {
         robot.lift.setPower(1);
         sleep(2100);
         robot.lift.setPower(0);
-        robot.mineralarm.setPower(0);
 
         if(cubepos == 0){
             DriveStrafe(1,40,1,-40);
@@ -207,62 +195,38 @@ public class Depot_Side extends LinearOpMode {
         if(cubepos == 2){
             DriveStrafe(1,-50,1,50);
         }
-        robot.mineralarm.setPower(1);
-
         DriveForward(.7, -20, .7, -20);
-        DriveForward(.7, 20, .7, 20);
-        robot.mineralarm.setPower(0);
+        DriveForward(.7, 30, .7, 30);
 
         if(cubepos == 0){
-            DriveStrafe(1,-40,1,40);
+            DriveStrafe(1,-110,1,110);
         }
         if(cubepos == 1){
-
+            DriveStrafe(1,-70,1,70);
         }
         if(cubepos == 2){
-            DriveStrafe(1,50,1,-50);
+            DriveStrafe(1,-20,1,20);
+
+        }
+        circle(-80);
+        turnangle(-90);
+
+        if(cubepos == 0){
+            DriveStrafe(1,-15,1,15);
+            DriveForward(.7, -20, .7, -20);
+            DriveForward(.7, 30, .7, 30);
+        }
+        if(cubepos == 1){
+            DriveStrafe(1,-50,1,50);
+            DriveForward(.7, -20, .7, -20);
+            DriveForward(.7, 30, .7, 30);
+        }
+        if(cubepos == 2){
+            DriveStrafe(1,-90,1,90);
+            DriveForward(.7, -20, .7, -20);
+            DriveForward(.7, 30, .7, 30);
         }
 
-        while ((robot.arm2.getCurrentPosition() / 35) < 38 ){
-            robot.arm.setPower(-.6);
-            robot.arm2.setPower(-.6);
-            //        DrivePower(-.5,-.5);
-            telemetry.addData("arm angle", robot.arm2.getCurrentPosition() / 35);
-            telemetry.addData("globalangle2", globalAngle);
-            telemetry.update();
-        }
-        robot.arm.setPower(0);
-        robot.arm2.setPower(0);
-
-      //  DrivePower(-.5, -.5);
-        sleep(1000);
-        DriveStop();
-
-        robot.mineralarm.setPower(1);
-
-
-        robot.intake.setPower(1);
-        sleep( 1000);
-        robot.mineralarm.setPower(0);
-
-
-        robot.arm.setPower(.8);
-        robot.arm2.setPower(.8);
-        //   DriveForward(.9,35,.9,35);
-
-        while ((robot.arm2.getCurrentPosition() / 35) > 20 ){
-            robot.arm.setPower(.8);
-            robot.arm2.setPower(.8);
-            //        DrivePower(-.5,-.5);
-            telemetry.addData("arm angle", robot.arm2.getCurrentPosition() / 35);
-            telemetry.addData("globalangle2", globalAngle);
-            telemetry.update();
-        }
-        robot.arm.setPower(0);
-        robot.arm2.setPower(0);
-
-        DriveStrafe(1,50,1,-50);
-        DriveForward(1,50 , 1 , -50);
     }
 
 
@@ -349,6 +313,31 @@ public class Depot_Side extends LinearOpMode {
         telemetry.update();*/
 
 
+
+        DriveStop();
+    }
+
+    public void circle (int turnangle){
+        double angle = 0;
+        double angle2 = 0;
+        double direction = 0;
+        double robotangle = 0;
+
+        while (Math.abs(globalAngle) < Math.abs(turnangle)) {
+
+            getAngle();
+            robot.rightFrontDrive.setPower(1); //lb lf
+            robot.rightBackDrive.setPower(-.1);
+            robot.leftFrontDrive.setPower(-1);
+            robot.leftBackDrive.setPower(.1);
+
+            telemetry.addData("globalangle2", globalAngle);
+            telemetry.addData("angle", angle);
+            telemetry.addData("angle2", angle2);
+
+            telemetry.update();
+
+        }
 
         DriveStop();
     }
