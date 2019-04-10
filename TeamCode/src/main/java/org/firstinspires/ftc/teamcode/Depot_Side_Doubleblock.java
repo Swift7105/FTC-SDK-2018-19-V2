@@ -34,6 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -50,7 +51,7 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 
-@Autonomous(name="Pushbot: Depot Side double chooser", group="Pushbot")
+@Autonomous(name="Pushbot: Depot Side double", group="Pushbot")
 //@Disabled
 public class Depot_Side_Doubleblock extends LinearOpMode {
 
@@ -87,7 +88,9 @@ public class Depot_Side_Doubleblock extends LinearOpMode {
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.loggingEnabled = false;
-
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
 
         initVuforia();
 
@@ -106,16 +109,17 @@ public class Depot_Side_Doubleblock extends LinearOpMode {
 
         waitForStart();
 
-
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
-
         robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         timerreset = getRuntime();
         robot.lift.setPower(-1);
         sleep(2100);
+
+        while(getRuntime() - timerreset < 2.1){
+
+        }
         robot.lift.setPower(-.1);
+        CameraDevice.getInstance().setFlashTorchMode(true) ;
 
         sleep(200);
         while (loop == TRUE) {
@@ -132,7 +136,7 @@ public class Depot_Side_Doubleblock extends LinearOpMode {
                         int silverMineral2X = -1;
                         for (Recognition recognition : updatedRecognitions) {
                             if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                                if (recognition.getHeight() < recognition.getWidth() + 70){
+                                if (recognition.getHeight() < recognition.getWidth() + 60){
                                     goldMineralX = (int) recognition.getTop();
                                 }
                             } else if (silverMineral1X == -1) {
@@ -158,27 +162,73 @@ public class Depot_Side_Doubleblock extends LinearOpMode {
                             loop = FALSE;
                         }
 
-                        telemetry.update();
-                    }
 
-                }
-                if (getRuntime() - timerreset > 4) {
-                    loop = FALSE;
-                    cubepos = 1;
+
+                    }
+                    if (getRuntime() - timerreset > 5) {
+                        loop = FALSE;
+                        cubepos = 1;
+                    }
+                    telemetry.addData("time", getRuntime() - timerreset);
+
                 }
             }
         }
         if (tfod != null) {
             tfod.shutdown();
         }
+        CameraDevice.getInstance().setFlashTorchMode(false) ;
 
         resetAngle();
         //robot.mineralarm.setPower(1);
+
+        robot.mineralarm.setPower(1);
         DriveForward(.7, 9, .7, 9);
         onethirtyfive(80,120,1);
         turnangle(90);
+        DriveForward(.7, -20, .7, -20);
+
+        while ((robot.arm2.getCurrentPosition() / 35) < 38 ){
+            robot.arm.setPower(-.6);
+            robot.arm2.setPower(-.6);
+            //        DrivePower(-.5,-.5);
+            telemetry.addData("arm angle", robot.arm2.getCurrentPosition() / 35);
+            telemetry.addData("globalangle2", globalAngle);
+            telemetry.update();
+        }
+        robot.arm.setPower(0);
+        robot.arm2.setPower(0);
+
+
+
+        robot.mineralarm.setPower(1);
+
+
+        sleep( 1000);
+        robot.intake.setPower(1);
+
+
+        robot.arm.setPower(.8);
+        robot.arm2.setPower(.8);
+        //   DriveForward(.9,35,.9,35);
+
+        while ((robot.arm2.getCurrentPosition() / 35) > 20 ){
+            robot.arm.setPower(.8);
+            robot.arm2.setPower(.8);
+            //        DrivePower(-.5,-.5);
+            telemetry.addData("arm angle", robot.arm2.getCurrentPosition() / 35);
+            telemetry.addData("globalangle2", globalAngle);
+            telemetry.update();
+        }
+        robot.mineralarm.setPower(0);
+
+        robot.arm.setPower(0);
+        robot.arm2.setPower(0);
+
+
+        robot.intake.setPower(0);
+
        // sleep(200);
-        DriveForward(.7, -25, .7, -25);
       //  DriveStrafe(1,20,1,-20);
         resetAngle();
 
@@ -195,17 +245,20 @@ public class Depot_Side_Doubleblock extends LinearOpMode {
         if(cubepos == 2){
             DriveStrafe(1,-50,1,50);
         }
-        DriveForward(.7, -20, .7, -20);
-        DriveForward(.7, 30, .7, 30);
+        DriveForward(.7, -25, .7, -25);
+        robot.mineralarm.setPower(1);
+
+        DriveForward(.7, 35, .7, 35);
+        robot.mineralarm.setPower(0);
 
         if(cubepos == 0){
-            DriveStrafe(1,-110,1,110);
+            DriveStrafe(1,-100,1,100);
         }
         if(cubepos == 1){
-            DriveStrafe(1,-70,1,70);
+            DriveStrafe(1,-60,1,60);
         }
         if(cubepos == 2){
-            DriveStrafe(1,-20,1,20);
+            DriveStrafe(1,-10,1,10);
 
         }
         circle(-80);
@@ -213,20 +266,30 @@ public class Depot_Side_Doubleblock extends LinearOpMode {
 
         if(cubepos == 0){
             DriveStrafe(1,-15,1,15);
-            DriveForward(.7, -20, .7, -20);
-            DriveForward(.7, 30, .7, 30);
+            DriveForward(.7, -30, .7, -30);
+            DriveForward(.7, 40, .7, 40);
+            DriveStrafe(1,-35,1,35);
+
         }
         if(cubepos == 1){
             DriveStrafe(1,-50,1,50);
-            DriveForward(.7, -20, .7, -20);
-            DriveForward(.7, 30, .7, 30);
+            DriveForward(.7, -30, .7, -30);
+            DriveForward(.7, 40, .7, 40);
+
         }
         if(cubepos == 2){
-            DriveStrafe(1,-90,1,90);
-            DriveForward(.7, -20, .7, -20);
-            DriveForward(.7, 30, .7, 30);
+            DriveStrafe(1,-100,1,100);
+            DriveForward(.7, -30, .7, -30);
+            DriveForward(.7, 40, .7, 40);
+            DriveStrafe(1,50,1,-50);
+
         }
 
+        robot.arm.setPower(-.5);
+        robot.arm2.setPower(-.5);
+        sleep(2000);
+        robot.arm.setPower(0);
+        robot.arm2.setPower(0);
     }
 
 

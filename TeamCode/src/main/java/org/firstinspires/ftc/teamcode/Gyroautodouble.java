@@ -88,7 +88,9 @@ public class Gyroautodouble extends LinearOpMode {
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.loggingEnabled = false;
-
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
 
         initVuforia();
 
@@ -107,23 +109,12 @@ public class Gyroautodouble extends LinearOpMode {
 
         waitForStart();
 
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
-
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
-
         robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         timerreset = getRuntime();
         robot.lift.setPower(-1);
-    //    sleep(2100);
-        while ((robot.arm2.getCurrentPosition() / 35) < 5 ){
-            robot.arm.setPower(-.6);
-            robot.arm2.setPower(-.6);
+        sleep(2100);
 
-        }
-        robot.arm.setPower(0);
-        robot.arm2.setPower(0);
         while(getRuntime() - timerreset < 2.1){
 
         }
@@ -192,11 +183,16 @@ public class Gyroautodouble extends LinearOpMode {
         DriveStrafe(1, 40, 1, -40);
         DriveForward(1, 70, 1, 70);
 
+        robot.arm.setPower(-.5);
+        robot.arm2.setPower(-.5);
+
         onethirtyfive(-115, 45);
 
-        while ((robot.arm2.getCurrentPosition() / 35) < 40 ){
-            robot.arm.setPower(-.6);
-            robot.arm2.setPower(-.6);
+        robot.mineralarm.setPower(1);
+
+        while ((robot.arm2.getCurrentPosition() / 35) < 38 ){
+            robot.arm.setPower(-.7);
+            robot.arm2.setPower(-.7);
     //        DrivePower(-.5,-.5);
             telemetry.addData("arm angle", robot.arm2.getCurrentPosition() / 35);
             telemetry.addData("globalangle2", globalAngle);
@@ -215,73 +211,156 @@ public class Gyroautodouble extends LinearOpMode {
         robot.intake.setPower(0);
 
         robot.mineralarm.setPower(0);
-        resetAngle();
 
         if (cubepos == 2){
-            robot.rightFrontDrive.setPower(-1);
-            robot.leftBackDrive.setPower(-1);
-            sleep(1000);
-            robot.rightFrontDrive.setPower(0);
-            robot.leftBackDrive.setPower(0);
-            sleep(200);
-            robot.rightFrontDrive.setPower(1);
-            robot.leftBackDrive.setPower(1);
-            sleep(1000);
-            robot.rightFrontDrive.setPower(0);
-            robot.leftBackDrive.setPower(0);
+
+            while ((robot.arm2.getCurrentPosition() / 35) > 20 ){
+                robot.arm.setPower(.8);
+                robot.arm2.setPower(.8);
+                //        DrivePower(-.5,-.5);
+                telemetry.addData("arm angle", robot.arm2.getCurrentPosition() / 35);
+                telemetry.addData("globalangle2", globalAngle);
+                telemetry.update();
+            }
+
+            robot.arm.setPower(0);
+            robot.arm2.setPower(0);
+            DriveStrafe(1,30,1,-30);
+            DriveForward(1,-30,1,-30);
+            DriveForward(1,30,1,30);
+            DriveStrafe(1,-30,1,30);
+
         }
         if (cubepos == 1){
 
-            DriveForward(1,25,1,-25);
+            while ((robot.arm2.getCurrentPosition() / 35) > 45 ){
+                robot.arm.setPower(.8);
+                robot.arm2.setPower(.8);
+                //        DrivePower(-.5,-.5);
+                telemetry.addData("arm angle", robot.arm2.getCurrentPosition() / 35);
+                telemetry.addData("globalangle2", globalAngle);
+                telemetry.update();
+            }
+            robot.arm.setPower(0);
+            robot.arm2.setPower(0);
+
+
+            DriveForward(.5,20,.5,20);
+            turnangle(-80);
 
             while ((robot.arm2.getCurrentPosition() / 35) < 55 ){
                 robot.arm.setPower(-.6);
                 robot.arm2.setPower(-.6);
 
             }
+            robot.arm.setPower(-.2);
+            robot.arm2.setPower(-.2);
+
+            sleep(500);
+            turnangle(-135);
+
+            while ((robot.arm2.getCurrentPosition() / 35) > 20 ){
+                robot.arm.setPower(.8);
+                robot.arm2.setPower(.8);
+                //        DrivePower(-.5,-.5);
+                telemetry.addData("arm angle", robot.arm2.getCurrentPosition() / 35);
+                telemetry.addData("globalangle2", globalAngle);
+                telemetry.update();
+            }
             robot.arm.setPower(0);
             robot.arm2.setPower(0);
 
-            DriveForward(1,15,1,-15);
 
-            robot.arm.setPower(.6);
-            robot.arm2.setPower(.6);
-            DriveForward(1,-40,1,40);
+
+
+            turnangle(-135);
+
+            DriveForward(.5,-20,.5,-20);
+
 
         }
         if (cubepos == 0){
-       //     DriveForward(1,-30,1,-30);
 
-            DriveForward(1,32,1,-32);
 
-            DriveForward(1,-18,1,-18);
+
+            while ((robot.arm2.getCurrentPosition() / 35) > 45 ){
+                robot.arm.setPower(.8);
+                robot.arm2.setPower(.8);
+                //        DrivePower(-.5,-.5);
+                telemetry.addData("arm angle", robot.arm2.getCurrentPosition() / 35);
+                telemetry.addData("globalangle2", globalAngle);
+                telemetry.update();
+            }
+            robot.arm.setPower(0);
+            robot.arm2.setPower(0);
+
+
+            DriveForward(.5,-45,.5,-45);
+            turnangle(-80);
 
             while ((robot.arm2.getCurrentPosition() / 35) < 55 ){
                 robot.arm.setPower(-.6);
                 robot.arm2.setPower(-.6);
 
             }
+            robot.arm.setPower(-.2);
+            robot.arm2.setPower(-.2);
+            sleep(500);
+
+            turnangle(-135);
+
+            while ((robot.arm2.getCurrentPosition() / 35) > 20 ){
+                robot.arm.setPower(.8);
+                robot.arm2.setPower(.8);
+                //        DrivePower(-.5,-.5);
+                telemetry.addData("arm angle", robot.arm2.getCurrentPosition() / 35);
+                telemetry.addData("globalangle2", globalAngle);
+                telemetry.update();
+            }
             robot.arm.setPower(0);
             robot.arm2.setPower(0);
-         //   DriveForward(1,-20,1,-20);
-            robot.mineralarm.setPower(1);
-            robot.intake.setPower(-1);
-            sleep(3000);
-            robot.intake.setPower(0);
 
-            robot.arm.setPower(.6);
-            robot.arm2.setPower(.6);
-            sleep(2000);
-            robot.arm.setPower(0);
-            robot.arm2.setPower(0);
-            DriveForward(1,18,1,18);
 
-            DriveForward(1,-32,1,32);
-            //DriveForward(1,30,1,30);
+
+            turnangle(-135);
+
+
+
+            DriveForward(.5,45,.5,45);
+
 
         }
 
+        onethirtyfive(-250, 170);
+        sleep(200);
+        resetAngle();
+        if(cubepos == 0){
+            DriveStrafe(1, -60, 1, 60);
+            DriveForward(.7, -40, .7, -40);
+            DriveForward(.7, 40, .7, 40);
+            DriveStrafe(1, -40, 1, 40);
+        }
+        if(cubepos == 1){
+            DriveStrafe(1, -100, 1, 100);
+            DriveForward(.7, -40, .7, -40);
+            DriveForward(.7, 40, .7, 40);
+        }
 
+        if(cubepos == 2){
+            DriveStrafe(1,-140,1,140);
+            DriveForward(.7, -40, .7, -40);
+            DriveForward(.7, 40, .7, 40);
+            DriveStrafe(1,40,1,-40);
+        }
+
+        zeroing();
+        robot.arm.setPower(-.5);
+        robot.arm2.setPower(-.5);
+        robot.lift.setPower(1);
+        sleep(2000);
+        robot.lift.setPower(0);
+        robot.arm.setPower(0);
+        robot.arm2.setPower(0);
 
     }
 
@@ -412,7 +491,7 @@ public class Gyroautodouble extends LinearOpMode {
 
         double anglereseter = Math.abs(globalAngle);
 
-        while (Math.abs(globalAngle) - anglereseter < Math.abs(angle)) {
+        while (Math.abs(globalAngle) < Math.abs(angle) - 3 ||  Math.abs(globalAngle) > Math.abs(angle) + 3) {
 
             getAngle();
 
@@ -430,7 +509,27 @@ public class Gyroautodouble extends LinearOpMode {
 
         DriveStop();
     }
+    public void zeroing (){
 
+        getAngle();
+
+        while (Math.abs(globalAngle) > 5)  {
+
+            getAngle();
+
+            robot.rightFrontDrive.setPower(globalAngle / 15);
+            robot.rightBackDrive.setPower(globalAngle / 15);
+            robot.leftFrontDrive.setPower( -globalAngle / 15);
+            robot.leftBackDrive.setPower( -globalAngle / 15);
+
+            telemetry.addData("globalangle2", globalAngle);
+            telemetry.update();
+
+        }
+        telemetry.addData("globalangle2", globalAngle);
+        telemetry.update();
+        DriveStop();
+    }
     public void DriveForward (double leftpower, int leftdistance, double rightpower, int rightdistance){
 
         //sets the encoder values to zero

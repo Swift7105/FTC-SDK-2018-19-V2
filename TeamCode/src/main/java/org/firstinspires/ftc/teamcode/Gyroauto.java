@@ -95,7 +95,9 @@ public class Gyroauto extends LinearOpMode {
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.loggingEnabled = false;
-
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
 
         initVuforia();
 
@@ -114,12 +116,6 @@ public class Gyroauto extends LinearOpMode {
 
         waitForStart();
 
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
-        resetAngle();
-        sleep(2000);
-        zeroing();
         robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
      //   DriveStrafe(.4, 40, .4, -40);
@@ -127,7 +123,6 @@ public class Gyroauto extends LinearOpMode {
      //   DriveStrafe(.4, 40, .4, 40);
 
         //sleep(10000);
-
 
         timerreset = getRuntime();
         robot.lift.setPower(-1);
@@ -214,12 +209,14 @@ public class Gyroauto extends LinearOpMode {
         DriveForward(1, 70, 1, 70);
 
        // robot.mineralarm.setPower(1);
+        robot.arm.setPower(-.6);
+        robot.arm2.setPower(-.6);
 
         onethirtyfive(-115, 45);
 
         while ((robot.arm2.getCurrentPosition() / 35) < 38 ){
-            robot.arm.setPower(-.6);
-            robot.arm2.setPower(-.6);
+            robot.arm.setPower(-.7);
+            robot.arm2.setPower(-.7);
     //        DrivePower(-.5,-.5);
             telemetry.addData("arm angle", robot.arm2.getCurrentPosition() / 35);
             telemetry.addData("globalangle2", globalAngle);
@@ -235,9 +232,8 @@ public class Gyroauto extends LinearOpMode {
         robot.mineralarm.setPower(1);
 
 
-        robot.intake.setPower(1);
         sleep( 1000);
-        robot.mineralarm.setPower(0);
+        robot.intake.setPower(1);
 
 
         robot.arm.setPower(.8);
@@ -255,6 +251,7 @@ public class Gyroauto extends LinearOpMode {
 
         robot.arm.setPower(0);
         robot.arm2.setPower(0);
+        robot.mineralarm.setPower(0);
 
 
         robot.intake.setPower(0);
@@ -265,14 +262,11 @@ public class Gyroauto extends LinearOpMode {
         resetAngle();
         if(cubepos == 0){
             DriveStrafe(1, -70, 1, 70);
-            resetAngle();
             DriveForward(1, -35, 1, -35);
-            robot.mineralarm.setPower(1);
             robot.lift.setPower(1);
             robot.arm.setPower(-.5);
             robot.arm2.setPower(-.5);
             angledrive(1, -30);
-            robot.mineralarm.setPower(0);
             sleep( 1000);
             robot.arm.setPower(0);
             robot.arm2.setPower(0);
@@ -285,14 +279,12 @@ public class Gyroauto extends LinearOpMode {
 
             robot.door.setPosition(.4);
 
-            DriveForward(1, -20, 1, -20);
+            DriveForward(1, -25, 1, -25);
 
             robot.arm.setPower(.8);
             robot.arm2.setPower(.8);
-            DriveForward(1, 30, 1, 30);
-            resetAngle();
+            DriveForward(1, 35, 1, 35);
             DriveForward(1, -20, 1, 20);
-            robot.mineralarm.setPower(0);
 
             DriveForward(1, 50, 1, 50);
             robot.arm.setPower(0);
@@ -320,8 +312,7 @@ public class Gyroauto extends LinearOpMode {
             robot.arm2.setPower(0);
         }
         if(cubepos == 1){
-            DriveStrafe(1, -110, 1, 110);
-            robot.mineralarm.setPower(1);
+            DriveStrafe(1, -100, 1, 100);
             DriveForward(1, -35, 1, -35);
             robot.lift.setPower(1);
             robot.arm.setPower(-.5);
@@ -335,17 +326,16 @@ public class Gyroauto extends LinearOpMode {
             robot.intake.setPower(-1);
 
             robot.door.setPosition(.4);
-            DriveForward(1, -20, 1, -20);
+            DriveForward(1, -25, 1, -25);
 
 
             robot.arm.setPower(.8);
             robot.arm2.setPower(.8);
          //   DriveStrafe(1, 20, 1, -20);
 
-            DriveForward(1, 25, 1, 25);
-            resetAngle();
+            DriveForward(1, 30, 1, 30);
+
             DriveForward(1, -30, 1, 30);
-            robot.mineralarm.setPower(0);
 
             DriveForward(1, 50, 1, 50);
             robot.arm.setPower(0);
@@ -376,8 +366,6 @@ public class Gyroauto extends LinearOpMode {
 
         if(cubepos == 2){
             DriveStrafe(1, -150, 1, 150);
-            resetAngle();
-            robot.mineralarm.setPower(1);
             DriveForward(1, -35, 1, -35);
 
             robot.lift.setPower(1);
@@ -385,7 +373,6 @@ public class Gyroauto extends LinearOpMode {
             robot.arm2.setPower(-.5);
            // DriveForward(1, 40, 1, 40);
             angledrive(1, 35);
-            robot.mineralarm.setPower(0);
             sleep( 1000);
             robot.arm.setPower(0);
             robot.arm2.setPower(0);
@@ -398,16 +385,14 @@ public class Gyroauto extends LinearOpMode {
 
             robot.door.setPosition(.4);
 
-            DriveForward(1, -20, 1, -20);
+            DriveForward(1, -25, 1, -25);
 
             robot.arm.setPower(.8);
             robot.arm2.setPower(.8);
-            DriveForward(1, 20, 1, 20);
-            resetAngle();
+            DriveForward(1, 25, 1, 25);
           //  angledrive(2, 35);
 
             DriveForward(1, -25, 1, 25);
-            robot.mineralarm.setPower(0);
 
             DriveForward(1, 50, 1, 50);
             robot.arm.setPower(0);
@@ -427,8 +412,8 @@ public class Gyroauto extends LinearOpMode {
             DriveForward(1, 20, 1, -20);
 
             zeroing();
-            robot.arm.setPower(-.5);
-            robot.arm2.setPower(-.5);
+            robot.arm.setPower(-.6);
+            robot.arm2.setPower(-.6);
             sleep(2000);
             robot.arm.setPower(0);
             robot.arm2.setPower(0);
@@ -579,8 +564,9 @@ public class Gyroauto extends LinearOpMode {
 
     public void turnangle (int angle){
 
+        double anglereseter = Math.abs(globalAngle);
 
-        while (Math.abs(globalAngle) < Math.abs(angle)) {
+        while (Math.abs(globalAngle) < Math.abs(angle) - 3 ||  Math.abs(globalAngle) > Math.abs(angle) + 3) {
 
             getAngle();
 
@@ -601,8 +587,9 @@ public class Gyroauto extends LinearOpMode {
 
     public void zeroing (){
 
+        getAngle();
 
-        while (Math.abs(globalAngle) < 0)  {
+        while (Math.abs(globalAngle) > 5)  {
 
             getAngle();
 

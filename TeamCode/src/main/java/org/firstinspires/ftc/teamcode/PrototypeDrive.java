@@ -278,7 +278,7 @@ public class PrototypeDrive extends OpMode{
             robot.door.setPosition(.18);
         } else {
             //closed
-            robot.door.setPosition(.4);
+            robot.door.setPosition(.5);
         }
 
 

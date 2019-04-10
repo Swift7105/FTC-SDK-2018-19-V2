@@ -95,6 +95,7 @@ public class Depot_Side extends LinearOpMode {
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.loggingEnabled = false;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
 
@@ -115,15 +116,17 @@ public class Depot_Side extends LinearOpMode {
 
         waitForStart();
 
-
-
-
         robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         timerreset = getRuntime();
         robot.lift.setPower(-1);
         sleep(2100);
+
+        while(getRuntime() - timerreset < 2.1){
+
+        }
         robot.lift.setPower(-.1);
+        CameraDevice.getInstance().setFlashTorchMode(true) ;
 
         sleep(200);
         while (loop == TRUE) {
@@ -189,7 +192,7 @@ public class Depot_Side extends LinearOpMode {
         onethirtyfive(80,120,1);
         turnangle(90);
        // sleep(200);
-        DriveForward(.7, -25, .7, -25);
+        DriveForward(.7, -20, .7, -20);
       //  DriveStrafe(1,20,1,-20);
         resetAngle();
 
@@ -209,8 +212,8 @@ public class Depot_Side extends LinearOpMode {
         }
         robot.mineralarm.setPower(1);
 
-        DriveForward(.7, -20, .7, -20);
-        DriveForward(.7, 20, .7, 20);
+        DriveForward(.7, -30, .7, -30);
+        DriveForward(.7, 30, .7, 30);
         robot.mineralarm.setPower(0);
 
         if(cubepos == 0){
@@ -260,9 +263,21 @@ public class Depot_Side extends LinearOpMode {
         }
         robot.arm.setPower(0);
         robot.arm2.setPower(0);
+        robot.intake.setPower(0);
 
+        robot.mineralarm.setPower(1);
         DriveStrafe(1,50,1,-50);
-        DriveForward(1,50 , 1 , -50);
+        DriveForward(1,65 , 1 , -65);
+        DriveForward(1,-30 , 1 , -30);
+
+        robot.arm.setPower(-.6);
+        robot.arm2.setPower(-.6);
+        sleep(2000);
+        robot.arm.setPower(0);
+        robot.arm2.setPower(0);
+
+        robot.mineralarm.setPower(0);
+
     }
 
 
