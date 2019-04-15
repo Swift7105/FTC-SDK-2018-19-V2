@@ -118,6 +118,7 @@ public class PrototypeDrive extends OpMode{
         imu = hardwareMap.get(BNO055IMU.class, "imu");
 
         imu.initialize(parameters);
+
         telemetry.addData("Mode", "calibrating...");
         telemetry.update();
 
@@ -164,9 +165,9 @@ public class PrototypeDrive extends OpMode{
         if (gamepad1.right_bumper) {
             if (reversetimer > 10) {
                 if (globalAngle > 1) {
-                    turning += ((globalAngle + (gamepad1.left_trigger - .9)) / 40) + .07;
+                    turning += ((globalAngle + (gamepad1.left_trigger - .9)) / 30) + .07;
                 } else if (globalAngle < -1) {
-                    turning -= ((-globalAngle + (gamepad1.left_trigger - .9)) / 40) + .07;
+                    turning -= ((-globalAngle + (gamepad1.left_trigger - .9)) / 30) + .07;
                 } else {
 
                 }
@@ -198,7 +199,7 @@ public class PrototypeDrive extends OpMode{
 
         if (gamepad1.left_bumper) {
             speedturning = .45;
-            speed = .5;
+            speed = .45;
 
         } else {
             speed = 1;

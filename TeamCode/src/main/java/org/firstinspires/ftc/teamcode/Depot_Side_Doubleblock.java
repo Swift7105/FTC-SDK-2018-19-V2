@@ -122,7 +122,7 @@ public class Depot_Side_Doubleblock extends LinearOpMode {
         CameraDevice.getInstance().setFlashTorchMode(true) ;
 
         sleep(200);
-        while (loop == TRUE) {
+        while (loop == TRUE && !isStopRequested() && opModeIsActive()) {
             if (tfod != null) {
                 // getUpdatedRecognitions() will return null if no new information is available since
                 // the last time that call was made.
@@ -136,12 +136,21 @@ public class Depot_Side_Doubleblock extends LinearOpMode {
                         int silverMineral2X = -1;
                         for (Recognition recognition : updatedRecognitions) {
                             if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                                if (recognition.getHeight() < recognition.getWidth() + 60){
-                                    goldMineralX = (int) recognition.getTop();
+                                if (Math.abs(recognition.getHeight() - 140) < 60) {
+                                    if (Math.abs(recognition.getWidth() - 140) < 50) {
+                                        goldMineralX = (int) recognition.getTop();
+                                        telemetry.addData("Gold mineral confidence", recognition.getConfidence());
+                                        telemetry.addData("Gold mineral hiht", recognition.getHeight());
+                                        telemetry.addData("Gold mineral width", recognition.getWidth());
+                                        telemetry.addData("Gold mineral lable", recognition.getLabel());
+                                    }
+
                                 }
-                            } else if (silverMineral1X == -1) {
+                            }
+                            else if (silverMineral1X == -1) {
                                 silverMineral1X = (int) recognition.getTop();
-                            } else {
+                            }
+                            else {
                                 silverMineral2X = (int) recognition.getLeft();
                             }
                         }
@@ -188,7 +197,7 @@ public class Depot_Side_Doubleblock extends LinearOpMode {
         turnangle(90);
         DriveForward(.7, -20, .7, -20);
 
-        while ((robot.arm2.getCurrentPosition() / 35) < 38 ){
+        while ((robot.arm2.getCurrentPosition() / 35) < 38 && !isStopRequested() && opModeIsActive() ){
             robot.arm.setPower(-.6);
             robot.arm2.setPower(-.6);
             //        DrivePower(-.5,-.5);
@@ -212,7 +221,7 @@ public class Depot_Side_Doubleblock extends LinearOpMode {
         robot.arm2.setPower(.8);
         //   DriveForward(.9,35,.9,35);
 
-        while ((robot.arm2.getCurrentPosition() / 35) > 20 ){
+        while ((robot.arm2.getCurrentPosition() / 35) > 20 && !isStopRequested() && opModeIsActive()){
             robot.arm.setPower(.8);
             robot.arm2.setPower(.8);
             //        DrivePower(-.5,-.5);
@@ -386,7 +395,7 @@ public class Depot_Side_Doubleblock extends LinearOpMode {
         double direction = 0;
         double robotangle = 0;
 
-        while (Math.abs(globalAngle) < Math.abs(turnangle)) {
+        while (Math.abs(globalAngle) < Math.abs(turnangle)&& !isStopRequested() && opModeIsActive()) {
 
             getAngle();
             robot.rightFrontDrive.setPower(1); //lb lf
@@ -417,7 +426,7 @@ public class Depot_Side_Doubleblock extends LinearOpMode {
         //double robotangle = angles.firstAngle;
         double robotangle = 0;
 
-        while (Math.abs(globalAngle) < Math.abs(turnangle)) {
+        while (Math.abs(globalAngle) < Math.abs(turnangle)&& !isStopRequested() && opModeIsActive()) {
 
             getAngle();
             robotangle = globalAngle + strafeangle;
@@ -460,7 +469,7 @@ public class Depot_Side_Doubleblock extends LinearOpMode {
     public void turnangle (int angle){
 
 
-        while (Math.abs(globalAngle) < Math.abs(angle)) {
+        while (Math.abs(globalAngle) < Math.abs(angle)&& !isStopRequested() && opModeIsActive()) {
 
             getAngle();
 

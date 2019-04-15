@@ -102,7 +102,7 @@ public class PrototypeHWSetup
         mineralarm   =hwMap.get(CRServo.class, "mineral_arm");
 
       //  intake.setPower(0);
-        door.setPosition(.15);
+        door.setPosition(.2);
         mineralarm.setPower(0);
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
