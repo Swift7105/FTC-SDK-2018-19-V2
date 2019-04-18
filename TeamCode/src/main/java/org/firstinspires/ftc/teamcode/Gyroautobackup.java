@@ -52,8 +52,8 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 
-@Autonomous(name="Pushbot: Gyroauto backup", group="Pushbot")
-@Disabled
+@Autonomous(name="Pushbot: Crater dside backup", group="Pushbot")
+//@Disabled
 public class Gyroautobackup extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -226,8 +226,8 @@ public class Gyroautobackup extends LinearOpMode {
        // DriveForward(1, 70, 1, 70);
 
        // robot.mineralarm.setPower(1);
-        robot.arm.setPower(-.6);
-        robot.arm2.setPower(-.6);
+      //  robot.arm.setPower(-.6);
+       // robot.arm2.setPower(-.6);
 
         onethirtyfive(-115, 0);
   /*
@@ -252,6 +252,7 @@ public class Gyroautobackup extends LinearOpMode {
 
         robot.mineralarm.setPower(1);
 
+        sleep(2000);
 
        // sleep( 1000);
         robot.intake.setPower(.3);

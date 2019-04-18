@@ -35,6 +35,7 @@ package org.firstinspires.ftc.teamcode;
 import android.graphics.Color;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -107,20 +108,27 @@ public class PrototypeDrive extends OpMode{
         // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
         // and named "imu".
 
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+       BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
         parameters.mode = BNO055IMU.SensorMode.IMU;
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.loggingEnabled = false;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json";
-
         imu = hardwareMap.get(BNO055IMU.class, "imu");
-
         imu.initialize(parameters);
 
+  /*    BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
         telemetry.addData("Mode", "calibrating...");
         telemetry.update();
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);*/
 
         // make sure the imu gyro is calibrated before continuing.
       /*  while (!imu.isGyroCalibrated()) {

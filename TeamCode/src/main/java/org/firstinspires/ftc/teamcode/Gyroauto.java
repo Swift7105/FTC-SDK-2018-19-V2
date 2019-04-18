@@ -57,7 +57,7 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 
-@Autonomous(name="Pushbot: Gyroauto", group="Pushbot")
+@Autonomous(name="Pushbot: Crater Side", group="Pushbot")
 //@Disabled
 public class Gyroauto extends LinearOpMode {
 
@@ -99,7 +99,6 @@ public class Gyroauto extends LinearOpMode {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
 
-
         initVuforia();
 
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
@@ -120,6 +119,8 @@ public class Gyroauto extends LinearOpMode {
             tfod.activate();
         }
 
+
+
         waitForStart();
 
 
@@ -131,9 +132,14 @@ public class Gyroauto extends LinearOpMode {
 
         //sleep(10000);
 
+
         timerreset = getRuntime();
-     //   robot.lift.setPower(-1);
+        robot.lift.setPower(-1);
+        robot.arm.setPower(-.1);
+        robot.arm2.setPower(-.1);
         sleep(2100);
+        robot.arm.setPower(0);
+        robot.arm2.setPower(0);
     /*    while ((robot.arm2.getCurrentPosition() / 35) < 5 ){
             robot.arm.setPower(-.6);
             robot.arm2.setPower(-.6);
@@ -144,7 +150,7 @@ public class Gyroauto extends LinearOpMode {
         while(getRuntime() - timerreset < 2.1 && !isStopRequested() && opModeIsActive()){
 
         }
-      //  robot.lift.setPower(-.1);
+        robot.lift.setPower(-.1);
 
         CameraDevice.getInstance().setFlashTorchMode(true) ;
 
@@ -210,7 +216,7 @@ public class Gyroauto extends LinearOpMode {
         CameraDevice.getInstance().setFlashTorchMode(false) ;
 
         telemetry.update();
-        sleep(5000);
+      //  sleep(5000);
 
         resetAngle();
         robot.mineralarm.setPower(1);
@@ -253,7 +259,7 @@ public class Gyroauto extends LinearOpMode {
        // sleep( 1000);
         robot.intake.setPower(.3);
 
-        sleep(500);
+//        sleep(500);
 
         robot.arm.setPower(.8);
         robot.arm2.setPower(.8);
@@ -360,7 +366,6 @@ public class Gyroauto extends LinearOpMode {
             robot.door.setPosition(.18);
 
             DriveForward(1, 10, 1, 10);
-            zeroing();
             robot.arm.setPower(0);
             robot.arm2.setPower(0);
 
@@ -413,13 +418,15 @@ public class Gyroauto extends LinearOpMode {
 
             robot.lift.setPower(0);
 
+            robot.intake.setPower(.3);
+
             robot.arm.setPower(.9);
             robot.arm2.setPower(.9);
-            robot.intake.setPower(0);
 
             DriveForward(1, 78, 1, 78);
             robot.arm.setPower(.2);
             robot.arm2.setPower(.2);
+            robot.intake.setPower(0);
 
             DriveStrafe(1,30,1,-30);
 
@@ -450,18 +457,19 @@ public class Gyroauto extends LinearOpMode {
             robot.door.setPosition(.4);
             DriveForward(.7, -25, .7, -25);
 
+            robot.intake.setPower(.3);
             robot.arm.setPower(.9);
             robot.arm2.setPower(.9);
-            robot.intake.setPower(0);
             sleep(300);
             DriveForward(1, 50, 1, 50);
+
+            robot.intake.setPower(0);
 
             robot.intake.setPower(-1);
 
             robot.door.setPosition(.18);
 
             DriveForward(1, 10, 1, 10);
-            zeroing();
             robot.arm.setPower(0);
             robot.arm2.setPower(0);
 
@@ -492,8 +500,8 @@ public class Gyroauto extends LinearOpMode {
             sleep(200);
             DriveStrafe(1, -137, 1, 137);
             zeroing();
-            DriveForward(1, -26, 1, -26);
-            DriveForward(.7, 10, .7, 10);
+            DriveForward(1, -30, 1, -30);
+            DriveForward(.7, 14, .7, 14);
 
             robot.lift.setPower(1);
             robot.arm.setPower(-.5);
@@ -504,8 +512,6 @@ public class Gyroauto extends LinearOpMode {
             robot.lift.setPower(0);
 
             robot.mineralarm.setPower(1);
-
-
 
 
 
@@ -567,7 +573,6 @@ public class Gyroauto extends LinearOpMode {
             robot.door.setPosition(.18);
 
             DriveForward(1, 10, 1, 10);
-            zeroing();
             robot.arm.setPower(0);
             robot.arm2.setPower(0);
 
