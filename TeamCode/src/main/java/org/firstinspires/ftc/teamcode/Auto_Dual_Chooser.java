@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -46,7 +47,7 @@ import static java.lang.Boolean.TRUE;
 
 
 @Autonomous(name="Pushbot: Auto_Dual_Chooser", group="Pushbot")
-//@Disabled
+@Disabled
 public class Auto_Dual_Chooser extends LinearOpMode {
 
     /* Declare OpMode members. */

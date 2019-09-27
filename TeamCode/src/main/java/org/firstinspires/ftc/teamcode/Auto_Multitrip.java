@@ -29,16 +29,11 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import android.graphics.Color;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -53,7 +48,7 @@ import static java.lang.Boolean.TRUE;
 
 @Autonomous(name="Pushbot: Crater Side", group="Pushbot")
 @Disabled
-public class Auto_Template_camera extends LinearOpMode {
+public class Auto_Multitrip extends LinearOpMode {
 
     /* Declare OpMode members. */
     PrototypeHWSetup robot = new PrototypeHWSetup();   // Use a Pushbot's hardware
@@ -86,39 +81,24 @@ public class Auto_Template_camera extends LinearOpMode {
         }
 
         robot.init(hardwareMap);
-     //   robot.leds.setPower(0);
+
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
-        if (tfod != null) {
-            tfod.activate();
-        }
-
 
         waitForStart();
 
-
-
         timerreset = getRuntime();
         robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-/*
-        robot.lift.setPower(-1);
-        sleep(2100);
-        robot.lift.setPower(-.1);
-        DriveForward(.7,9,  .7,9);
-        robot.lift.setPower(0);
-        DriveStrafe(.9,14,.9,-14);
-        DriveForward(.9,-17,  .9,-17);
-        DriveForward(.5,6,  .5,-6);
-*/
 
-     //   if (opModeIsActive()) {
+
+        if (opModeIsActive()) {
             // Activate Tensor Flow Object Detection.
-        robot.lift.setPower(-1);
-        sleep(2100);
-        robot.lift.setPower(-.1);
+            if (tfod != null) {
+                tfod.activate();
+            }
 
             while (loop == TRUE) {
                 if (tfod != null) {
@@ -127,28 +107,7 @@ public class Auto_Template_camera extends LinearOpMode {
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                     if (updatedRecognitions != null) {
                         telemetry.addData("# Object Detected", updatedRecognitions.size());
-
-     /*                   if (updatedRecognitions.size() < 2){
-                            int goldMineralX = -1;
-                            int silverMineral1X = -1;
-                            int silverMineral2X = -1;
-                            for (Recognition recognition : updatedRecognitions) {
-                                if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                                    goldMineralX = (int) recognition.getTop();
-                                } else if (silverMineral1X == -1) {
-                                    silverMineral1X = (int) recognition.getTop();
-                                } else {
-                                    silverMineral2X = (int) recognition.getLeft();
-                                }
-                            }
-                            if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1){
-                                telemetry.addData("Gold Mineral Position", "Right");
-                                cubepos = 2;
-                                loop = FALSE;
-                            }
-                        }*/
-
-                         if (updatedRecognitions.size() > 0) {
+                        if (updatedRecognitions.size() == 2) {
                             int goldMineralX = -1;
                             int silverMineral1X = -1;
                             int silverMineral2X = -1;
@@ -162,24 +121,6 @@ public class Auto_Template_camera extends LinearOpMode {
                                 }
                             }
 
-                            if (goldMineralX != -1){
-                                if (goldMineralX > 650){
-                                    telemetry.addData("Gold Mineral Position", "Center");
-                                    loop = FALSE;
-                                    cubepos = 1;
-                                }
-                                else{
-                                    telemetry.addData("Gold Mineral Position", "Left");
-                                    loop = FALSE;
-                                    cubepos = 0;
-                                }
-                            }
-                            else{
-                                telemetry.addData("Gold Mineral Position", "Right");
-                                cubepos = 2;
-                                loop = FALSE;
-                            }
-/*
                             if (goldMineralX != -1 && silverMineral1X != -1){
                                 if (goldMineralX > silverMineral1X){
                                     telemetry.addData("Gold Mineral Position", "Center");
@@ -197,10 +138,9 @@ public class Auto_Template_camera extends LinearOpMode {
                                 telemetry.addData("Gold Mineral Position", "Right");
                                 cubepos = 2;
                                 loop = FALSE;
-                            }*/
+                            }
                         }
-
-                        if (getRuntime() - timerreset > 5){
+                        if (getRuntime() - timerreset > 4){
                             loop = FALSE;
                             cubepos = 1;
                         }
@@ -208,13 +148,14 @@ public class Auto_Template_camera extends LinearOpMode {
                     }
                 }
             }
-
+        }
         if (tfod != null) {
             tfod.shutdown();
         }
 
-    //    robot.leds.setPower(1);
-
+        robot.lift.setPower(-1);
+        sleep(2100);
+        robot.lift.setPower(-.1);
         DriveForward(.7,9,  .7,9);
         robot.lift.setPower(0);
         DriveStrafe(.9,14,.9,-14);
@@ -224,8 +165,8 @@ public class Auto_Template_camera extends LinearOpMode {
         if (cubepos == 0){
 
             DriveForward(1, 18, 1, -18);
-            DriveStrafe(.9,72,.9,-72);
-            DriveStrafe(.9,-30,.9,30);
+            DriveStrafe(.9,76,.9,-76);
+            DriveStrafe(.9,-32,.9,32);
             DriveForward(.7, -18, .7, 18);
             DriveForward(1, 70, 1, 70);
 
@@ -233,16 +174,16 @@ public class Auto_Template_camera extends LinearOpMode {
         if (cubepos == 1){
             DriveForward(1,-10,  1,-10);
             DriveStrafe(1,64,1,-64);
-            DriveStrafe(.9,-32,.9,32);
+            DriveStrafe(.9,-29,.9,29);
             DriveForward(1,95,  1,95);
 
         }
         if (cubepos == 2) {
-            DriveForward(.9, -27, .9, 27);
+            DriveForward(.9, -25, .9, 25);
             DriveStrafe(.9,78,.9,-78);
             DriveStrafe(.9,-34,.9,34);
-            DriveForward(.7, 27, .7, -27);
-            DriveForward(1, 128, 1, 128);
+            DriveForward(.7, 25, .7, -25);
+            DriveForward(1, 115, 1, 115);
 
         }
 /*
@@ -255,7 +196,7 @@ public class Auto_Template_camera extends LinearOpMode {
         DriveForward(.9,105,  .9,105);
 
         robot.intake.setPower(.3);
-        sleep( 2000);
+        sleep( 700);
         robot.intake.setPower(0);
 
         robot.intake.setPower(0);
@@ -277,14 +218,14 @@ public class Auto_Template_camera extends LinearOpMode {
         robot.mineralarm.setPower(1);
         DriveForward(1,-100,  1,-100);
         DriveStrafe(.9,-20,.9,20);
-        DriveForward(.9,25,  .9,-25);
-        DriveStrafe(.9,-100,.9,100);
+        DriveForward(.9,23,  .9,-23);
+        DriveStrafe(.9,-90,.9,90);
 
 
         robot.intake.setPower(-1);
         robot.arm.setPower(-.5);
         robot.arm2.setPower(-.5);
-        sleep( 1600);
+        sleep( 1200);
         robot.arm.setPower(0);
         robot.arm2.setPower(0);
         robot.lift.setPower(.7);

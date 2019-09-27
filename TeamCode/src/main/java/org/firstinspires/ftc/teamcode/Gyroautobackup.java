@@ -29,17 +29,12 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import android.graphics.Color;
-
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -57,9 +52,9 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 
-@Autonomous(name="Pushbot: Crater Side", group="Pushbot")
+@Autonomous(name="Pushbot: Crater dside backup", group="Pushbot")
 //@Disabled
-public class Gyroauto extends LinearOpMode {
+public class Gyroautobackup extends LinearOpMode {
 
     /* Declare OpMode members. */
     PrototypeHWSetup robot = new PrototypeHWSetup();   // Use a Pushbot's hardware
@@ -99,6 +94,7 @@ public class Gyroauto extends LinearOpMode {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
 
+
         initVuforia();
 
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
@@ -110,7 +106,7 @@ public class Gyroauto extends LinearOpMode {
         telemetry.addData("Mode", "calibrating...");
         telemetry.update();
 
-        while (!isStopRequested() && opModeIsActive() && !imu.isGyroCalibrated())
+        while ( !imu.isGyroCalibrated() && !isStopRequested() && opModeIsActive())
         {
             sleep(50);
             idle();
@@ -118,8 +114,6 @@ public class Gyroauto extends LinearOpMode {
         if (tfod != null) {
             tfod.activate();
         }
-
-
 
         waitForStart();
 
@@ -132,14 +126,9 @@ public class Gyroauto extends LinearOpMode {
 
         //sleep(10000);
 
-
         timerreset = getRuntime();
         robot.lift.setPower(-1);
-        robot.arm.setPower(-.1);
-        robot.arm2.setPower(-.1);
         sleep(2100);
-        robot.arm.setPower(0);
-        robot.arm2.setPower(0);
     /*    while ((robot.arm2.getCurrentPosition() / 35) < 5 ){
             robot.arm.setPower(-.6);
             robot.arm2.setPower(-.6);
@@ -147,7 +136,7 @@ public class Gyroauto extends LinearOpMode {
         }
         robot.arm.setPower(0);
         robot.arm2.setPower(0);*/
-        while(getRuntime() - timerreset < 2.1 && !isStopRequested() && opModeIsActive()){
+        while(getRuntime() - timerreset < 2.1){
 
         }
         robot.lift.setPower(-.1);
@@ -168,14 +157,24 @@ public class Gyroauto extends LinearOpMode {
                         int silverMineral1X = -1;
                         int silverMineral2X = -1;
                         for (Recognition recognition : updatedRecognitions) {
-                            if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                                if (Math.abs(recognition.getHeight() - 140) < 60){
-                                    if (Math.abs(recognition.getWidth() - 140) < 50){
-                                        goldMineralX = (int) recognition.getTop();
-
-                                    }
+                        /*    if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                                if (recognition.getHeight() < recognition.getWidth() + 50){
+                                    goldMineralX = (int) recognition.getTop();
                                 }
-                            } else if (silverMineral1X == -1) {
+                            }*/
+                            if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                                if (Math.abs(recognition.getHeight() - 140) < 60) {
+                                    if (Math.abs(recognition.getWidth() - 140) < 50) {
+                                        goldMineralX = (int) recognition.getTop();
+                                        telemetry.addData("Gold mineral confidence", recognition.getConfidence());
+                                        telemetry.addData("Gold mineral hiht", recognition.getHeight());
+                                        telemetry.addData("Gold mineral width", recognition.getWidth());
+                                        telemetry.addData("Gold mineral lable", recognition.getLabel());
+                                    }
+
+                                }
+                            }
+                             else if (silverMineral1X == -1) {
                                 silverMineral1X = (int) recognition.getTop();
                             } else {
                                 silverMineral2X = (int) recognition.getTop();
@@ -216,8 +215,6 @@ public class Gyroauto extends LinearOpMode {
         CameraDevice.getInstance().setFlashTorchMode(false) ;
 
         telemetry.update();
-      //  sleep(5000);
-
         resetAngle();
         robot.mineralarm.setPower(1);
 
@@ -229,8 +226,8 @@ public class Gyroauto extends LinearOpMode {
        // DriveForward(1, 70, 1, 70);
 
        // robot.mineralarm.setPower(1);
-        robot.arm.setPower(-.6);
-        robot.arm2.setPower(-.6);
+      //  robot.arm.setPower(-.6);
+       // robot.arm2.setPower(-.6);
 
         onethirtyfive(-115, 0);
   /*
@@ -255,17 +252,18 @@ public class Gyroauto extends LinearOpMode {
 
         robot.mineralarm.setPower(1);
 
+        sleep(2000);
 
        // sleep( 1000);
         robot.intake.setPower(.3);
 
-//        sleep(500);
+        sleep(500);
 
         robot.arm.setPower(.8);
         robot.arm2.setPower(.8);
      //   DriveForward(.9,35,.9,35);
 
-        while ((robot.arm2.getCurrentPosition() / 35) > 20 && !isStopRequested() && opModeIsActive() ){
+        while ((robot.arm2.getCurrentPosition() / 35) > 20 && !isStopRequested() && opModeIsActive()){
             robot.arm.setPower(.9);
             robot.arm2.setPower(.9);
             //        DrivePower(-.5,-.5);
@@ -292,6 +290,8 @@ public class Gyroauto extends LinearOpMode {
             DriveForward(1, -35, 1, -35);
             DriveForward(.7, 15, .7, 15);
 
+            robot.mineralarm.setPower(1);
+
             robot.lift.setPower(1);
             robot.arm.setPower(-.5);
             robot.arm2.setPower(-.5);
@@ -303,90 +303,8 @@ public class Gyroauto extends LinearOpMode {
             robot.lift.setPower(0);
 
 
-            robot.mineralarm.setPower(1);
-
-
-
-
-
-            robot.arm.setPower(-.3);
-            robot.arm2.setPower(-.3);
-            robot.intake.setPower(-1);
-
-            robot.door.setPosition(.4);
-
-            DriveForward(.7, -35, .7, -35);
             robot.mineralarm.setPower(0);
 
-
-            robot.arm.setPower(.9);
-            robot.arm2.setPower(.9);
-            robot.intake.setPower(0);
-
-            DriveForward(1, 60, 1, 60);
-            robot.arm.setPower(.2);
-            robot.arm2.setPower(.2);
-
-            DriveStrafe(1,22,1,-22);
-
-            robot.door.setPosition(.18);
-            robot.intake.setPower(-1);
-
-            DriveForward(1, 10, 1, 10);
-            robot.arm.setPower(0);
-            robot.arm2.setPower(0);
-            zeroing();
-
-            sleep(500);
-            robot.intake.setPower(0);
-            robot.door.setPosition(.4);
-
-         //   DriveForward(.7, -10, .7, 10);
-
-            robot.arm.setPower(-.7);
-            robot.arm2.setPower(-.7);
-            robot.intake.setPower(-1);
-
-            DriveForward(1, -30, 1, -30);
-            robot.arm.setPower(-.3);
-            robot.arm2.setPower(-.3);
-            robot.lift.setPower(0);
-            sleep(300);
-            robot.door.setPosition(.4);
-            DriveForward(.7, -25, .7, -25);
-
-            robot.arm.setPower(.9);
-            robot.arm2.setPower(.9);
-            robot.intake.setPower(0);
-            sleep(300);
-            DriveForward(1, 45, 1, 45);
-
-            robot.intake.setPower(-1);
-
-            robot.door.setPosition(.18);
-
-            DriveForward(1, 10, 1, 10);
-            robot.arm.setPower(0);
-            robot.arm2.setPower(0);
-
-
-            sleep(500);
-            robot.intake.setPower(0);
-
-            robot.arm.setPower(-.7);
-            robot.arm2.setPower(-.7);
-            robot.intake.setPower(-1);
-
-            DriveForward(1, -30, 1, -30);
-
-            robot.arm.setPower(-.1);
-            robot.arm2.setPower(-.1);
-
-            zeroing();
-            robot.intake.setPower(0);
-
-            robot.arm.setPower(0);
-            robot.arm2.setPower(0);
 
         }
 
@@ -418,80 +336,6 @@ public class Gyroauto extends LinearOpMode {
 
             robot.lift.setPower(0);
 
-            robot.intake.setPower(.3);
-
-            robot.arm.setPower(.9);
-            robot.arm2.setPower(.9);
-
-            DriveForward(1, 78, 1, 78);
-            robot.arm.setPower(.2);
-            robot.arm2.setPower(.2);
-            robot.intake.setPower(0);
-
-            DriveStrafe(1,30,1,-30);
-
-            robot.door.setPosition(.18);
-            robot.intake.setPower(-1);
-
-            DriveForward(1, 10, 1, 10);
-            robot.arm.setPower(0);
-            robot.arm2.setPower(0);
-            zeroing();
-
-            DriveForward(.7, -10, .7, 10);
-
-            sleep(500);
-            robot.intake.setPower(0);
-            robot.door.setPosition(.4);
-
-
-            robot.arm.setPower(-.7);
-            robot.arm2.setPower(-.7);
-            robot.intake.setPower(-1);
-
-            DriveForward(1, -30, 1, -30);
-            robot.arm.setPower(-.2);
-            robot.arm2.setPower(-.2);
-            robot.lift.setPower(0);
-
-            robot.door.setPosition(.4);
-            DriveForward(.7, -25, .7, -25);
-
-            robot.intake.setPower(.3);
-            robot.arm.setPower(.9);
-            robot.arm2.setPower(.9);
-            sleep(300);
-            DriveForward(1, 50, 1, 50);
-
-            robot.intake.setPower(0);
-
-            robot.intake.setPower(-1);
-
-            robot.door.setPosition(.18);
-
-            DriveForward(1, 10, 1, 10);
-            robot.arm.setPower(0);
-            robot.arm2.setPower(0);
-
-
-            sleep(500);
-            robot.intake.setPower(0);
-            DriveForward(.7, -10, .7, 10);
-
-            robot.arm.setPower(-.7);
-            robot.arm2.setPower(-.7);
-            robot.intake.setPower(-1);
-
-            DriveForward(1, -30, 1, -30);
-
-            robot.arm.setPower(-.1);
-            robot.arm2.setPower(-.1);
-
-            zeroing();
-            robot.intake.setPower(0);
-
-            robot.arm.setPower(0);
-            robot.arm2.setPower(0);
 
         }
 
@@ -500,8 +344,12 @@ public class Gyroauto extends LinearOpMode {
             sleep(200);
             DriveStrafe(1, -137, 1, 137);
             zeroing();
-            DriveForward(1, -30, 1, -30);
-            DriveForward(.7, 14, .7, 14);
+            robot.mineralarm.setPower(1);
+
+            DriveForward(1, -26, 1, -26);
+            robot.mineralarm.setPower(0);
+
+            DriveForward(.7, 10, .7, 10);
 
             robot.lift.setPower(1);
             robot.arm.setPower(-.5);
@@ -511,89 +359,11 @@ public class Gyroauto extends LinearOpMode {
             sleep(800);
             robot.lift.setPower(0);
 
-            robot.mineralarm.setPower(1);
 
 
-
-
-            robot.arm.setPower(-.3);
-            robot.arm2.setPower(-.3);
-            robot.intake.setPower(-1);
-
-            robot.door.setPosition(.4);
-
-            DriveForward(.7, -25, .7, -25);
-            robot.mineralarm.setPower(0);
-
-            robot.lift.setPower(0);
-
-            robot.arm.setPower(.9);
-            robot.arm2.setPower(.9);
-            robot.intake.setPower(0);
-
-            DriveForward(1, 50, 1, 50);
-            robot.arm.setPower(.2);
-            robot.arm2.setPower(.2);
-
-            DriveStrafe(1,28,1,-28);
-
-            robot.door.setPosition(.18);
-            robot.intake.setPower(-1);
-
-            DriveForward(1, 10, 1, 10);
-            robot.arm.setPower(0);
-            robot.arm2.setPower(0);
-            zeroing();
-            DriveForward(.7, -10, .7, 10);
-
-            robot.intake.setPower(0);
-            robot.door.setPosition(.4);
-
-
-            robot.arm.setPower(-.7);
-            robot.arm2.setPower(-.7);
-            robot.intake.setPower(-1);
-
-            DriveForward(1, -28, 1, -28);
-            robot.arm.setPower(-.3);
-            robot.arm2.setPower(-.3);
-
-            robot.door.setPosition(.4);
-            DriveForward(.7, -30, .7, -30);
-
-            robot.arm.setPower(.9);
-            robot.arm2.setPower(.9);
-            robot.intake.setPower(0);
-            DriveForward(1, 48, 1, 48);
-            robot.arm.setPower(.2);
-            robot.arm2.setPower(.2);
-
-            robot.intake.setPower(-1);
-
-            robot.door.setPosition(.18);
-
-            DriveForward(1, 10, 1, 10);
             robot.arm.setPower(0);
             robot.arm2.setPower(0);
 
-
-            sleep(500);
-            robot.intake.setPower(0);
-
-            robot.arm.setPower(-.7);
-            robot.arm2.setPower(-.7);
-            robot.intake.setPower(-1);
-
-            DriveForward(1, -30, 1, -30);
-
-            robot.arm.setPower(-.1);
-            robot.arm2.setPower(-.1);
-
-            zeroing();
-            robot.intake.setPower(0);
-
-            robot.arm.setPower(0);
-            robot.arm2.setPower(0);
         }
 
     }

@@ -2,12 +2,16 @@ package org.firstinspires.ftc.teamcode;
 
 import android.hardware.Sensor;
 
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcontroller.external.samples.SensorDigitalTouch;
 
 public class PrototypeHWSetup
 {
@@ -19,19 +23,21 @@ public class PrototypeHWSetup
     public DcMotor  lift = null;
     public DcMotor  arm      = null;
     public DcMotor  arm2     = null;
+    public DcMotor intake  = null;
 
     public CRServo mineralarm = null;
-    public CRServo intake = null;
+   // public CRServo intake = null;
     public Servo door = null;
-    public Servo sensorarm;
     /*   public DcMotor driveleft = null;
        public DcMotor driveright = null; */
 
 
 
+  //  public DcMotor  leds        = null;
 
-    //public AnalogInput armsensor = null;
-  //  public SensorDigitalTouch armsensor = null;
+   // public AnalogInput armsensor = null;
+//    public SensorDigitalTouch touchsensor = null;
+ //  public SensorDigitalTouch armsensor = null;
 
 
     /* local OpMode members. */
@@ -57,6 +63,8 @@ public class PrototypeHWSetup
         arm = hwMap.dcMotor.get("arm");
         arm2 = hwMap.dcMotor.get("arm2");
 
+        intake = hwMap.dcMotor.get("leds");
+
 
 
 
@@ -68,8 +76,13 @@ public class PrototypeHWSetup
         lift.setDirection(DcMotor.Direction.FORWARD);
         arm.setDirection(DcMotor.Direction.FORWARD);
         arm2.setDirection(DcMotor.Direction.FORWARD);
+        intake.setDirection(DcMotor.Direction.FORWARD);
 
+    /*    leds = hwMap.dcMotor.get("leds");
 
+        leds.setDirection(DcMotor.Direction.FORWARD);
+
+        leds.setPower(.5);*/
 
         // Set to FORWARD if using AndyMark motors
 
@@ -82,16 +95,15 @@ public class PrototypeHWSetup
         lift.setPower(0);
         arm.setPower(0);
         arm2.setPower(0);
+        intake.setPower(0);
 
-        intake   =hwMap.get(CRServo.class, "intake");
+      //  intake   =hwMap.get(CRServo.class, "intake");
         door   =hwMap.get(Servo.class, "door");
         mineralarm   =hwMap.get(CRServo.class, "mineral_arm");
-        sensorarm =hwMap.get(Servo.class, "sensor_arm");
 
-        intake.setPower(0);
-        door.setPosition(0);
+      //  intake.setPower(0);
+        door.setPosition(.2);
         mineralarm.setPower(0);
-        sensorarm.setPosition(.4);
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
 
@@ -102,6 +114,7 @@ public class PrototypeHWSetup
         lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         arm2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
       /*  driveright.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         driveleft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); */
@@ -115,6 +128,7 @@ public class PrototypeHWSetup
         
 
        // armsensor = hwMap.get(SensorDigitalTouch.class, "armsensor");
+     //   touchsensor = hwMap.get(SensorDigitalTouch.class, "touchsensor");
 
 
 

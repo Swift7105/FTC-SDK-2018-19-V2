@@ -35,11 +35,13 @@ package org.firstinspires.ftc.teamcode;
 import android.graphics.Color;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -66,13 +68,21 @@ public class PrototypeDrive extends OpMode{
      double speedturning = 0;
      double inittime = 0;
      double armspeed = 0;
+     double armreset = 0;
+     boolean bbep = FALSE;
      double armpos = 0;
+
+    double ledbrightness = 1;
+     double ledmultiplier = 1;
+
+     double gravcomp = 0.05;
      //----------------------------------------------------------------------
     BNO055IMU imu;
     Orientation             lastAngles = new Orientation();
     double globalAngle = 0;
-    double Xposition = 0;
-    double Yposition = 0;
+    double global90 = 0;
+  //  double Xposition = 0;
+  //  double Yposition = 0;
 //----------------------------------------------------------------------
 
 
@@ -85,28 +95,40 @@ public class PrototypeDrive extends OpMode{
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
+
+        armreset = robot.arm2.getCurrentPosition();
+
        // robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //  relicclaw = false;
 
 //----------------------------------------------------------------------
 
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+
+        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+        // and named "imu".
+
+       BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
         parameters.mode = BNO055IMU.SensorMode.IMU;
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.loggingEnabled = false;
-
-        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
-        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
-        // and named "imu".
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
         imu = hardwareMap.get(BNO055IMU.class, "imu");
-
         imu.initialize(parameters);
 
-
+  /*    BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
         telemetry.addData("Mode", "calibrating...");
         telemetry.update();
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);*/
 
         // make sure the imu gyro is calibrated before continuing.
       /*  while (!imu.isGyroCalibrated()) {
@@ -114,9 +136,7 @@ public class PrototypeDrive extends OpMode{
         }
         */
         telemetry.addData("Mode", "waiting for start");
-        telemetry.addData("imu calib status", imu.getCalibrationStatus().toString());
         telemetry.update();
-//----------------------------------------------------------------------
 
 
         /*
@@ -125,6 +145,8 @@ public class PrototypeDrive extends OpMode{
     }
     @Override
     public void init_loop() {
+
+
     }
     /*
      * Code to run ONCE when the driver hits PLAY
@@ -142,204 +164,149 @@ public class PrototypeDrive extends OpMode{
 
     @Override
     public void loop() {
-/*
-        double r = Math.hypot(gamepad1.right_stick_x, gamepad1.right_stick_y);
-        double robotAngle = Math.atan2(gamepad1.right_stick_y, gamepad1.right_stick_x) - Math.PI / 4;
-        double rightX = gamepad1.left_stick_x;
 
-        final double v1 = r * Math.sin(robotAngle) - rightX;
-        final double v2 = r * Math.cos(robotAngle) + rightX;
-        final double v3 = r * Math.cos(robotAngle) - rightX;
-        final double v4 = r * Math.sin(robotAngle) + rightX;
-
-
-            robot.frontleftMotor.setPower(v1 * v1 * v1 * 5);
-            robot.frontrightMotor.setPower(v2 * v2 * v2 * 5 );
-            robot.backleftMotor.setPower(v3 * v3 * v3 * 5);
-            robot.backrightMotor.setPower(v4 * v4 * v4 * 5);
-*/
         getAngle();
         turning = gamepad1.left_stick_x * .75;
         negmecanum = gamepad1.right_stick_y - gamepad1.right_stick_x;
         mecanum = gamepad1.right_stick_y + gamepad1.right_stick_x;
-   //     armpos = (robot.arm2.getCurrentPosition() / 35) - armposreset;
-       // Yposition += (-gamepad1.right_stick_y * Math.cos(Math.abs(globalAngle))) + (gamepad1.right_stick_x * Math.sin(Math.abs(globalAngle)));
-       // Xposition += (gamepad1.right_stick_x * Math.sin(Math.abs(globalAngle))) + (-gamepad1.right_stick_y * Math.cos(Math.abs(globalAngle)));
 
-
-     //   Xposition += (gamepad1.right_stick_x * Math.cos(globalAngle));
-
-        /*
-        if (gamepad1.dpad_up) {
-            getAngle();
-            if (globalAngle > 0){
-                turning += ((globalAngle / 50) * .5) + .2;
-            }
-            else{
-                turning -= ((-globalAngle / 50) * .5) + .2;
-            }
-        }
-*/
-
-        if (gamepad1.right_bumper){
-            if (reversetimer > 10){
-                if (globalAngle > 1){
-                    turning += ((globalAngle + (gamepad2.left_trigger - .9))  / 40) + .07;
-                }
-                else if (globalAngle < -1 ){
-                    turning -= ((-globalAngle + (gamepad1.left_trigger - .9)) / 40) + .07;
-                }
-                else{
+        if (gamepad1.right_bumper) {
+            if (reversetimer > 10) {
+                if (globalAngle > 1) {
+                    turning += ((globalAngle + (gamepad1.left_trigger - .9)) / 30) + .07;
+                } else if (globalAngle < -1) {
+                    turning -= ((-globalAngle + (gamepad1.left_trigger - .9)) / 30) + .07;
+                } else {
 
                 }
             }
             reverse = -1;
             reversetimer += 1;
-        }
-        else {
+        } else {
             reverse = 1;
             reversetimer = 0;
         }
 
-        if (gamepad1.left_bumper){
-            speedturning = .45;
-            speed = .5;
+        global90 = globalAngle + 95;
 
+        if (gamepad1.right_trigger > .5) {
+            if (global90 > 1) {
+                turning += ((global90 + (gamepad1.left_trigger - .9)) / 40) + .07;
+
+                //     turning += (global90 * global90 * global90 / 729000);
+            } else if ((globalAngle + 90) < -1) {
+                turning -= ((-global90 + (gamepad1.left_trigger - .9)) / 40) + .07;
+
+                //      turning -= (-global90 * -global90 * -global90 / 729000 );
+            } else {
+
+            }
         }
-        else {
+        Range.clip(turning, -1, 1);
+
+
+        if (gamepad1.left_bumper) {
+            speedturning = .45;
+            speed = .45;
+
+        } else {
             speed = 1;
             speedturning = 1;
         }
 
 
-        robot.leftFrontDrive.setPower(((negmecanum)* reverse)* speed  - (turning * speedturning)) ;
-        robot.rightBackDrive.setPower(((negmecanum)* reverse)* speed  + (turning * speedturning));
-        robot.rightFrontDrive.setPower(((mecanum)* reverse)* speed + (turning * speedturning));
-        robot.leftBackDrive.setPower(((mecanum) * reverse)* speed - (turning * speedturning));
+        robot.leftFrontDrive.setPower(((negmecanum) * reverse) * speed - (turning * speedturning));
+        robot.rightBackDrive.setPower(((negmecanum) * reverse) * speed + (turning * speedturning));
+        robot.rightFrontDrive.setPower(((mecanum) * reverse) * speed + (turning * speedturning));
+        robot.leftBackDrive.setPower(((mecanum) * reverse) * speed - (turning * speedturning));
 
-        armpos = robot.arm2.getCurrentPosition() / 35 ;
 
-        if (gamepad2.right_stick_y > 0){
 
-            armspeed = (55 - armpos) / 50;
-            robot.arm.setPower(-gamepad2.right_stick_y * armspeed);
-            robot.arm2.setPower(-gamepad2.right_stick_y * armspeed);
+        if (Math.abs(gamepad2.right_stick_y) > .1) {
+            armspeed = robot.arm2.getCurrentPosition() - armreset;
+            armspeed = Math.abs(armspeed);
+            armspeed = 2800 - armspeed;
+            armspeed = armspeed / 2800;
+            robot.arm.setPower(gamepad2.right_stick_y * -armspeed);
+            robot.arm2.setPower(gamepad2.right_stick_y * -armspeed);
+        } else if (gamepad2.right_trigger > .5) {
+            robot.arm.setPower(-.3);
+            robot.arm2.setPower(-.3);
+        } else {
 
-        }
-        else if (gamepad2.right_stick_y < 0){
+            armreset = robot.arm2.getCurrentPosition();
 
-            armspeed = armpos / 50;
-            robot.arm.setPower(-gamepad2.right_stick_y * armspeed);
-            robot.arm2.setPower(-gamepad2.right_stick_y * armspeed);
-
-        }
-        else{
             robot.arm.setPower(0);
             robot.arm2.setPower(0);
         }
- /*
-        robot.arm.setPower(gamepad2.right_stick_y * armspeed);
-        robot.arm2.setPower(gamepad2.right_stick_y * armspeed);
-*/
 
-        robot.intake.setPower(-gamepad2.left_stick_y);
-        if (gamepad2.left_stick_y > .1 || gamepad2.left_stick_y < -.1){
-            if (inittime == 0){
+        if(-gamepad2.left_stick_y < 0){
+            robot.intake.setPower(-gamepad2.left_stick_y);
+
+        }
+        else {
+            robot.intake.setPower(-gamepad2.left_stick_y * .5);
+
+        }
+
+
+        if (gamepad2.left_stick_y > .1 || gamepad2.left_stick_y < -.1) {
+            if (inittime == 0) {
                 inittime = getRuntime();
 
             }
         }
 
 
-        if (gamepad2.left_trigger > .5){
+        if (gamepad2.left_trigger > .5) {
             robot.lift.setPower(1);
-        }
-        else {
-            if ((getRuntime() - inittime) > 110 && (getRuntime() - inittime) < 113){
+        } else {
+            if ((getRuntime() - inittime) > 108 && (getRuntime() - inittime) < 111) {
                 robot.lift.setPower(-1);
-
-            }
-            else{
+                ledmultiplier = 10;
+            } else {
                 robot.lift.setPower(0);
             }
         }
 
 
-
-
-        if (gamepad2.a){
+        if (gamepad2.a) {
             robot.mineralarm.setPower(1);
-        }
-        else if (gamepad2.x){
+        } else if (gamepad2.x) {
             robot.mineralarm.setPower(-1);
-        }
-        else {
+        } else {
             robot.mineralarm.setPower(0);
         }
 
-        if (gamepad2.left_bumper){
+        if (gamepad2.left_bumper) {
             robot.lift.setPower(-1);
         }
 
-        if (gamepad2.right_bumper){
-            robot.door.setPosition(.05);
+        if (gamepad2.right_bumper) {
+            //open
+            robot.door.setPosition(.18);
+        } else {
+            //closed
+            robot.door.setPosition(.5);
         }
-        else {
-            robot.door.setPosition(.3);
-
-        }
 
 
-
-
-/*
-        if (gamepad1.right_bumper){
-            if (reversem == 1) {
-                reversem = -1;
-                if (reverse > 0){
-                    reverse = -1;
-                }
-                else {
-                    reverse = 1;
-                }
-            }
-
-        }
-        else {
-            reversem = 1;
-        }
-*/
-
-        if (gamepad1.x){
+        if (gamepad1.x) {
             resetAngle();
-            Xposition = 0;
-            Yposition = 0;
         }
 
-
-
-
-//----------------------------------------------------------------------
-        telemetry.addData("1 imu heading",  imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES));
+        telemetry.addData(" arm", robot.arm2.getCurrentPosition());
         telemetry.addData("2 global heading", globalAngle);
-        telemetry.addData("armspeed", armspeed);
-        telemetry.addData("bbep", robot.arm2.getCurrentPosition() / 35);
-        telemetry.addData("X", Xposition);
-        telemetry.addData("Y", Yposition);
+        telemetry.addData("trigger", gamepad2.right_trigger);
+        telemetry.addData("gamestick", gamepad2.right_stick_y);
 
+        telemetry.addData("1", robot.rightBackDrive.getCurrentPosition()); // rfd lfd rbd lbd
+        telemetry.addData("2", robot.rightFrontDrive.getCurrentPosition());
+        telemetry.addData("3", robot.leftBackDrive.getCurrentPosition());
+        telemetry.addData("4", robot.leftFrontDrive.getCurrentPosition());
 
-
-    /*    if (robot.arm.getCurrentPosition() < 415){
-            telemetry.addData("angle", robot.arm.getCurrentPosition());
-
-        } */
         telemetry.update();
-//----------------------------------------------------------------------
     }
-
-
-
-    //----------------------------------------------------------------------
     private void resetAngle()
     {
         lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -347,18 +314,9 @@ public class PrototypeDrive extends OpMode{
         globalAngle = 0;
     }
 
-    /**
-     * Get current cumulative angle rotation from last reset.
-     * @return Angle in degrees. + = left, - = right.
-     */
 
     private double getAngle()
     {
-        // We experimentally determined the Z axis is the axis we want to use for heading angle.
-        // We have to process the angle because the imu works in euler angles so the Z axis is
-        // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
-        // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
-
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
@@ -374,7 +332,6 @@ public class PrototypeDrive extends OpMode{
 
         return globalAngle;
     }
-    //----------------------------------------------------------------------
 
     @Override
     public void stop() {
